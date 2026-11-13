@@ -1,0 +1,4264 @@
+[
+  {
+    "id": "AFG",
+    "iso2": "AF",
+    "name": "Afghanistan",
+    "officialName": "Islamic Republic of Afghanistan",
+    "capitals": [
+      "Kabul"
+    ],
+    "region": "Asia",
+    "subregion": "Southern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 652230,
+    "latlng": [
+      33,
+      65
+    ]
+  },
+  {
+    "id": "ALA",
+    "iso2": "AX",
+    "name": "Åland Islands",
+    "officialName": "Åland Islands",
+    "capitals": [
+      "Mariehamn"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": false,
+    "independent": false,
+    "area": 1580,
+    "latlng": [
+      60.116667,
+      19.9
+    ]
+  },
+  {
+    "id": "ALB",
+    "iso2": "AL",
+    "name": "Albania",
+    "officialName": "Republic of Albania",
+    "capitals": [
+      "Tirana"
+    ],
+    "region": "Europe",
+    "subregion": "Southeast Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 28748,
+    "latlng": [
+      41,
+      20
+    ]
+  },
+  {
+    "id": "DZA",
+    "iso2": "DZ",
+    "name": "Algeria",
+    "officialName": "People's Democratic Republic of Algeria",
+    "capitals": [
+      "Algiers"
+    ],
+    "region": "Africa",
+    "subregion": "Northern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 2381741,
+    "latlng": [
+      28,
+      3
+    ]
+  },
+  {
+    "id": "ASM",
+    "iso2": "AS",
+    "name": "American Samoa",
+    "officialName": "American Samoa",
+    "capitals": [
+      "Pago Pago"
+    ],
+    "region": "Oceania",
+    "subregion": "Polynesia",
+    "unMember": false,
+    "independent": false,
+    "area": 199,
+    "latlng": [
+      -14.33333333,
+      -170
+    ]
+  },
+  {
+    "id": "AND",
+    "iso2": "AD",
+    "name": "Andorra",
+    "officialName": "Principality of Andorra",
+    "capitals": [
+      "Andorra la Vella"
+    ],
+    "region": "Europe",
+    "subregion": "Southern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 468,
+    "latlng": [
+      42.5,
+      1.5
+    ]
+  },
+  {
+    "id": "AGO",
+    "iso2": "AO",
+    "name": "Angola",
+    "officialName": "Republic of Angola",
+    "capitals": [
+      "Luanda"
+    ],
+    "region": "Africa",
+    "subregion": "Middle Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 1246700,
+    "latlng": [
+      -12.5,
+      18.5
+    ]
+  },
+  {
+    "id": "AIA",
+    "iso2": "AI",
+    "name": "Anguilla",
+    "officialName": "Anguilla",
+    "capitals": [
+      "The Valley"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": false,
+    "independent": false,
+    "area": 91,
+    "latlng": [
+      18.25,
+      -63.16666666
+    ]
+  },
+  {
+    "id": "ATA",
+    "iso2": "AQ",
+    "name": "Antarctica",
+    "officialName": "Antarctica",
+    "capitals": [],
+    "region": "Antarctic",
+    "subregion": "",
+    "unMember": false,
+    "independent": false,
+    "area": 14000000,
+    "latlng": [
+      -90,
+      0
+    ]
+  },
+  {
+    "id": "ATG",
+    "iso2": "AG",
+    "name": "Antigua and Barbuda",
+    "officialName": "Antigua and Barbuda",
+    "capitals": [
+      "Saint John's"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": true,
+    "independent": true,
+    "area": 442,
+    "latlng": [
+      17.05,
+      -61.8
+    ]
+  },
+  {
+    "id": "ARG",
+    "iso2": "AR",
+    "name": "Argentina",
+    "officialName": "Argentine Republic",
+    "capitals": [
+      "Buenos Aires"
+    ],
+    "region": "Americas",
+    "subregion": "South America",
+    "unMember": true,
+    "independent": true,
+    "area": 2780400,
+    "latlng": [
+      -34,
+      -64
+    ]
+  },
+  {
+    "id": "ARM",
+    "iso2": "AM",
+    "name": "Armenia",
+    "officialName": "Republic of Armenia",
+    "capitals": [
+      "Yerevan"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 29743,
+    "latlng": [
+      40,
+      45
+    ]
+  },
+  {
+    "id": "ABW",
+    "iso2": "AW",
+    "name": "Aruba",
+    "officialName": "Aruba",
+    "capitals": [
+      "Oranjestad"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": false,
+    "independent": false,
+    "area": 180,
+    "latlng": [
+      12.5,
+      -69.96666666
+    ]
+  },
+  {
+    "id": "AUS",
+    "iso2": "AU",
+    "name": "Australia",
+    "officialName": "Commonwealth of Australia",
+    "capitals": [
+      "Canberra"
+    ],
+    "region": "Oceania",
+    "subregion": "Australia and New Zealand",
+    "unMember": true,
+    "independent": true,
+    "area": 7692024,
+    "latlng": [
+      -27,
+      133
+    ]
+  },
+  {
+    "id": "AUT",
+    "iso2": "AT",
+    "name": "Austria",
+    "officialName": "Republic of Austria",
+    "capitals": [
+      "Vienna"
+    ],
+    "region": "Europe",
+    "subregion": "Central Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 83871,
+    "latlng": [
+      47.33333333,
+      13.33333333
+    ]
+  },
+  {
+    "id": "AZE",
+    "iso2": "AZ",
+    "name": "Azerbaijan",
+    "officialName": "Republic of Azerbaijan",
+    "capitals": [
+      "Baku"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 86600,
+    "latlng": [
+      40.5,
+      47.5
+    ]
+  },
+  {
+    "id": "BHS",
+    "iso2": "BS",
+    "name": "Bahamas",
+    "officialName": "Commonwealth of the Bahamas",
+    "capitals": [
+      "Nassau"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": true,
+    "independent": true,
+    "area": 13943,
+    "latlng": [
+      24.25,
+      -76
+    ]
+  },
+  {
+    "id": "BHR",
+    "iso2": "BH",
+    "name": "Bahrain",
+    "officialName": "Kingdom of Bahrain",
+    "capitals": [
+      "Manama"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 765,
+    "latlng": [
+      26,
+      50.55
+    ]
+  },
+  {
+    "id": "BGD",
+    "iso2": "BD",
+    "name": "Bangladesh",
+    "officialName": "People's Republic of Bangladesh",
+    "capitals": [
+      "Dhaka"
+    ],
+    "region": "Asia",
+    "subregion": "Southern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 147570,
+    "latlng": [
+      24,
+      90
+    ]
+  },
+  {
+    "id": "BRB",
+    "iso2": "BB",
+    "name": "Barbados",
+    "officialName": "Barbados",
+    "capitals": [
+      "Bridgetown"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": true,
+    "independent": true,
+    "area": 430,
+    "latlng": [
+      13.16666666,
+      -59.53333333
+    ]
+  },
+  {
+    "id": "BLR",
+    "iso2": "BY",
+    "name": "Belarus",
+    "officialName": "Republic of Belarus",
+    "capitals": [
+      "Minsk"
+    ],
+    "region": "Europe",
+    "subregion": "Eastern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 207600,
+    "latlng": [
+      53,
+      28
+    ]
+  },
+  {
+    "id": "BEL",
+    "iso2": "BE",
+    "name": "Belgium",
+    "officialName": "Kingdom of Belgium",
+    "capitals": [
+      "Brussels"
+    ],
+    "region": "Europe",
+    "subregion": "Western Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 30528,
+    "latlng": [
+      50.83333333,
+      4
+    ]
+  },
+  {
+    "id": "BLZ",
+    "iso2": "BZ",
+    "name": "Belize",
+    "officialName": "Belize",
+    "capitals": [
+      "Belmopan"
+    ],
+    "region": "Americas",
+    "subregion": "Central America",
+    "unMember": true,
+    "independent": true,
+    "area": 22966,
+    "latlng": [
+      17.25,
+      -88.75
+    ]
+  },
+  {
+    "id": "BEN",
+    "iso2": "BJ",
+    "name": "Benin",
+    "officialName": "Republic of Benin",
+    "capitals": [
+      "Porto-Novo"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 112622,
+    "latlng": [
+      9.5,
+      2.25
+    ]
+  },
+  {
+    "id": "BMU",
+    "iso2": "BM",
+    "name": "Bermuda",
+    "officialName": "Bermuda",
+    "capitals": [
+      "Hamilton"
+    ],
+    "region": "Americas",
+    "subregion": "North America",
+    "unMember": false,
+    "independent": false,
+    "area": 54,
+    "latlng": [
+      32.33333333,
+      -64.75
+    ]
+  },
+  {
+    "id": "BTN",
+    "iso2": "BT",
+    "name": "Bhutan",
+    "officialName": "Kingdom of Bhutan",
+    "capitals": [
+      "Thimphu"
+    ],
+    "region": "Asia",
+    "subregion": "Southern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 38394,
+    "latlng": [
+      27.5,
+      90.5
+    ]
+  },
+  {
+    "id": "BOL",
+    "iso2": "BO",
+    "name": "Bolivia",
+    "officialName": "Plurinational State of Bolivia",
+    "capitals": [
+      "Sucre"
+    ],
+    "region": "Americas",
+    "subregion": "South America",
+    "unMember": true,
+    "independent": true,
+    "area": 1098581,
+    "latlng": [
+      -17,
+      -65
+    ]
+  },
+  {
+    "id": "BIH",
+    "iso2": "BA",
+    "name": "Bosnia and Herzegovina",
+    "officialName": "Bosnia and Herzegovina",
+    "capitals": [
+      "Sarajevo"
+    ],
+    "region": "Europe",
+    "subregion": "Southeast Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 51209,
+    "latlng": [
+      44,
+      18
+    ]
+  },
+  {
+    "id": "BWA",
+    "iso2": "BW",
+    "name": "Botswana",
+    "officialName": "Republic of Botswana",
+    "capitals": [
+      "Gaborone"
+    ],
+    "region": "Africa",
+    "subregion": "Southern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 582000,
+    "latlng": [
+      -22,
+      24
+    ]
+  },
+  {
+    "id": "BRA",
+    "iso2": "BR",
+    "name": "Brazil",
+    "officialName": "Federative Republic of Brazil",
+    "capitals": [
+      "Brasília"
+    ],
+    "region": "Americas",
+    "subregion": "South America",
+    "unMember": true,
+    "independent": true,
+    "area": 8515767,
+    "latlng": [
+      -10,
+      -55
+    ]
+  },
+  {
+    "id": "IOT",
+    "iso2": "IO",
+    "name": "British Indian Ocean Territory",
+    "officialName": "British Indian Ocean Territory",
+    "capitals": [
+      "Diego Garcia"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": false,
+    "independent": false,
+    "area": 60,
+    "latlng": [
+      -6,
+      71.5
+    ]
+  },
+  {
+    "id": "VGB",
+    "iso2": "VG",
+    "name": "British Virgin Islands",
+    "officialName": "Virgin Islands",
+    "capitals": [
+      "Road Town"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": false,
+    "independent": false,
+    "area": 151,
+    "latlng": [
+      18.431383,
+      -64.62305
+    ]
+  },
+  {
+    "id": "BRN",
+    "iso2": "BN",
+    "name": "Brunei",
+    "officialName": "Nation of Brunei, Abode of Peace",
+    "capitals": [
+      "Bandar Seri Begawan"
+    ],
+    "region": "Asia",
+    "subregion": "South-Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 5765,
+    "latlng": [
+      4.5,
+      114.66666666
+    ]
+  },
+  {
+    "id": "BGR",
+    "iso2": "BG",
+    "name": "Bulgaria",
+    "officialName": "Republic of Bulgaria",
+    "capitals": [
+      "Sofia"
+    ],
+    "region": "Europe",
+    "subregion": "Southeast Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 110879,
+    "latlng": [
+      43,
+      25
+    ]
+  },
+  {
+    "id": "BFA",
+    "iso2": "BF",
+    "name": "Burkina Faso",
+    "officialName": "Burkina Faso",
+    "capitals": [
+      "Ouagadougou"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 272967,
+    "latlng": [
+      13,
+      -2
+    ]
+  },
+  {
+    "id": "BDI",
+    "iso2": "BI",
+    "name": "Burundi",
+    "officialName": "Republic of Burundi",
+    "capitals": [
+      "Gitega"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 27834,
+    "latlng": [
+      -3.5,
+      30
+    ]
+  },
+  {
+    "id": "KHM",
+    "iso2": "KH",
+    "name": "Cambodia",
+    "officialName": "Kingdom of Cambodia",
+    "capitals": [
+      "Phnom Penh"
+    ],
+    "region": "Asia",
+    "subregion": "South-Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 181035,
+    "latlng": [
+      13,
+      105
+    ]
+  },
+  {
+    "id": "CMR",
+    "iso2": "CM",
+    "name": "Cameroon",
+    "officialName": "Republic of Cameroon",
+    "capitals": [
+      "Yaoundé"
+    ],
+    "region": "Africa",
+    "subregion": "Middle Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 475442,
+    "latlng": [
+      6,
+      12
+    ]
+  },
+  {
+    "id": "CAN",
+    "iso2": "CA",
+    "name": "Canada",
+    "officialName": "Canada",
+    "capitals": [
+      "Ottawa"
+    ],
+    "region": "Americas",
+    "subregion": "North America",
+    "unMember": true,
+    "independent": true,
+    "area": 9984670,
+    "latlng": [
+      60,
+      -95
+    ]
+  },
+  {
+    "id": "CPV",
+    "iso2": "CV",
+    "name": "Cape Verde",
+    "officialName": "Republic of Cabo Verde",
+    "capitals": [
+      "Praia"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 4033,
+    "latlng": [
+      16,
+      -24
+    ]
+  },
+  {
+    "id": "CYM",
+    "iso2": "KY",
+    "name": "Cayman Islands",
+    "officialName": "Cayman Islands",
+    "capitals": [
+      "George Town"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": false,
+    "independent": false,
+    "area": 264,
+    "latlng": [
+      19.5,
+      -80.5
+    ]
+  },
+  {
+    "id": "CAF",
+    "iso2": "CF",
+    "name": "Central African Republic",
+    "officialName": "Central African Republic",
+    "capitals": [
+      "Bangui"
+    ],
+    "region": "Africa",
+    "subregion": "Middle Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 622984,
+    "latlng": [
+      7,
+      21
+    ]
+  },
+  {
+    "id": "TCD",
+    "iso2": "TD",
+    "name": "Chad",
+    "officialName": "Republic of Chad",
+    "capitals": [
+      "N'Djamena"
+    ],
+    "region": "Africa",
+    "subregion": "Middle Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 1284000,
+    "latlng": [
+      15,
+      19
+    ]
+  },
+  {
+    "id": "CHL",
+    "iso2": "CL",
+    "name": "Chile",
+    "officialName": "Republic of Chile",
+    "capitals": [
+      "Santiago"
+    ],
+    "region": "Americas",
+    "subregion": "South America",
+    "unMember": true,
+    "independent": true,
+    "area": 756102,
+    "latlng": [
+      -30,
+      -71
+    ]
+  },
+  {
+    "id": "CHN",
+    "iso2": "CN",
+    "name": "China",
+    "officialName": "People's Republic of China",
+    "capitals": [
+      "Beijing"
+    ],
+    "region": "Asia",
+    "subregion": "Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 9706961,
+    "latlng": [
+      35,
+      105
+    ]
+  },
+  {
+    "id": "COL",
+    "iso2": "CO",
+    "name": "Colombia",
+    "officialName": "Republic of Colombia",
+    "capitals": [
+      "Bogotá"
+    ],
+    "region": "Americas",
+    "subregion": "South America",
+    "unMember": true,
+    "independent": true,
+    "area": 1141748,
+    "latlng": [
+      4,
+      -72
+    ]
+  },
+  {
+    "id": "COM",
+    "iso2": "KM",
+    "name": "Comoros",
+    "officialName": "Union of the Comoros",
+    "capitals": [
+      "Moroni"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 1862,
+    "latlng": [
+      -12.16666666,
+      44.25
+    ]
+  },
+  {
+    "id": "COG",
+    "iso2": "CG",
+    "name": "Congo",
+    "officialName": "Republic of the Congo",
+    "capitals": [
+      "Brazzaville"
+    ],
+    "region": "Africa",
+    "subregion": "Middle Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 342000,
+    "latlng": [
+      -1,
+      15
+    ]
+  },
+  {
+    "id": "COK",
+    "iso2": "CK",
+    "name": "Cook Islands",
+    "officialName": "Cook Islands",
+    "capitals": [
+      "Avarua"
+    ],
+    "region": "Oceania",
+    "subregion": "Polynesia",
+    "unMember": false,
+    "independent": false,
+    "area": 236,
+    "latlng": [
+      -21.23333333,
+      -159.76666666
+    ]
+  },
+  {
+    "id": "CRI",
+    "iso2": "CR",
+    "name": "Costa Rica",
+    "officialName": "Republic of Costa Rica",
+    "capitals": [
+      "San José"
+    ],
+    "region": "Americas",
+    "subregion": "Central America",
+    "unMember": true,
+    "independent": true,
+    "area": 51100,
+    "latlng": [
+      10,
+      -84
+    ]
+  },
+  {
+    "id": "HRV",
+    "iso2": "HR",
+    "name": "Croatia",
+    "officialName": "Republic of Croatia",
+    "capitals": [
+      "Zagreb"
+    ],
+    "region": "Europe",
+    "subregion": "Southeast Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 56594,
+    "latlng": [
+      45.16666666,
+      15.5
+    ]
+  },
+  {
+    "id": "CUB",
+    "iso2": "CU",
+    "name": "Cuba",
+    "officialName": "Republic of Cuba",
+    "capitals": [
+      "Havana"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": true,
+    "independent": true,
+    "area": 109884,
+    "latlng": [
+      21.5,
+      -80
+    ]
+  },
+  {
+    "id": "CUW",
+    "iso2": "CW",
+    "name": "Curaçao",
+    "officialName": "Country of Curaçao",
+    "capitals": [
+      "Willemstad"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": false,
+    "independent": false,
+    "area": 444,
+    "latlng": [
+      12.116667,
+      -68.933333
+    ]
+  },
+  {
+    "id": "CYP",
+    "iso2": "CY",
+    "name": "Cyprus",
+    "officialName": "Republic of Cyprus",
+    "capitals": [
+      "Nicosia"
+    ],
+    "region": "Europe",
+    "subregion": "Southern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 9251,
+    "latlng": [
+      35,
+      33
+    ]
+  },
+  {
+    "id": "CZE",
+    "iso2": "CZ",
+    "name": "Czechia",
+    "officialName": "Czech Republic",
+    "capitals": [
+      "Prague"
+    ],
+    "region": "Europe",
+    "subregion": "Central Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 78865,
+    "latlng": [
+      49.75,
+      15.5
+    ]
+  },
+  {
+    "id": "DNK",
+    "iso2": "DK",
+    "name": "Denmark",
+    "officialName": "Kingdom of Denmark",
+    "capitals": [
+      "Copenhagen"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 43094,
+    "latlng": [
+      56,
+      10
+    ]
+  },
+  {
+    "id": "DJI",
+    "iso2": "DJ",
+    "name": "Djibouti",
+    "officialName": "Republic of Djibouti",
+    "capitals": [
+      "Djibouti"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 23200,
+    "latlng": [
+      11.5,
+      43
+    ]
+  },
+  {
+    "id": "DMA",
+    "iso2": "DM",
+    "name": "Dominica",
+    "officialName": "Commonwealth of Dominica",
+    "capitals": [
+      "Roseau"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": true,
+    "independent": true,
+    "area": 751,
+    "latlng": [
+      15.41666666,
+      -61.33333333
+    ]
+  },
+  {
+    "id": "DOM",
+    "iso2": "DO",
+    "name": "Dominican Republic",
+    "officialName": "Dominican Republic",
+    "capitals": [
+      "Santo Domingo"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": true,
+    "independent": true,
+    "area": 48671,
+    "latlng": [
+      19,
+      -70.66666666
+    ]
+  },
+  {
+    "id": "COD",
+    "iso2": "CD",
+    "name": "DR Congo",
+    "officialName": "Democratic Republic of the Congo",
+    "capitals": [
+      "Kinshasa"
+    ],
+    "region": "Africa",
+    "subregion": "Middle Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 2344858,
+    "latlng": [
+      0,
+      25
+    ]
+  },
+  {
+    "id": "ECU",
+    "iso2": "EC",
+    "name": "Ecuador",
+    "officialName": "Republic of Ecuador",
+    "capitals": [
+      "Quito"
+    ],
+    "region": "Americas",
+    "subregion": "South America",
+    "unMember": true,
+    "independent": true,
+    "area": 276841,
+    "latlng": [
+      -2,
+      -77.5
+    ]
+  },
+  {
+    "id": "EGY",
+    "iso2": "EG",
+    "name": "Egypt",
+    "officialName": "Arab Republic of Egypt",
+    "capitals": [
+      "Cairo"
+    ],
+    "region": "Africa",
+    "subregion": "Northern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 1002450,
+    "latlng": [
+      27,
+      30
+    ]
+  },
+  {
+    "id": "SLV",
+    "iso2": "SV",
+    "name": "El Salvador",
+    "officialName": "Republic of El Salvador",
+    "capitals": [
+      "San Salvador"
+    ],
+    "region": "Americas",
+    "subregion": "Central America",
+    "unMember": true,
+    "independent": true,
+    "area": 21041,
+    "latlng": [
+      13.83333333,
+      -88.91666666
+    ]
+  },
+  {
+    "id": "GNQ",
+    "iso2": "GQ",
+    "name": "Equatorial Guinea",
+    "officialName": "Republic of Equatorial Guinea",
+    "capitals": [
+      "Ciudad de la Paz"
+    ],
+    "region": "Africa",
+    "subregion": "Middle Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 28051,
+    "latlng": [
+      2,
+      10
+    ]
+  },
+  {
+    "id": "ERI",
+    "iso2": "ER",
+    "name": "Eritrea",
+    "officialName": "State of Eritrea",
+    "capitals": [
+      "Asmara"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 117600,
+    "latlng": [
+      15,
+      39
+    ]
+  },
+  {
+    "id": "EST",
+    "iso2": "EE",
+    "name": "Estonia",
+    "officialName": "Republic of Estonia",
+    "capitals": [
+      "Tallinn"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 45227,
+    "latlng": [
+      59,
+      26
+    ]
+  },
+  {
+    "id": "SWZ",
+    "iso2": "SZ",
+    "name": "Eswatini",
+    "officialName": "Kingdom of Eswatini",
+    "capitals": [
+      "Lobamba"
+    ],
+    "region": "Africa",
+    "subregion": "Southern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 17364,
+    "latlng": [
+      -26.5,
+      31.5
+    ]
+  },
+  {
+    "id": "ETH",
+    "iso2": "ET",
+    "name": "Ethiopia",
+    "officialName": "Federal Democratic Republic of Ethiopia",
+    "capitals": [
+      "Addis Ababa"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 1104300,
+    "latlng": [
+      8,
+      38
+    ]
+  },
+  {
+    "id": "FLK",
+    "iso2": "FK",
+    "name": "Falkland Islands",
+    "officialName": "Falkland Islands",
+    "capitals": [
+      "Stanley"
+    ],
+    "region": "Americas",
+    "subregion": "South America",
+    "unMember": false,
+    "independent": false,
+    "area": 12173,
+    "latlng": [
+      -51.75,
+      -59
+    ]
+  },
+  {
+    "id": "FRO",
+    "iso2": "FO",
+    "name": "Faroe Islands",
+    "officialName": "Faroe Islands",
+    "capitals": [
+      "Tórshavn"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": false,
+    "independent": false,
+    "area": 1393,
+    "latlng": [
+      62,
+      -7
+    ]
+  },
+  {
+    "id": "FJI",
+    "iso2": "FJ",
+    "name": "Fiji",
+    "officialName": "Republic of Fiji",
+    "capitals": [
+      "Suva"
+    ],
+    "region": "Oceania",
+    "subregion": "Melanesia",
+    "unMember": true,
+    "independent": true,
+    "area": 18272,
+    "latlng": [
+      -18,
+      175
+    ]
+  },
+  {
+    "id": "FIN",
+    "iso2": "FI",
+    "name": "Finland",
+    "officialName": "Republic of Finland",
+    "capitals": [
+      "Helsinki"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 338424,
+    "latlng": [
+      64,
+      26
+    ]
+  },
+  {
+    "id": "FRA",
+    "iso2": "FR",
+    "name": "France",
+    "officialName": "French Republic",
+    "capitals": [
+      "Paris"
+    ],
+    "region": "Europe",
+    "subregion": "Western Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 551695,
+    "latlng": [
+      46,
+      2
+    ]
+  },
+  {
+    "id": "PYF",
+    "iso2": "PF",
+    "name": "French Polynesia",
+    "officialName": "French Polynesia",
+    "capitals": [
+      "Papeetē"
+    ],
+    "region": "Oceania",
+    "subregion": "Polynesia",
+    "unMember": false,
+    "independent": false,
+    "area": 4167,
+    "latlng": [
+      -15,
+      -140
+    ]
+  },
+  {
+    "id": "ATF",
+    "iso2": "TF",
+    "name": "French Southern and Antarctic Lands",
+    "officialName": "Territory of the French Southern and Antarctic Lands",
+    "capitals": [
+      "Port-aux-Français"
+    ],
+    "region": "Antarctic",
+    "subregion": "",
+    "unMember": false,
+    "independent": false,
+    "area": 7747,
+    "latlng": [
+      -49.25,
+      69.167
+    ]
+  },
+  {
+    "id": "GAB",
+    "iso2": "GA",
+    "name": "Gabon",
+    "officialName": "Gabonese Republic",
+    "capitals": [
+      "Libreville"
+    ],
+    "region": "Africa",
+    "subregion": "Middle Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 267668,
+    "latlng": [
+      -1,
+      11.75
+    ]
+  },
+  {
+    "id": "GMB",
+    "iso2": "GM",
+    "name": "Gambia",
+    "officialName": "Republic of the Gambia",
+    "capitals": [
+      "Banjul"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 10689,
+    "latlng": [
+      13.46666666,
+      -16.56666666
+    ]
+  },
+  {
+    "id": "GEO",
+    "iso2": "GE",
+    "name": "Georgia",
+    "officialName": "Georgia",
+    "capitals": [
+      "Tbilisi"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 69700,
+    "latlng": [
+      42,
+      43.5
+    ]
+  },
+  {
+    "id": "DEU",
+    "iso2": "DE",
+    "name": "Germany",
+    "officialName": "Federal Republic of Germany",
+    "capitals": [
+      "Berlin"
+    ],
+    "region": "Europe",
+    "subregion": "Western Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 357114,
+    "latlng": [
+      51,
+      9
+    ]
+  },
+  {
+    "id": "GHA",
+    "iso2": "GH",
+    "name": "Ghana",
+    "officialName": "Republic of Ghana",
+    "capitals": [
+      "Accra"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 238533,
+    "latlng": [
+      8,
+      -2
+    ]
+  },
+  {
+    "id": "GRC",
+    "iso2": "GR",
+    "name": "Greece",
+    "officialName": "Hellenic Republic",
+    "capitals": [
+      "Athens"
+    ],
+    "region": "Europe",
+    "subregion": "Southern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 131990,
+    "latlng": [
+      39,
+      22
+    ]
+  },
+  {
+    "id": "GRL",
+    "iso2": "GL",
+    "name": "Greenland",
+    "officialName": "Greenland",
+    "capitals": [
+      "Nuuk"
+    ],
+    "region": "Americas",
+    "subregion": "North America",
+    "unMember": false,
+    "independent": false,
+    "area": 2166086,
+    "latlng": [
+      72,
+      -40
+    ]
+  },
+  {
+    "id": "GRD",
+    "iso2": "GD",
+    "name": "Grenada",
+    "officialName": "Grenada",
+    "capitals": [
+      "St. George's"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": true,
+    "independent": true,
+    "area": 344,
+    "latlng": [
+      12.11666666,
+      -61.66666666
+    ]
+  },
+  {
+    "id": "GUM",
+    "iso2": "GU",
+    "name": "Guam",
+    "officialName": "Guam",
+    "capitals": [
+      "Hagåtña"
+    ],
+    "region": "Oceania",
+    "subregion": "Micronesia",
+    "unMember": false,
+    "independent": false,
+    "area": 549,
+    "latlng": [
+      13.46666666,
+      144.78333333
+    ]
+  },
+  {
+    "id": "GTM",
+    "iso2": "GT",
+    "name": "Guatemala",
+    "officialName": "Republic of Guatemala",
+    "capitals": [
+      "Guatemala City"
+    ],
+    "region": "Americas",
+    "subregion": "Central America",
+    "unMember": true,
+    "independent": true,
+    "area": 108889,
+    "latlng": [
+      15.5,
+      -90.25
+    ]
+  },
+  {
+    "id": "GGY",
+    "iso2": "GG",
+    "name": "Guernsey",
+    "officialName": "Bailiwick of Guernsey",
+    "capitals": [
+      "St. Peter Port"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": false,
+    "independent": false,
+    "area": 78,
+    "latlng": [
+      49.46666666,
+      -2.58333333
+    ]
+  },
+  {
+    "id": "GIN",
+    "iso2": "GN",
+    "name": "Guinea",
+    "officialName": "Republic of Guinea",
+    "capitals": [
+      "Conakry"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 245857,
+    "latlng": [
+      11,
+      -10
+    ]
+  },
+  {
+    "id": "GNB",
+    "iso2": "GW",
+    "name": "Guinea-Bissau",
+    "officialName": "Republic of Guinea-Bissau",
+    "capitals": [
+      "Bissau"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 36125,
+    "latlng": [
+      12,
+      -15
+    ]
+  },
+  {
+    "id": "GUY",
+    "iso2": "GY",
+    "name": "Guyana",
+    "officialName": "Co-operative Republic of Guyana",
+    "capitals": [
+      "Georgetown"
+    ],
+    "region": "Americas",
+    "subregion": "South America",
+    "unMember": true,
+    "independent": true,
+    "area": 214969,
+    "latlng": [
+      5,
+      -59
+    ]
+  },
+  {
+    "id": "HTI",
+    "iso2": "HT",
+    "name": "Haiti",
+    "officialName": "Republic of Haiti",
+    "capitals": [
+      "Port-au-Prince"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": true,
+    "independent": true,
+    "area": 27750,
+    "latlng": [
+      19,
+      -72.41666666
+    ]
+  },
+  {
+    "id": "HMD",
+    "iso2": "HM",
+    "name": "Heard Island and McDonald Islands",
+    "officialName": "Heard Island and McDonald Islands",
+    "capitals": [],
+    "region": "Antarctic",
+    "subregion": "",
+    "unMember": false,
+    "independent": false,
+    "area": 412,
+    "latlng": [
+      -53.1,
+      72.51666666
+    ]
+  },
+  {
+    "id": "HND",
+    "iso2": "HN",
+    "name": "Honduras",
+    "officialName": "Republic of Honduras",
+    "capitals": [
+      "Tegucigalpa"
+    ],
+    "region": "Americas",
+    "subregion": "Central America",
+    "unMember": true,
+    "independent": true,
+    "area": 112492,
+    "latlng": [
+      15,
+      -86.5
+    ]
+  },
+  {
+    "id": "HKG",
+    "iso2": "HK",
+    "name": "Hong Kong",
+    "officialName": "Hong Kong Special Administrative Region of the People's Republic of China",
+    "capitals": [
+      "City of Victoria"
+    ],
+    "region": "Asia",
+    "subregion": "Eastern Asia",
+    "unMember": false,
+    "independent": false,
+    "area": 1104,
+    "latlng": [
+      22.267,
+      114.188
+    ]
+  },
+  {
+    "id": "HUN",
+    "iso2": "HU",
+    "name": "Hungary",
+    "officialName": "Hungary",
+    "capitals": [
+      "Budapest"
+    ],
+    "region": "Europe",
+    "subregion": "Central Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 93028,
+    "latlng": [
+      47,
+      20
+    ]
+  },
+  {
+    "id": "ISL",
+    "iso2": "IS",
+    "name": "Iceland",
+    "officialName": "Iceland",
+    "capitals": [
+      "Reykjavik"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 103000,
+    "latlng": [
+      65,
+      -18
+    ]
+  },
+  {
+    "id": "IND",
+    "iso2": "IN",
+    "name": "India",
+    "officialName": "Republic of India",
+    "capitals": [
+      "New Delhi"
+    ],
+    "region": "Asia",
+    "subregion": "Southern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 3287590,
+    "latlng": [
+      20,
+      77
+    ]
+  },
+  {
+    "id": "IDN",
+    "iso2": "ID",
+    "name": "Indonesia",
+    "officialName": "Republic of Indonesia",
+    "capitals": [
+      "Jakarta"
+    ],
+    "region": "Asia",
+    "subregion": "South-Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 1904569,
+    "latlng": [
+      -5,
+      120
+    ]
+  },
+  {
+    "id": "IRN",
+    "iso2": "IR",
+    "name": "Iran",
+    "officialName": "Islamic Republic of Iran",
+    "capitals": [
+      "Tehran"
+    ],
+    "region": "Asia",
+    "subregion": "Southern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 1648195,
+    "latlng": [
+      32,
+      53
+    ]
+  },
+  {
+    "id": "IRQ",
+    "iso2": "IQ",
+    "name": "Iraq",
+    "officialName": "Republic of Iraq",
+    "capitals": [
+      "Baghdad"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 438317,
+    "latlng": [
+      33,
+      44
+    ]
+  },
+  {
+    "id": "IRL",
+    "iso2": "IE",
+    "name": "Ireland",
+    "officialName": "Republic of Ireland",
+    "capitals": [
+      "Dublin"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 70273,
+    "latlng": [
+      53,
+      -8
+    ]
+  },
+  {
+    "id": "IMN",
+    "iso2": "IM",
+    "name": "Isle of Man",
+    "officialName": "Isle of Man",
+    "capitals": [
+      "Douglas"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": false,
+    "independent": false,
+    "area": 572,
+    "latlng": [
+      54.25,
+      -4.5
+    ]
+  },
+  {
+    "id": "ISR",
+    "iso2": "IL",
+    "name": "Israel",
+    "officialName": "State of Israel",
+    "capitals": [
+      "Jerusalem"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 20770,
+    "latlng": [
+      31.47,
+      35.13
+    ]
+  },
+  {
+    "id": "ITA",
+    "iso2": "IT",
+    "name": "Italy",
+    "officialName": "Italian Republic",
+    "capitals": [
+      "Rome"
+    ],
+    "region": "Europe",
+    "subregion": "Southern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 301336,
+    "latlng": [
+      42.83333333,
+      12.83333333
+    ]
+  },
+  {
+    "id": "CIV",
+    "iso2": "CI",
+    "name": "Ivory Coast",
+    "officialName": "Republic of Côte d'Ivoire",
+    "capitals": [
+      "Yamoussoukro"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 322463,
+    "latlng": [
+      8,
+      -5
+    ]
+  },
+  {
+    "id": "JAM",
+    "iso2": "JM",
+    "name": "Jamaica",
+    "officialName": "Jamaica",
+    "capitals": [
+      "Kingston"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": true,
+    "independent": true,
+    "area": 10991,
+    "latlng": [
+      18.25,
+      -77.5
+    ]
+  },
+  {
+    "id": "JPN",
+    "iso2": "JP",
+    "name": "Japan",
+    "officialName": "Japan",
+    "capitals": [
+      "Tokyo"
+    ],
+    "region": "Asia",
+    "subregion": "Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 377930,
+    "latlng": [
+      36,
+      138
+    ]
+  },
+  {
+    "id": "JEY",
+    "iso2": "JE",
+    "name": "Jersey",
+    "officialName": "Bailiwick of Jersey",
+    "capitals": [
+      "Saint Helier"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": false,
+    "independent": false,
+    "area": 116,
+    "latlng": [
+      49.25,
+      -2.16666666
+    ]
+  },
+  {
+    "id": "JOR",
+    "iso2": "JO",
+    "name": "Jordan",
+    "officialName": "Hashemite Kingdom of Jordan",
+    "capitals": [
+      "Amman"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 89342,
+    "latlng": [
+      31,
+      36
+    ]
+  },
+  {
+    "id": "KAZ",
+    "iso2": "KZ",
+    "name": "Kazakhstan",
+    "officialName": "Republic of Kazakhstan",
+    "capitals": [
+      "Astana"
+    ],
+    "region": "Asia",
+    "subregion": "Central Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 2724900,
+    "latlng": [
+      48,
+      68
+    ]
+  },
+  {
+    "id": "KEN",
+    "iso2": "KE",
+    "name": "Kenya",
+    "officialName": "Republic of Kenya",
+    "capitals": [
+      "Nairobi"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 580367,
+    "latlng": [
+      1,
+      38
+    ]
+  },
+  {
+    "id": "KIR",
+    "iso2": "KI",
+    "name": "Kiribati",
+    "officialName": "Independent and Sovereign Republic of Kiribati",
+    "capitals": [
+      "South Tarawa"
+    ],
+    "region": "Oceania",
+    "subregion": "Micronesia",
+    "unMember": true,
+    "independent": true,
+    "area": 811,
+    "latlng": [
+      1.41666666,
+      173
+    ]
+  },
+  {
+    "id": "UNK",
+    "iso2": "XK",
+    "name": "Kosovo",
+    "officialName": "Republic of Kosovo",
+    "capitals": [
+      "Pristina"
+    ],
+    "region": "Europe",
+    "subregion": "Southeast Europe",
+    "unMember": false,
+    "independent": false,
+    "area": 10908,
+    "latlng": [
+      42.666667,
+      21.166667
+    ]
+  },
+  {
+    "id": "KWT",
+    "iso2": "KW",
+    "name": "Kuwait",
+    "officialName": "State of Kuwait",
+    "capitals": [
+      "Kuwait City"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 17818,
+    "latlng": [
+      29.5,
+      45.75
+    ]
+  },
+  {
+    "id": "KGZ",
+    "iso2": "KG",
+    "name": "Kyrgyzstan",
+    "officialName": "Kyrgyz Republic",
+    "capitals": [
+      "Bishkek"
+    ],
+    "region": "Asia",
+    "subregion": "Central Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 199951,
+    "latlng": [
+      41,
+      75
+    ]
+  },
+  {
+    "id": "LAO",
+    "iso2": "LA",
+    "name": "Laos",
+    "officialName": "Lao People's Democratic Republic",
+    "capitals": [
+      "Vientiane"
+    ],
+    "region": "Asia",
+    "subregion": "South-Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 236800,
+    "latlng": [
+      18,
+      105
+    ]
+  },
+  {
+    "id": "LVA",
+    "iso2": "LV",
+    "name": "Latvia",
+    "officialName": "Republic of Latvia",
+    "capitals": [
+      "Riga"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 64559,
+    "latlng": [
+      57,
+      25
+    ]
+  },
+  {
+    "id": "LBN",
+    "iso2": "LB",
+    "name": "Lebanon",
+    "officialName": "Lebanese Republic",
+    "capitals": [
+      "Beirut"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 10452,
+    "latlng": [
+      33.83333333,
+      35.83333333
+    ]
+  },
+  {
+    "id": "LSO",
+    "iso2": "LS",
+    "name": "Lesotho",
+    "officialName": "Kingdom of Lesotho",
+    "capitals": [
+      "Maseru"
+    ],
+    "region": "Africa",
+    "subregion": "Southern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 30355,
+    "latlng": [
+      -29.5,
+      28.5
+    ]
+  },
+  {
+    "id": "LBR",
+    "iso2": "LR",
+    "name": "Liberia",
+    "officialName": "Republic of Liberia",
+    "capitals": [
+      "Monrovia"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 111369,
+    "latlng": [
+      6.5,
+      -9.5
+    ]
+  },
+  {
+    "id": "LBY",
+    "iso2": "LY",
+    "name": "Libya",
+    "officialName": "State of Libya",
+    "capitals": [
+      "Tripoli"
+    ],
+    "region": "Africa",
+    "subregion": "Northern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 1759540,
+    "latlng": [
+      25,
+      17
+    ]
+  },
+  {
+    "id": "LIE",
+    "iso2": "LI",
+    "name": "Liechtenstein",
+    "officialName": "Principality of Liechtenstein",
+    "capitals": [
+      "Vaduz"
+    ],
+    "region": "Europe",
+    "subregion": "Western Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 160,
+    "latlng": [
+      47.26666666,
+      9.53333333
+    ]
+  },
+  {
+    "id": "LTU",
+    "iso2": "LT",
+    "name": "Lithuania",
+    "officialName": "Republic of Lithuania",
+    "capitals": [
+      "Vilnius"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 65300,
+    "latlng": [
+      56,
+      24
+    ]
+  },
+  {
+    "id": "LUX",
+    "iso2": "LU",
+    "name": "Luxembourg",
+    "officialName": "Grand Duchy of Luxembourg",
+    "capitals": [
+      "Luxembourg"
+    ],
+    "region": "Europe",
+    "subregion": "Western Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 2586,
+    "latlng": [
+      49.75,
+      6.16666666
+    ]
+  },
+  {
+    "id": "MAC",
+    "iso2": "MO",
+    "name": "Macau",
+    "officialName": "Macao Special Administrative Region of the People's Republic of China",
+    "capitals": [],
+    "region": "Asia",
+    "subregion": "Eastern Asia",
+    "unMember": false,
+    "independent": false,
+    "area": 30,
+    "latlng": [
+      22.16666666,
+      113.55
+    ]
+  },
+  {
+    "id": "MDG",
+    "iso2": "MG",
+    "name": "Madagascar",
+    "officialName": "Republic of Madagascar",
+    "capitals": [
+      "Antananarivo"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 587041,
+    "latlng": [
+      -20,
+      47
+    ]
+  },
+  {
+    "id": "MWI",
+    "iso2": "MW",
+    "name": "Malawi",
+    "officialName": "Republic of Malawi",
+    "capitals": [
+      "Lilongwe"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 118484,
+    "latlng": [
+      -13.5,
+      34
+    ]
+  },
+  {
+    "id": "MYS",
+    "iso2": "MY",
+    "name": "Malaysia",
+    "officialName": "Malaysia",
+    "capitals": [
+      "Kuala Lumpur"
+    ],
+    "region": "Asia",
+    "subregion": "South-Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 330803,
+    "latlng": [
+      2.5,
+      112.5
+    ]
+  },
+  {
+    "id": "MDV",
+    "iso2": "MV",
+    "name": "Maldives",
+    "officialName": "Republic of the Maldives",
+    "capitals": [
+      "Malé"
+    ],
+    "region": "Asia",
+    "subregion": "Southern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 300,
+    "latlng": [
+      3.25,
+      73
+    ]
+  },
+  {
+    "id": "MLI",
+    "iso2": "ML",
+    "name": "Mali",
+    "officialName": "Republic of Mali",
+    "capitals": [
+      "Bamako"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 1240192,
+    "latlng": [
+      17,
+      -4
+    ]
+  },
+  {
+    "id": "MLT",
+    "iso2": "MT",
+    "name": "Malta",
+    "officialName": "Republic of Malta",
+    "capitals": [
+      "Valletta"
+    ],
+    "region": "Europe",
+    "subregion": "Southern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 316,
+    "latlng": [
+      35.83333333,
+      14.58333333
+    ]
+  },
+  {
+    "id": "MHL",
+    "iso2": "MH",
+    "name": "Marshall Islands",
+    "officialName": "Republic of the Marshall Islands",
+    "capitals": [
+      "Majuro"
+    ],
+    "region": "Oceania",
+    "subregion": "Micronesia",
+    "unMember": true,
+    "independent": true,
+    "area": 181,
+    "latlng": [
+      9,
+      168
+    ]
+  },
+  {
+    "id": "MRT",
+    "iso2": "MR",
+    "name": "Mauritania",
+    "officialName": "Islamic Republic of Mauritania",
+    "capitals": [
+      "Nouakchott"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 1030700,
+    "latlng": [
+      20,
+      -12
+    ]
+  },
+  {
+    "id": "MUS",
+    "iso2": "MU",
+    "name": "Mauritius",
+    "officialName": "Republic of Mauritius",
+    "capitals": [
+      "Port Louis"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 2040,
+    "latlng": [
+      -20.28333333,
+      57.55
+    ]
+  },
+  {
+    "id": "MEX",
+    "iso2": "MX",
+    "name": "Mexico",
+    "officialName": "United Mexican States",
+    "capitals": [
+      "Mexico City"
+    ],
+    "region": "Americas",
+    "subregion": "North America",
+    "unMember": true,
+    "independent": true,
+    "area": 1964375,
+    "latlng": [
+      23,
+      -102
+    ]
+  },
+  {
+    "id": "FSM",
+    "iso2": "FM",
+    "name": "Micronesia",
+    "officialName": "Federated States of Micronesia",
+    "capitals": [
+      "Palikir"
+    ],
+    "region": "Oceania",
+    "subregion": "Micronesia",
+    "unMember": true,
+    "independent": true,
+    "area": 702,
+    "latlng": [
+      6.91666666,
+      158.25
+    ]
+  },
+  {
+    "id": "MDA",
+    "iso2": "MD",
+    "name": "Moldova",
+    "officialName": "Republic of Moldova",
+    "capitals": [
+      "Chișinău"
+    ],
+    "region": "Europe",
+    "subregion": "Eastern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 33846,
+    "latlng": [
+      47,
+      29
+    ]
+  },
+  {
+    "id": "MCO",
+    "iso2": "MC",
+    "name": "Monaco",
+    "officialName": "Principality of Monaco",
+    "capitals": [
+      "Monaco"
+    ],
+    "region": "Europe",
+    "subregion": "Western Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 2.02,
+    "latlng": [
+      43.73333333,
+      7.4
+    ]
+  },
+  {
+    "id": "MNG",
+    "iso2": "MN",
+    "name": "Mongolia",
+    "officialName": "Mongolia",
+    "capitals": [
+      "Ulan Bator"
+    ],
+    "region": "Asia",
+    "subregion": "Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 1564110,
+    "latlng": [
+      46,
+      105
+    ]
+  },
+  {
+    "id": "MNE",
+    "iso2": "ME",
+    "name": "Montenegro",
+    "officialName": "Montenegro",
+    "capitals": [
+      "Podgorica"
+    ],
+    "region": "Europe",
+    "subregion": "Southeast Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 13812,
+    "latlng": [
+      42.5,
+      19.3
+    ]
+  },
+  {
+    "id": "MSR",
+    "iso2": "MS",
+    "name": "Montserrat",
+    "officialName": "Montserrat",
+    "capitals": [
+      "Plymouth"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": false,
+    "independent": false,
+    "area": 102,
+    "latlng": [
+      16.75,
+      -62.2
+    ]
+  },
+  {
+    "id": "MAR",
+    "iso2": "MA",
+    "name": "Morocco",
+    "officialName": "Kingdom of Morocco",
+    "capitals": [
+      "Rabat"
+    ],
+    "region": "Africa",
+    "subregion": "Northern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 446550,
+    "latlng": [
+      32,
+      -5
+    ]
+  },
+  {
+    "id": "MOZ",
+    "iso2": "MZ",
+    "name": "Mozambique",
+    "officialName": "Republic of Mozambique",
+    "capitals": [
+      "Maputo"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 801590,
+    "latlng": [
+      -18.25,
+      35
+    ]
+  },
+  {
+    "id": "MMR",
+    "iso2": "MM",
+    "name": "Myanmar",
+    "officialName": "Republic of the Union of Myanmar",
+    "capitals": [
+      "Naypyidaw"
+    ],
+    "region": "Asia",
+    "subregion": "South-Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 676578,
+    "latlng": [
+      22,
+      98
+    ]
+  },
+  {
+    "id": "NAM",
+    "iso2": "NA",
+    "name": "Namibia",
+    "officialName": "Republic of Namibia",
+    "capitals": [
+      "Windhoek"
+    ],
+    "region": "Africa",
+    "subregion": "Southern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 825615,
+    "latlng": [
+      -22,
+      17
+    ]
+  },
+  {
+    "id": "NRU",
+    "iso2": "NR",
+    "name": "Nauru",
+    "officialName": "Republic of Nauru",
+    "capitals": [
+      "Yaren"
+    ],
+    "region": "Oceania",
+    "subregion": "Micronesia",
+    "unMember": true,
+    "independent": true,
+    "area": 21,
+    "latlng": [
+      -0.53333333,
+      166.91666666
+    ]
+  },
+  {
+    "id": "NPL",
+    "iso2": "NP",
+    "name": "Nepal",
+    "officialName": "Federal Democratic Republic of Nepal",
+    "capitals": [
+      "Kathmandu"
+    ],
+    "region": "Asia",
+    "subregion": "Southern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 147181,
+    "latlng": [
+      28,
+      84
+    ]
+  },
+  {
+    "id": "NLD",
+    "iso2": "NL",
+    "name": "Netherlands",
+    "officialName": "Kingdom of the Netherlands",
+    "capitals": [
+      "Amsterdam"
+    ],
+    "region": "Europe",
+    "subregion": "Western Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 41850,
+    "latlng": [
+      52.5,
+      5.75
+    ]
+  },
+  {
+    "id": "NCL",
+    "iso2": "NC",
+    "name": "New Caledonia",
+    "officialName": "New Caledonia",
+    "capitals": [
+      "Nouméa"
+    ],
+    "region": "Oceania",
+    "subregion": "Melanesia",
+    "unMember": false,
+    "independent": false,
+    "area": 18575,
+    "latlng": [
+      -21.5,
+      165.5
+    ]
+  },
+  {
+    "id": "NZL",
+    "iso2": "NZ",
+    "name": "New Zealand",
+    "officialName": "New Zealand",
+    "capitals": [
+      "Wellington"
+    ],
+    "region": "Oceania",
+    "subregion": "Australia and New Zealand",
+    "unMember": true,
+    "independent": true,
+    "area": 270467,
+    "latlng": [
+      -41,
+      174
+    ]
+  },
+  {
+    "id": "NIC",
+    "iso2": "NI",
+    "name": "Nicaragua",
+    "officialName": "Republic of Nicaragua",
+    "capitals": [
+      "Managua"
+    ],
+    "region": "Americas",
+    "subregion": "Central America",
+    "unMember": true,
+    "independent": true,
+    "area": 130373,
+    "latlng": [
+      13,
+      -85
+    ]
+  },
+  {
+    "id": "NER",
+    "iso2": "NE",
+    "name": "Niger",
+    "officialName": "Republic of Niger",
+    "capitals": [
+      "Niamey"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 1267000,
+    "latlng": [
+      16,
+      8
+    ]
+  },
+  {
+    "id": "NGA",
+    "iso2": "NG",
+    "name": "Nigeria",
+    "officialName": "Federal Republic of Nigeria",
+    "capitals": [
+      "Abuja"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 923768,
+    "latlng": [
+      10,
+      8
+    ]
+  },
+  {
+    "id": "NIU",
+    "iso2": "NU",
+    "name": "Niue",
+    "officialName": "Niue",
+    "capitals": [
+      "Alofi"
+    ],
+    "region": "Oceania",
+    "subregion": "Polynesia",
+    "unMember": false,
+    "independent": false,
+    "area": 260,
+    "latlng": [
+      -19.03333333,
+      -169.86666666
+    ]
+  },
+  {
+    "id": "NFK",
+    "iso2": "NF",
+    "name": "Norfolk Island",
+    "officialName": "Territory of Norfolk Island",
+    "capitals": [
+      "Kingston"
+    ],
+    "region": "Oceania",
+    "subregion": "Australia and New Zealand",
+    "unMember": false,
+    "independent": false,
+    "area": 36,
+    "latlng": [
+      -29.03333333,
+      167.95
+    ]
+  },
+  {
+    "id": "PRK",
+    "iso2": "KP",
+    "name": "North Korea",
+    "officialName": "Democratic People's Republic of Korea",
+    "capitals": [
+      "Pyongyang"
+    ],
+    "region": "Asia",
+    "subregion": "Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 120538,
+    "latlng": [
+      40,
+      127
+    ]
+  },
+  {
+    "id": "MKD",
+    "iso2": "MK",
+    "name": "North Macedonia",
+    "officialName": "Republic of North Macedonia",
+    "capitals": [
+      "Skopje"
+    ],
+    "region": "Europe",
+    "subregion": "Southeast Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 25713,
+    "latlng": [
+      41.83333333,
+      22
+    ]
+  },
+  {
+    "id": "MNP",
+    "iso2": "MP",
+    "name": "Northern Mariana Islands",
+    "officialName": "Commonwealth of the Northern Mariana Islands",
+    "capitals": [
+      "Saipan"
+    ],
+    "region": "Oceania",
+    "subregion": "Micronesia",
+    "unMember": false,
+    "independent": false,
+    "area": 464,
+    "latlng": [
+      15.2,
+      145.75
+    ]
+  },
+  {
+    "id": "NOR",
+    "iso2": "NO",
+    "name": "Norway",
+    "officialName": "Kingdom of Norway",
+    "capitals": [
+      "Oslo"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 323802,
+    "latlng": [
+      62,
+      10
+    ]
+  },
+  {
+    "id": "OMN",
+    "iso2": "OM",
+    "name": "Oman",
+    "officialName": "Sultanate of Oman",
+    "capitals": [
+      "Muscat"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 309500,
+    "latlng": [
+      21,
+      57
+    ]
+  },
+  {
+    "id": "PAK",
+    "iso2": "PK",
+    "name": "Pakistan",
+    "officialName": "Islamic Republic of Pakistan",
+    "capitals": [
+      "Islamabad"
+    ],
+    "region": "Asia",
+    "subregion": "Southern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 881912,
+    "latlng": [
+      30,
+      70
+    ]
+  },
+  {
+    "id": "PLW",
+    "iso2": "PW",
+    "name": "Palau",
+    "officialName": "Republic of Palau",
+    "capitals": [
+      "Ngerulmud"
+    ],
+    "region": "Oceania",
+    "subregion": "Micronesia",
+    "unMember": true,
+    "independent": true,
+    "area": 459,
+    "latlng": [
+      7.5,
+      134.5
+    ]
+  },
+  {
+    "id": "PSE",
+    "iso2": "PS",
+    "name": "Palestine",
+    "officialName": "State of Palestine",
+    "capitals": [
+      "Ramallah"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": false,
+    "independent": false,
+    "area": 6220,
+    "latlng": [
+      31.9,
+      35.2
+    ]
+  },
+  {
+    "id": "PAN",
+    "iso2": "PA",
+    "name": "Panama",
+    "officialName": "Republic of Panama",
+    "capitals": [
+      "Panama City"
+    ],
+    "region": "Americas",
+    "subregion": "Central America",
+    "unMember": true,
+    "independent": true,
+    "area": 75417,
+    "latlng": [
+      9,
+      -80
+    ]
+  },
+  {
+    "id": "PNG",
+    "iso2": "PG",
+    "name": "Papua New Guinea",
+    "officialName": "Independent State of Papua New Guinea",
+    "capitals": [
+      "Port Moresby"
+    ],
+    "region": "Oceania",
+    "subregion": "Melanesia",
+    "unMember": true,
+    "independent": true,
+    "area": 462840,
+    "latlng": [
+      -6,
+      147
+    ]
+  },
+  {
+    "id": "PRY",
+    "iso2": "PY",
+    "name": "Paraguay",
+    "officialName": "Republic of Paraguay",
+    "capitals": [
+      "Asunción"
+    ],
+    "region": "Americas",
+    "subregion": "South America",
+    "unMember": true,
+    "independent": true,
+    "area": 406752,
+    "latlng": [
+      -23,
+      -58
+    ]
+  },
+  {
+    "id": "PER",
+    "iso2": "PE",
+    "name": "Peru",
+    "officialName": "Republic of Peru",
+    "capitals": [
+      "Lima"
+    ],
+    "region": "Americas",
+    "subregion": "South America",
+    "unMember": true,
+    "independent": true,
+    "area": 1285216,
+    "latlng": [
+      -10,
+      -76
+    ]
+  },
+  {
+    "id": "PHL",
+    "iso2": "PH",
+    "name": "Philippines",
+    "officialName": "Republic of the Philippines",
+    "capitals": [
+      "Manila"
+    ],
+    "region": "Asia",
+    "subregion": "South-Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 342353,
+    "latlng": [
+      13,
+      122
+    ]
+  },
+  {
+    "id": "PCN",
+    "iso2": "PN",
+    "name": "Pitcairn Islands",
+    "officialName": "Pitcairn Group of Islands",
+    "capitals": [
+      "Adamstown"
+    ],
+    "region": "Oceania",
+    "subregion": "Polynesia",
+    "unMember": false,
+    "independent": false,
+    "area": 47,
+    "latlng": [
+      -25.06666666,
+      -130.1
+    ]
+  },
+  {
+    "id": "POL",
+    "iso2": "PL",
+    "name": "Poland",
+    "officialName": "Republic of Poland",
+    "capitals": [
+      "Warsaw"
+    ],
+    "region": "Europe",
+    "subregion": "Central Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 312679,
+    "latlng": [
+      52,
+      20
+    ]
+  },
+  {
+    "id": "PRT",
+    "iso2": "PT",
+    "name": "Portugal",
+    "officialName": "Portuguese Republic",
+    "capitals": [
+      "Lisbon"
+    ],
+    "region": "Europe",
+    "subregion": "Southern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 92090,
+    "latlng": [
+      39.5,
+      -8
+    ]
+  },
+  {
+    "id": "PRI",
+    "iso2": "PR",
+    "name": "Puerto Rico",
+    "officialName": "Commonwealth of Puerto Rico",
+    "capitals": [
+      "San Juan"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": false,
+    "independent": false,
+    "area": 8870,
+    "latlng": [
+      18.25,
+      -66.5
+    ]
+  },
+  {
+    "id": "QAT",
+    "iso2": "QA",
+    "name": "Qatar",
+    "officialName": "State of Qatar",
+    "capitals": [
+      "Doha"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 11586,
+    "latlng": [
+      25.5,
+      51.25
+    ]
+  },
+  {
+    "id": "ROU",
+    "iso2": "RO",
+    "name": "Romania",
+    "officialName": "Romania",
+    "capitals": [
+      "Bucharest"
+    ],
+    "region": "Europe",
+    "subregion": "Southeast Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 238391,
+    "latlng": [
+      46,
+      25
+    ]
+  },
+  {
+    "id": "RUS",
+    "iso2": "RU",
+    "name": "Russia",
+    "officialName": "Russian Federation",
+    "capitals": [
+      "Moscow"
+    ],
+    "region": "Europe",
+    "subregion": "Eastern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 17098242,
+    "latlng": [
+      60,
+      100
+    ]
+  },
+  {
+    "id": "RWA",
+    "iso2": "RW",
+    "name": "Rwanda",
+    "officialName": "Republic of Rwanda",
+    "capitals": [
+      "Kigali"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 26338,
+    "latlng": [
+      -2,
+      30
+    ]
+  },
+  {
+    "id": "BLM",
+    "iso2": "BL",
+    "name": "Saint Barthélemy",
+    "officialName": "Collectivity of Saint Barthélemy",
+    "capitals": [
+      "Gustavia"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": false,
+    "independent": false,
+    "area": 21,
+    "latlng": [
+      18.5,
+      -63.41666666
+    ]
+  },
+  {
+    "id": "SHN",
+    "iso2": "SH",
+    "name": "Saint Helena, Ascension and Tristan da Cunha",
+    "officialName": "Saint Helena, Ascension and Tristan da Cunha",
+    "capitals": [
+      "Jamestown"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": false,
+    "independent": false,
+    "area": 394,
+    "latlng": [
+      -15.95,
+      -5.72
+    ]
+  },
+  {
+    "id": "KNA",
+    "iso2": "KN",
+    "name": "Saint Kitts and Nevis",
+    "officialName": "Federation of Saint Christopher and Nevis",
+    "capitals": [
+      "Basseterre"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": true,
+    "independent": true,
+    "area": 261,
+    "latlng": [
+      17.33333333,
+      -62.75
+    ]
+  },
+  {
+    "id": "LCA",
+    "iso2": "LC",
+    "name": "Saint Lucia",
+    "officialName": "Saint Lucia",
+    "capitals": [
+      "Castries"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": true,
+    "independent": true,
+    "area": 616,
+    "latlng": [
+      13.88333333,
+      -60.96666666
+    ]
+  },
+  {
+    "id": "MAF",
+    "iso2": "MF",
+    "name": "Saint Martin",
+    "officialName": "Saint Martin",
+    "capitals": [
+      "Marigot"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": false,
+    "independent": false,
+    "area": 53,
+    "latlng": [
+      18.08333333,
+      -63.95
+    ]
+  },
+  {
+    "id": "SPM",
+    "iso2": "PM",
+    "name": "Saint Pierre and Miquelon",
+    "officialName": "Saint Pierre and Miquelon",
+    "capitals": [
+      "Saint-Pierre"
+    ],
+    "region": "Americas",
+    "subregion": "North America",
+    "unMember": false,
+    "independent": false,
+    "area": 242,
+    "latlng": [
+      46.83333333,
+      -56.33333333
+    ]
+  },
+  {
+    "id": "VCT",
+    "iso2": "VC",
+    "name": "Saint Vincent and the Grenadines",
+    "officialName": "Saint Vincent and the Grenadines",
+    "capitals": [
+      "Kingstown"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": true,
+    "independent": true,
+    "area": 389,
+    "latlng": [
+      13.25,
+      -61.2
+    ]
+  },
+  {
+    "id": "WSM",
+    "iso2": "WS",
+    "name": "Samoa",
+    "officialName": "Independent State of Samoa",
+    "capitals": [
+      "Apia"
+    ],
+    "region": "Oceania",
+    "subregion": "Polynesia",
+    "unMember": true,
+    "independent": true,
+    "area": 2842,
+    "latlng": [
+      -13.58333333,
+      -172.33333333
+    ]
+  },
+  {
+    "id": "SMR",
+    "iso2": "SM",
+    "name": "San Marino",
+    "officialName": "Most Serene Republic of San Marino",
+    "capitals": [
+      "City of San Marino"
+    ],
+    "region": "Europe",
+    "subregion": "Southern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 61,
+    "latlng": [
+      43.76666666,
+      12.41666666
+    ]
+  },
+  {
+    "id": "STP",
+    "iso2": "ST",
+    "name": "São Tomé and Príncipe",
+    "officialName": "Democratic Republic of São Tomé and Príncipe",
+    "capitals": [
+      "São Tomé"
+    ],
+    "region": "Africa",
+    "subregion": "Middle Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 964,
+    "latlng": [
+      1,
+      7
+    ]
+  },
+  {
+    "id": "SAU",
+    "iso2": "SA",
+    "name": "Saudi Arabia",
+    "officialName": "Kingdom of Saudi Arabia",
+    "capitals": [
+      "Riyadh"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 2149690,
+    "latlng": [
+      25,
+      45
+    ]
+  },
+  {
+    "id": "SEN",
+    "iso2": "SN",
+    "name": "Senegal",
+    "officialName": "Republic of Senegal",
+    "capitals": [
+      "Dakar"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 196722,
+    "latlng": [
+      14,
+      -14
+    ]
+  },
+  {
+    "id": "SRB",
+    "iso2": "RS",
+    "name": "Serbia",
+    "officialName": "Republic of Serbia",
+    "capitals": [
+      "Belgrade"
+    ],
+    "region": "Europe",
+    "subregion": "Southeast Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 88361,
+    "latlng": [
+      44,
+      21
+    ]
+  },
+  {
+    "id": "SYC",
+    "iso2": "SC",
+    "name": "Seychelles",
+    "officialName": "Republic of Seychelles",
+    "capitals": [
+      "Victoria"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 452,
+    "latlng": [
+      -4.58333333,
+      55.66666666
+    ]
+  },
+  {
+    "id": "SLE",
+    "iso2": "SL",
+    "name": "Sierra Leone",
+    "officialName": "Republic of Sierra Leone",
+    "capitals": [
+      "Freetown"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 71740,
+    "latlng": [
+      8.5,
+      -11.5
+    ]
+  },
+  {
+    "id": "SGP",
+    "iso2": "SG",
+    "name": "Singapore",
+    "officialName": "Republic of Singapore",
+    "capitals": [
+      "Singapore"
+    ],
+    "region": "Asia",
+    "subregion": "South-Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 710,
+    "latlng": [
+      1.36666666,
+      103.8
+    ]
+  },
+  {
+    "id": "SXM",
+    "iso2": "SX",
+    "name": "Sint Maarten",
+    "officialName": "Sint Maarten",
+    "capitals": [
+      "Philipsburg"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": false,
+    "independent": false,
+    "area": 34,
+    "latlng": [
+      18.033333,
+      -63.05
+    ]
+  },
+  {
+    "id": "SVK",
+    "iso2": "SK",
+    "name": "Slovakia",
+    "officialName": "Slovak Republic",
+    "capitals": [
+      "Bratislava"
+    ],
+    "region": "Europe",
+    "subregion": "Central Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 49037,
+    "latlng": [
+      48.66666666,
+      19.5
+    ]
+  },
+  {
+    "id": "SVN",
+    "iso2": "SI",
+    "name": "Slovenia",
+    "officialName": "Republic of Slovenia",
+    "capitals": [
+      "Ljubljana"
+    ],
+    "region": "Europe",
+    "subregion": "Central Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 20273,
+    "latlng": [
+      46.11666666,
+      14.81666666
+    ]
+  },
+  {
+    "id": "SLB",
+    "iso2": "SB",
+    "name": "Solomon Islands",
+    "officialName": "Solomon Islands",
+    "capitals": [
+      "Honiara"
+    ],
+    "region": "Oceania",
+    "subregion": "Melanesia",
+    "unMember": true,
+    "independent": true,
+    "area": 28896,
+    "latlng": [
+      -8,
+      159
+    ]
+  },
+  {
+    "id": "SOM",
+    "iso2": "SO",
+    "name": "Somalia",
+    "officialName": "Federal Republic of Somalia",
+    "capitals": [
+      "Mogadishu"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 637657,
+    "latlng": [
+      10,
+      49
+    ]
+  },
+  {
+    "id": "ZAF",
+    "iso2": "ZA",
+    "name": "South Africa",
+    "officialName": "Republic of South Africa",
+    "capitals": [
+      "Pretoria",
+      "Bloemfontein",
+      "Cape Town"
+    ],
+    "region": "Africa",
+    "subregion": "Southern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 1221037,
+    "latlng": [
+      -29,
+      24
+    ]
+  },
+  {
+    "id": "SGS",
+    "iso2": "GS",
+    "name": "South Georgia",
+    "officialName": "South Georgia and the South Sandwich Islands",
+    "capitals": [
+      "King Edward Point"
+    ],
+    "region": "Antarctic",
+    "subregion": "",
+    "unMember": false,
+    "independent": false,
+    "area": 3903,
+    "latlng": [
+      -54.5,
+      -37
+    ]
+  },
+  {
+    "id": "KOR",
+    "iso2": "KR",
+    "name": "South Korea",
+    "officialName": "Republic of Korea",
+    "capitals": [
+      "Seoul"
+    ],
+    "region": "Asia",
+    "subregion": "Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 100210,
+    "latlng": [
+      37,
+      127.5
+    ]
+  },
+  {
+    "id": "SSD",
+    "iso2": "SS",
+    "name": "South Sudan",
+    "officialName": "Republic of South Sudan",
+    "capitals": [
+      "Juba"
+    ],
+    "region": "Africa",
+    "subregion": "Middle Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 619745,
+    "latlng": [
+      7,
+      30
+    ]
+  },
+  {
+    "id": "ESP",
+    "iso2": "ES",
+    "name": "Spain",
+    "officialName": "Kingdom of Spain",
+    "capitals": [
+      "Madrid"
+    ],
+    "region": "Europe",
+    "subregion": "Southern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 505992,
+    "latlng": [
+      40,
+      -4
+    ]
+  },
+  {
+    "id": "LKA",
+    "iso2": "LK",
+    "name": "Sri Lanka",
+    "officialName": "Democratic Socialist Republic of Sri Lanka",
+    "capitals": [
+      "Colombo"
+    ],
+    "region": "Asia",
+    "subregion": "Southern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 65610,
+    "latlng": [
+      7,
+      81
+    ]
+  },
+  {
+    "id": "SDN",
+    "iso2": "SD",
+    "name": "Sudan",
+    "officialName": "Republic of the Sudan",
+    "capitals": [
+      "Khartoum"
+    ],
+    "region": "Africa",
+    "subregion": "Northern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 1886068,
+    "latlng": [
+      15,
+      30
+    ]
+  },
+  {
+    "id": "SUR",
+    "iso2": "SR",
+    "name": "Suriname",
+    "officialName": "Republic of Suriname",
+    "capitals": [
+      "Paramaribo"
+    ],
+    "region": "Americas",
+    "subregion": "South America",
+    "unMember": true,
+    "independent": true,
+    "area": 163820,
+    "latlng": [
+      4,
+      -56
+    ]
+  },
+  {
+    "id": "SWE",
+    "iso2": "SE",
+    "name": "Sweden",
+    "officialName": "Kingdom of Sweden",
+    "capitals": [
+      "Stockholm"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 450295,
+    "latlng": [
+      62,
+      15
+    ]
+  },
+  {
+    "id": "CHE",
+    "iso2": "CH",
+    "name": "Switzerland",
+    "officialName": "Swiss Confederation",
+    "capitals": [
+      "Bern"
+    ],
+    "region": "Europe",
+    "subregion": "Western Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 41284,
+    "latlng": [
+      47,
+      8
+    ]
+  },
+  {
+    "id": "SYR",
+    "iso2": "SY",
+    "name": "Syria",
+    "officialName": "Syrian Arab Republic",
+    "capitals": [
+      "Damascus"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 185180,
+    "latlng": [
+      35,
+      38
+    ]
+  },
+  {
+    "id": "TWN",
+    "iso2": "TW",
+    "name": "Taiwan",
+    "officialName": "Republic of China (Taiwan)",
+    "capitals": [
+      "Taipei"
+    ],
+    "region": "Asia",
+    "subregion": "Eastern Asia",
+    "unMember": false,
+    "independent": false,
+    "area": 36193,
+    "latlng": [
+      23.5,
+      121
+    ]
+  },
+  {
+    "id": "TJK",
+    "iso2": "TJ",
+    "name": "Tajikistan",
+    "officialName": "Republic of Tajikistan",
+    "capitals": [
+      "Dushanbe"
+    ],
+    "region": "Asia",
+    "subregion": "Central Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 143100,
+    "latlng": [
+      39,
+      71
+    ]
+  },
+  {
+    "id": "TZA",
+    "iso2": "TZ",
+    "name": "Tanzania",
+    "officialName": "United Republic of Tanzania",
+    "capitals": [
+      "Dodoma"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 945087,
+    "latlng": [
+      -6,
+      35
+    ]
+  },
+  {
+    "id": "THA",
+    "iso2": "TH",
+    "name": "Thailand",
+    "officialName": "Kingdom of Thailand",
+    "capitals": [
+      "Bangkok"
+    ],
+    "region": "Asia",
+    "subregion": "South-Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 513120,
+    "latlng": [
+      15,
+      100
+    ]
+  },
+  {
+    "id": "TLS",
+    "iso2": "TL",
+    "name": "Timor-Leste",
+    "officialName": "Democratic Republic of Timor-Leste",
+    "capitals": [
+      "Dili"
+    ],
+    "region": "Asia",
+    "subregion": "South-Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 14874,
+    "latlng": [
+      -8.83333333,
+      125.91666666
+    ]
+  },
+  {
+    "id": "TGO",
+    "iso2": "TG",
+    "name": "Togo",
+    "officialName": "Togolese Republic",
+    "capitals": [
+      "Lomé"
+    ],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 56785,
+    "latlng": [
+      8,
+      1.16666666
+    ]
+  },
+  {
+    "id": "TON",
+    "iso2": "TO",
+    "name": "Tonga",
+    "officialName": "Kingdom of Tonga",
+    "capitals": [
+      "Nuku'alofa"
+    ],
+    "region": "Oceania",
+    "subregion": "Polynesia",
+    "unMember": true,
+    "independent": true,
+    "area": 747,
+    "latlng": [
+      -20,
+      -175
+    ]
+  },
+  {
+    "id": "TTO",
+    "iso2": "TT",
+    "name": "Trinidad and Tobago",
+    "officialName": "Republic of Trinidad and Tobago",
+    "capitals": [
+      "Port of Spain"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": true,
+    "independent": true,
+    "area": 5130,
+    "latlng": [
+      11,
+      -61
+    ]
+  },
+  {
+    "id": "TUN",
+    "iso2": "TN",
+    "name": "Tunisia",
+    "officialName": "Tunisian Republic",
+    "capitals": [
+      "Tunis"
+    ],
+    "region": "Africa",
+    "subregion": "Northern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 163610,
+    "latlng": [
+      34,
+      9
+    ]
+  },
+  {
+    "id": "TUR",
+    "iso2": "TR",
+    "name": "Türkiye",
+    "officialName": "Republic of Türkiye",
+    "capitals": [
+      "Ankara"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 783562,
+    "latlng": [
+      39,
+      35
+    ]
+  },
+  {
+    "id": "TKM",
+    "iso2": "TM",
+    "name": "Turkmenistan",
+    "officialName": "Turkmenistan",
+    "capitals": [
+      "Ashgabat"
+    ],
+    "region": "Asia",
+    "subregion": "Central Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 488100,
+    "latlng": [
+      40,
+      60
+    ]
+  },
+  {
+    "id": "TCA",
+    "iso2": "TC",
+    "name": "Turks and Caicos Islands",
+    "officialName": "Turks and Caicos Islands",
+    "capitals": [
+      "Cockburn Town"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": false,
+    "independent": false,
+    "area": 948,
+    "latlng": [
+      21.75,
+      -71.58333333
+    ]
+  },
+  {
+    "id": "TUV",
+    "iso2": "TV",
+    "name": "Tuvalu",
+    "officialName": "Tuvalu",
+    "capitals": [
+      "Funafuti"
+    ],
+    "region": "Oceania",
+    "subregion": "Polynesia",
+    "unMember": true,
+    "independent": true,
+    "area": 26,
+    "latlng": [
+      -8,
+      178
+    ]
+  },
+  {
+    "id": "UGA",
+    "iso2": "UG",
+    "name": "Uganda",
+    "officialName": "Republic of Uganda",
+    "capitals": [
+      "Kampala"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 241550,
+    "latlng": [
+      1,
+      32
+    ]
+  },
+  {
+    "id": "UKR",
+    "iso2": "UA",
+    "name": "Ukraine",
+    "officialName": "Ukraine",
+    "capitals": [
+      "Kyiv"
+    ],
+    "region": "Europe",
+    "subregion": "Eastern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 603500,
+    "latlng": [
+      49,
+      32
+    ]
+  },
+  {
+    "id": "ARE",
+    "iso2": "AE",
+    "name": "United Arab Emirates",
+    "officialName": "United Arab Emirates",
+    "capitals": [
+      "Abu Dhabi"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 83600,
+    "latlng": [
+      24,
+      54
+    ]
+  },
+  {
+    "id": "GBR",
+    "iso2": "GB",
+    "name": "United Kingdom",
+    "officialName": "United Kingdom of Great Britain and Northern Ireland",
+    "capitals": [
+      "London"
+    ],
+    "region": "Europe",
+    "subregion": "Northern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 242900,
+    "latlng": [
+      54,
+      -2
+    ]
+  },
+  {
+    "id": "USA",
+    "iso2": "US",
+    "name": "United States",
+    "officialName": "United States of America",
+    "capitals": [
+      "Washington D.C."
+    ],
+    "region": "Americas",
+    "subregion": "North America",
+    "unMember": true,
+    "independent": true,
+    "area": 9372610,
+    "latlng": [
+      38,
+      -97
+    ]
+  },
+  {
+    "id": "VIR",
+    "iso2": "VI",
+    "name": "United States Virgin Islands",
+    "officialName": "Virgin Islands of the United States",
+    "capitals": [
+      "Charlotte Amalie"
+    ],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "unMember": false,
+    "independent": false,
+    "area": 347,
+    "latlng": [
+      18.35,
+      -64.933333
+    ]
+  },
+  {
+    "id": "URY",
+    "iso2": "UY",
+    "name": "Uruguay",
+    "officialName": "Oriental Republic of Uruguay",
+    "capitals": [
+      "Montevideo"
+    ],
+    "region": "Americas",
+    "subregion": "South America",
+    "unMember": true,
+    "independent": true,
+    "area": 181034,
+    "latlng": [
+      -33,
+      -56
+    ]
+  },
+  {
+    "id": "UZB",
+    "iso2": "UZ",
+    "name": "Uzbekistan",
+    "officialName": "Republic of Uzbekistan",
+    "capitals": [
+      "Tashkent"
+    ],
+    "region": "Asia",
+    "subregion": "Central Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 447400,
+    "latlng": [
+      41,
+      64
+    ]
+  },
+  {
+    "id": "VUT",
+    "iso2": "VU",
+    "name": "Vanuatu",
+    "officialName": "Republic of Vanuatu",
+    "capitals": [
+      "Port Vila"
+    ],
+    "region": "Oceania",
+    "subregion": "Melanesia",
+    "unMember": true,
+    "independent": true,
+    "area": 12189,
+    "latlng": [
+      -16,
+      167
+    ]
+  },
+  {
+    "id": "VAT",
+    "iso2": "VA",
+    "name": "Vatican City",
+    "officialName": "Vatican City State",
+    "capitals": [
+      "Vatican City"
+    ],
+    "region": "Europe",
+    "subregion": "Southern Europe",
+    "unMember": true,
+    "independent": true,
+    "area": 0.44,
+    "latlng": [
+      41.9,
+      12.45
+    ]
+  },
+  {
+    "id": "VEN",
+    "iso2": "VE",
+    "name": "Venezuela",
+    "officialName": "Bolivarian Republic of Venezuela",
+    "capitals": [
+      "Caracas"
+    ],
+    "region": "Americas",
+    "subregion": "South America",
+    "unMember": true,
+    "independent": true,
+    "area": 916445,
+    "latlng": [
+      8,
+      -66
+    ]
+  },
+  {
+    "id": "VNM",
+    "iso2": "VN",
+    "name": "Vietnam",
+    "officialName": "Socialist Republic of Vietnam",
+    "capitals": [
+      "Hanoi"
+    ],
+    "region": "Asia",
+    "subregion": "South-Eastern Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 331212,
+    "latlng": [
+      16.16666666,
+      107.83333333
+    ]
+  },
+  {
+    "id": "WLF",
+    "iso2": "WF",
+    "name": "Wallis and Futuna",
+    "officialName": "Territory of the Wallis and Futuna Islands",
+    "capitals": [
+      "Mata-Utu"
+    ],
+    "region": "Oceania",
+    "subregion": "Polynesia",
+    "unMember": false,
+    "independent": false,
+    "area": 142,
+    "latlng": [
+      -13.3,
+      -176.2
+    ]
+  },
+  {
+    "id": "ESH",
+    "iso2": "EH",
+    "name": "Western Sahara",
+    "officialName": "Sahrawi Arab Democratic Republic",
+    "capitals": [
+      "El Aaiún"
+    ],
+    "region": "Africa",
+    "subregion": "Northern Africa",
+    "unMember": false,
+    "independent": false,
+    "area": 266000,
+    "latlng": [
+      24.5,
+      -13
+    ]
+  },
+  {
+    "id": "YEM",
+    "iso2": "YE",
+    "name": "Yemen",
+    "officialName": "Republic of Yemen",
+    "capitals": [
+      "Sana'a"
+    ],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "unMember": true,
+    "independent": true,
+    "area": 527968,
+    "latlng": [
+      15,
+      48
+    ]
+  },
+  {
+    "id": "ZMB",
+    "iso2": "ZM",
+    "name": "Zambia",
+    "officialName": "Republic of Zambia",
+    "capitals": [
+      "Lusaka"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 752612,
+    "latlng": [
+      -15,
+      30
+    ]
+  },
+  {
+    "id": "ZWE",
+    "iso2": "ZW",
+    "name": "Zimbabwe",
+    "officialName": "Republic of Zimbabwe",
+    "capitals": [
+      "Harare"
+    ],
+    "region": "Africa",
+    "subregion": "Eastern Africa",
+    "unMember": true,
+    "independent": true,
+    "area": 390757,
+    "latlng": [
+      -20,
+      30
+    ]
+  }
+]

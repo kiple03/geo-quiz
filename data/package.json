@@ -1,0 +1,19 @@
+{
+  "name": "geo-quiz-data",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Generates the static country dataset and map geometry for the frontend",
+  "scripts": {
+    "build": "node build.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "mapshaper": "^0.7.101",
+    "typescript": "~6.0.3"
+  }
+}
