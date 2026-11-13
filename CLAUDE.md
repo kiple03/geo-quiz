@@ -65,7 +65,7 @@ a ruleset that requires this check. Renaming the job breaks the required check.
   and files with CRLF fail `format:check` locally even though CI passes. If Prettier
   flags a whole file you didn't edit, check its line endings first.
 - Prettier only checks `frontend/`. Root Markdown files (like this one) can be formatted
-  with `npx prettier --config .prettierrc.json --write ../<file>` from `frontend/`.
+  with `npx prettier --write ../<file>` from `frontend/` (it picks up `frontend/.prettierrc.json`).
 
 ## Workflow
 
