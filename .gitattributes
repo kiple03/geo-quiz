@@ -1,0 +1,3 @@
+# Always use LF in the working tree, regardless of core.autocrlf.
+# Prettier and .editorconfig expect LF; CRLF checkouts on Windows fail format:check.
+* text=auto eol=lf
