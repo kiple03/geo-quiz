@@ -203,6 +203,70 @@ describe('WorldMap zoom', () => {
     expect(view(fresh.container).k).toBe(1);
   });
 
+  describe('with a home area (e.g. a region)', () => {
+    // AAA is the square 0–10°E, 0–10°N.
+    const home: [[number, number], [number, number]] = [
+      [0, 0],
+      [10, 10],
+    ];
+    const aaa = shapes.find((s) => s.id === 'AAA')!;
+    const inView = (container: HTMLElement) => {
+      const { x, y, k } = view(container);
+      const [[x0, y0], [x1, y1]] = aaa.bounds;
+      const eps = 1e-6;
+      return (
+        x0 >= -x / k - eps &&
+        y0 >= -y / k - eps &&
+        x1 <= (width - x) / k + eps &&
+        y1 <= (height - y) / k + eps
+      );
+    };
+
+    it('starts zoomed in on it, and the reset button goes back there', async () => {
+      const user = userEvent.setup();
+      const { container } = render(
+        <WorldMap world={world} clickableIds={countryIds} homeArea={home} />,
+      );
+      const start = view(container);
+      expect(start.k).toBeGreaterThan(4);
+      expect(inView(container)).toBe(true);
+
+      // The player can still zoom out to the whole world.
+      for (let i = 0; i < 6; i++) {
+        await user.click(screen.getByRole('button', { name: 'Zoom out' }));
+      }
+      expect(view(container).k).toBe(1);
+
+      await user.click(screen.getByRole('button', { name: 'Show the whole region' }));
+      expect(view(container)).toEqual(start);
+    });
+
+    it('goes back there with the 0 key too', async () => {
+      const user = userEvent.setup();
+      const { container } = render(
+        <WorldMap world={world} clickableIds={countryIds} homeArea={home} />,
+      );
+      const start = view(container);
+      await user.click(screen.getByRole('button', { name: 'Zoom out' }));
+      screen.getByRole('application').focus();
+      await user.keyboard('0');
+      expect(view(container)).toEqual(start);
+    });
+
+    it("keeps the last map's view instead when asked to", async () => {
+      const user = userEvent.setup();
+      const first = render(<WorldMap world={world} clickableIds={countryIds} homeArea={home} />);
+      await user.click(screen.getByRole('button', { name: 'Zoom in' }));
+      const zoomed = view(first.container);
+      first.unmount();
+
+      const next = render(
+        <WorldMap world={world} clickableIds={countryIds} homeArea={home} initialView="previous" />,
+      );
+      expect(view(next.container)).toEqual(zoomed);
+    });
+  });
+
   describe('with animations (no reduced-motion preference)', () => {
     beforeEach(() => {
       vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }));

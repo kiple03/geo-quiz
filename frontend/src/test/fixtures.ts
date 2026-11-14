@@ -2,12 +2,14 @@ import { createGameData } from '../data/load';
 import type { Country } from '../data/types';
 import { parseWorld } from '../data/validate';
 
-/** Small, made-up test data: two countries and one neutral-land shape. */
+/**
+ * Small, made-up test data: two countries (Alphaland in Europe, Betaland in Africa) and
+ * one neutral-land shape.
+ */
 
 const baseCountry = {
   officialName: '',
   capitals: [],
-  region: 'Testregion',
   subregion: '',
   unMember: true,
   independent: true,
@@ -20,10 +22,19 @@ export const fixtureCountries: Country[] = [
     id: 'AAA',
     iso2: 'AA',
     name: 'Alphaland',
+    region: 'Europe',
     capitals: ['Alpha City'],
     latlng: [5, 5],
   },
-  { ...baseCountry, id: 'BBB', iso2: 'BB', name: 'Betaland', capitals: [], latlng: [5, 25] },
+  {
+    ...baseCountry,
+    id: 'BBB',
+    iso2: 'BB',
+    name: 'Betaland',
+    region: 'Africa',
+    capitals: [],
+    latlng: [5, 25],
+  },
 ];
 
 /** Three 10°×10° squares (clockwise, as d3-geo expects): AAA, BBB, and neutral NEU. */

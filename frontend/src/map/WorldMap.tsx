@@ -10,7 +10,7 @@ import {
   type KeyboardEvent,
 } from 'react';
 import type { WorldTopology } from '../data/types';
-import { getMapGeometry, type MapBounds, type MapShape } from './geometry';
+import { getMapGeometry, projectBox, type GeoBox, type MapBounds, type MapShape } from './geometry';
 import { ARROW_KEYS, nearestTo, nextInDirection } from './keyboardNav';
 import { useMapZoom, type MapView } from './useMapZoom';
 import './WorldMap.css';
@@ -77,8 +77,16 @@ interface WorldMapProps {
    * wrong click). A ring is hidden while its shape is big enough on screen to see.
    */
   ringIds?: readonly string[];
-  /** `'previous'` keeps the view of the last map shown (e.g. the previous question). */
-  initialView?: 'full' | 'previous';
+  /**
+   * `'previous'` keeps the view of the last map shown (e.g. the previous question);
+   * `'home'` starts on `homeArea`, or the whole map.
+   */
+  initialView?: 'home' | 'previous';
+  /**
+   * The area the map starts on (with `initialView: 'home'`) and the reset button and
+   * the 0 key return to, e.g. a region. The whole map if omitted.
+   */
+  homeArea?: GeoBox;
   /** What to do on the map, e.g. "Find Norway". Screen readers read it with the map. */
   description?: string;
   /** How a shape is announced when the keyboard cursor moves onto it. Defaults to its id. */
@@ -113,7 +121,8 @@ function WorldMap({
   onCountryClick,
   revealIds,
   ringIds = [],
-  initialView = 'full',
+  initialView = 'home',
+  homeArea,
   description,
   nameOf = (id) => id,
   focusTarget = false,
@@ -178,10 +187,12 @@ function WorldMap({
     },
     [shapeById],
   );
+  const home = useMemo(() => homeArea && projectBox(world, homeArea), [world, homeArea]);
   const zoom = useMapZoom(svgRef, layerRef, {
     width,
     height,
     initialView,
+    home,
     onZoom: updateOverlays,
   });
   // Also after every render, in case React has just added markers or rings.
@@ -291,7 +302,7 @@ function WorldMap({
     { label: 'Zoom in', action: zoom.zoomIn, icon: 'M8 3v10M3 8h10' },
     { label: 'Zoom out', action: zoom.zoomOut, icon: 'M3 8h10' },
     {
-      label: 'Show the whole map',
+      label: homeArea ? 'Show the whole region' : 'Show the whole map',
       action: zoom.reset,
       icon: 'M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4',
     },

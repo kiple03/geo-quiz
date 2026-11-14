@@ -1,7 +1,7 @@
 import worldRaw from '../../public/data/world.topo.json?raw';
 import { parseWorld } from '../data/validate';
 import { fixtureGameData } from '../test/fixtures';
-import { getMapGeometry, MAP_WIDTH } from './geometry';
+import { getMapGeometry, MAP_WIDTH, projectBox } from './geometry';
 
 describe('getMapGeometry', () => {
   it('projects one shape per geometry, in a viewBox about twice as wide as high', () => {
@@ -37,6 +37,34 @@ describe('getMapGeometry', () => {
     expect(cx).toBeLessThan(x1);
     expect(cy).toBeGreaterThan(y0);
     expect(cy).toBeLessThan(y1);
+  });
+
+  describe('projectBox', () => {
+    it('gives the bounds of a lon/lat box, the same as a shape that fills it', () => {
+      // AAA is the square 0–10°E, 0–10°N.
+      const [aaa] = getMapGeometry(fixtureGameData.world).shapes;
+      const [[x0, y0], [x1, y1]] = projectBox(fixtureGameData.world, [
+        [0, 0],
+        [10, 10],
+      ]);
+      expect(x0).toBeCloseTo(aaa.bounds[0][0], 6);
+      expect(y0).toBeCloseTo(aaa.bounds[0][1], 6);
+      expect(x1).toBeCloseTo(aaa.bounds[1][0], 6);
+      expect(y1).toBeCloseTo(aaa.bounds[1][1], 6);
+    });
+
+    it('includes the bulge of curved meridians, not just the corners', () => {
+      // At 60°N the west edge of a box from 60°S is further in than at the equator.
+      const box = projectBox(fixtureGameData.world, [
+        [-90, -60],
+        [-60, 60],
+      ]);
+      const corners = projectBox(fixtureGameData.world, [
+        [-90, 60],
+        [-60, 60],
+      ]);
+      expect(box[0][0]).toBeLessThan(corners[0][0] - 10);
+    });
   });
 
   describe('with the real world map', () => {

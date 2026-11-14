@@ -12,6 +12,7 @@ import {
 import type { Question, RoundConfig } from './engine/types';
 import type { GameMode } from './modes/types';
 import ResultsView from './ResultsView';
+import { roundSearchFor } from './settings';
 import { createRoundQuestions } from './setup';
 
 interface RoundViewProps {
@@ -35,7 +36,7 @@ function RoundView(props: RoundViewProps) {
     return (
       <div className="round-empty" role="alert">
         <p>No questions match these settings. Try a different region or game.</p>
-        <Link to="/" className="button">
+        <Link to={{ pathname: '/', search: roundSearchFor(config) }} className="button">
           Back to menu
         </Link>
       </div>
@@ -141,6 +142,7 @@ function ActiveRound({
         // option) never carries over to the next question.
         key={state.current}
         data={data}
+        config={config}
         question={question}
         history={state.answers.slice(0, state.current)}
         feedback={feedback}

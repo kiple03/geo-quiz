@@ -1,17 +1,28 @@
-import { useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { useMemo, useState } from 'react';
+import { Link, useParams, useSearchParams } from 'react-router';
 import { useGameData } from '../data/gameDataContext';
-import { defaultRoundConfig } from './engine/types';
 import { findGameMode } from './modes/registry';
+import { regionsLabel } from './regions';
 import RoundView from './RoundView';
+import { roundConfigFromSearch, roundSearchFor } from './settings';
 import './game.css';
 
-/** Runs one game mode, chosen by the `/play/:modeId` route. */
+/**
+ * Runs one game mode, chosen by the `/play/:modeId` route, with the round settings
+ * from the URL's search params (ADR 0006).
+ */
 function GameScreen() {
   const { modeId } = useParams();
   const mode = findGameMode(modeId);
   const dataState = useGameData();
   const [roundNumber, setRoundNumber] = useState(0);
+  const [searchParams] = useSearchParams();
+  const search = searchParams.toString();
+  // Keyed on the string, so the config only changes when the settings do.
+  const config = useMemo(
+    () => roundConfigFromSearch(modeId ?? '', new URLSearchParams(search)),
+    [modeId, search],
+  );
 
   if (!mode) {
     return (
@@ -24,9 +35,13 @@ function GameScreen() {
     );
   }
 
+  const regionLabel = regionsLabel(config.regions);
   return (
     <section className="game-screen">
-      <h1>{mode.title}</h1>
+      <h1>
+        {mode.title}
+        {regionLabel && <span className="game-region"> · {regionLabel}</span>}
+      </h1>
       {dataState.status === 'loading' && <p role="status">Loading the map…</p>}
       {dataState.status === 'error' && (
         <div role="alert">
@@ -39,12 +54,11 @@ function GameScreen() {
       )}
       {dataState.status === 'ready' && (
         <RoundView
-          // A new key starts a fresh round.
-          key={`${mode.id}-${roundNumber}`}
+          // A new key starts a fresh round, also when the settings change.
+          key={`${mode.id}?${roundSearchFor(config)}#${roundNumber}`}
           mode={mode}
           data={dataState.data}
-          // Settings UI comes later; for now every round uses the defaults.
-          config={defaultRoundConfig(mode.id)}
+          config={config}
           onPlayAgain={() => setRoundNumber((n) => n + 1)}
         />
       )}

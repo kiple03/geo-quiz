@@ -1,7 +1,11 @@
-import { act, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter, Route, Routes, useNavigate } from 'react-router';
+import { GameDataProvider } from '../data/GameDataProvider';
+import { fixtureCountries, fixtureGameData } from '../test/fixtures';
 import { DEFAULT_AUTO_ADVANCE_MS } from './engine/types';
-import { fixtureCountries } from '../test/fixtures';
+import GameScreen from './GameScreen';
+
 import { renderApp } from '../test/renderApp';
 
 // The fixture has two countries (Alphaland = AAA, Betaland = BBB) and neutral land
@@ -35,9 +39,9 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-async function startGame() {
+async function startGame(path = '/play/map-click') {
   const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
-  renderApp('/play/map-click');
+  renderApp(path);
   await screen.findByRole('application', { name: 'World map' });
   return user;
 }
@@ -203,5 +207,93 @@ describe('Map-click game', () => {
 
     await user.click(screen.getByRole('link', { name: 'Back to menu' }));
     expect(screen.getByRole('heading', { level: 1, name: 'Geo Quiz' })).toBeInTheDocument();
+  });
+});
+
+// The fixture's Alphaland (AAA) is in Europe, Betaland (BBB) in Africa (ADR 0006).
+describe('Map-click game in a region', () => {
+  const zoomLevel = () => {
+    const transform = document.querySelector('.world-map__svg > g')?.getAttribute('transform');
+    return Number(/scale\(([^)]+)\)/.exec(transform ?? '')?.[1]);
+  };
+
+  it('asks only about the region, with the rest of the world neutral', async () => {
+    const user = await startGame('/play/map-click?region=europe');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      'Find the country · Europe',
+    );
+    expect(screen.getByText('Question 1 of 1')).toBeInTheDocument();
+    expect(screen.getByText(/^Click on/)).toHaveTextContent('Click on Alphaland');
+
+    // The map starts zoomed in on Europe.
+    expect(zoomLevel()).toBeGreaterThan(1);
+
+    // Betaland is neutral land now: not clickable, and the keyboard cursor skips it.
+    expect(shape('BBB')).toHaveClass('world-map__shape--neutral');
+    await user.click(shape('BBB'));
+    expect(screen.getByRole('status')).toHaveTextContent('');
+    await user.keyboard('{ArrowRight}{ArrowRight}');
+    expect(document.querySelector('[data-cursor-for]')).toHaveAttribute('data-cursor-for', 'AAA');
+
+    await user.keyboard('{Enter}');
+    await waitForAutoAdvance();
+    expect(screen.getByText(/You got/)).toHaveTextContent('You got 1 of 1 right.');
+
+    // Back to the menu keeps the region chosen.
+    expect(screen.getByRole('link', { name: 'Back to menu' })).toHaveAttribute(
+      'href',
+      '/?region=europe',
+    );
+  });
+
+  it('plays the whole world when the region in the URL is unknown', async () => {
+    await startGame('/play/map-click?region=atlantis');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/^Find the country$/);
+    expect(screen.getByText('Question 1 of 2')).toBeInTheDocument();
+    expect(zoomLevel()).toBe(1);
+  });
+
+  it('starts a new round when the settings change while the game screen stays open', async () => {
+    // Changes only the search params, e.g. a future settings control. Rendered without
+    // AppShell, whose error boundary remounts the page on every navigation: here
+    // GameScreen stays mounted, so only the round key can restart the round.
+    function ToEurope() {
+      const navigate = useNavigate();
+      return (
+        <button type="button" onClick={() => navigate('/play/map-click?region=europe')}>
+          To Europe
+        </button>
+      );
+    }
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    render(
+      <GameDataProvider load={() => Promise.resolve(fixtureGameData)}>
+        <MemoryRouter initialEntries={['/play/map-click?region=africa']}>
+          <Routes>
+            <Route path="/play/:modeId" element={<GameScreen />} />
+          </Routes>
+          <ToEurope />
+        </MemoryRouter>
+      </GameDataProvider>,
+    );
+    await screen.findByRole('application', { name: 'World map' });
+    const heading = screen.getByRole('heading', { level: 1 });
+    expect(screen.getByText(/^Click on/)).toHaveTextContent('Click on Betaland');
+
+    await user.click(screen.getByRole('button', { name: 'To Europe' }));
+    // The same screen (not remounted), with a fresh round for the new region.
+    expect(screen.getByRole('heading', { level: 1 })).toBe(heading);
+    expect(heading).toHaveTextContent('Find the country · Europe');
+    expect(screen.getByText(/^Click on/)).toHaveTextContent('Click on Alphaland');
+  });
+
+  it('starts a new round when the region in the URL changes', async () => {
+    const user = await startGame('/play/map-click?region=africa');
+    expect(screen.getByText(/^Click on/)).toHaveTextContent('Click on Betaland');
+    await user.click(screen.getByRole('link', { name: 'Geo Quiz' }));
+    await user.click(screen.getByRole('radio', { name: 'Europe' }));
+    await user.click(screen.getByRole('link', { name: /find the country/i }));
+    expect(screen.getByText(/^Click on/)).toHaveTextContent('Click on Alphaland');
+    expect(screen.getByText('Question 1 of 1')).toBeInTheDocument();
   });
 });

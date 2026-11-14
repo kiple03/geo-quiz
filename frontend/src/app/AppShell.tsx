@@ -1,15 +1,20 @@
 import { Link, Outlet, useLocation } from 'react-router';
+import { roundConfigFromSearch, roundSearchFor } from '../game/settings';
 import './AppShell.css';
 import ErrorBoundary from './ErrorBoundary';
 
 /** Layout shared by every screen: header (later also the user menu) and the page. */
 function AppShell() {
   const location = useLocation();
+  // Back to the menu with the same round settings (e.g. the region) chosen (ADR 0006).
+  const menuSearch = roundSearchFor(
+    roundConfigFromSearch('', new URLSearchParams(location.search)),
+  );
   return (
     <div className="app-shell">
       <header className="app-header">
         <div className="app-header-inner">
-          <Link to="/" className="app-brand">
+          <Link to={{ pathname: '/', search: menuSearch }} className="app-brand">
             Geo Quiz
           </Link>
         </div>
