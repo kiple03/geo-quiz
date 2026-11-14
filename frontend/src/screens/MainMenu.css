@@ -1,0 +1,48 @@
+.main-menu {
+  max-width: 44rem;
+}
+
+.main-menu h1 {
+  font-size: var(--text-display);
+  font-stretch: var(--stretch-wide);
+  font-weight: 800;
+}
+
+.main-menu-intro {
+  color: var(--color-ink-muted);
+  font-size: var(--text-lg);
+}
+
+.mode-list {
+  list-style: none;
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.mode-card {
+  display: block;
+  padding: var(--space-4) var(--space-6);
+  border: 1.5px solid var(--color-rule);
+  border-left: 4px solid var(--color-accent);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.mode-card:hover {
+  border-color: var(--color-accent);
+}
+
+.mode-card-title {
+  display: block;
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.mode-card-description {
+  display: block;
+  color: var(--color-ink-muted);
+}

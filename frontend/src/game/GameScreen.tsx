@@ -1,13 +1,17 @@
+import { useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { useGameData } from '../data/gameDataContext';
-import WorldMap from '../map/WorldMap';
+import { DEFAULT_QUESTION_COUNT } from './engine/types';
 import { findGameMode } from './modes/registry';
+import RoundView from './RoundView';
+import './game.css';
 
 /** Runs one game mode, chosen by the `/play/:modeId` route. */
 function GameScreen() {
   const { modeId } = useParams();
   const mode = findGameMode(modeId);
   const dataState = useGameData();
+  const [roundNumber, setRoundNumber] = useState(0);
 
   if (!mode) {
     return (
@@ -21,23 +25,28 @@ function GameScreen() {
   }
 
   return (
-    <section>
+    <section className="game-screen">
       <h1>{mode.title}</h1>
       {dataState.status === 'loading' && <p role="status">Loading the map…</p>}
       {dataState.status === 'error' && (
         <div role="alert">
           <p>Could not load the game data.</p>
           <p>{dataState.error.message}</p>
-          <button type="button" onClick={dataState.retry}>
+          <button type="button" className="button" onClick={dataState.retry}>
             Try again
           </button>
         </div>
       )}
       {dataState.status === 'ready' && (
-        <>
-          <p>The game is not playable yet. This is a preview of the map.</p>
-          <WorldMap world={dataState.data.world} clickableIds={dataState.data.countryIds} />
-        </>
+        <RoundView
+          // A new key starts a fresh round.
+          key={`${mode.id}-${roundNumber}`}
+          mode={mode}
+          data={dataState.data}
+          // Settings UI comes later; for now every round uses the defaults.
+          config={{ modeId: mode.id, questionCount: DEFAULT_QUESTION_COUNT }}
+          onPlayAgain={() => setRoundNumber((n) => n + 1)}
+        />
       )}
     </section>
   );

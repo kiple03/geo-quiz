@@ -1,9 +1,10 @@
+import { pickRandom, type Rng } from './random';
 import type { AnswerRecord, Question, RoundConfig, RoundResult } from './types';
 
 /**
- * The round engine, shared by every game mode (ADR 0003). Pure functions: no React, no
- * clock, no randomness. Callers pass in the time, and the mode decides whether an
- * answer is correct.
+ * The round engine, shared by every game mode (ADR 0003). Pure functions: no React, and
+ * the caller passes in the time and the random source. The mode decides whether an
+ * answer is correct; the engine only records it.
  *
  * Flow: `asking` → answer → `feedback` → next → `asking` ... → `finished`.
  * The last answer is shown as feedback too, before the round finishes.
@@ -92,18 +93,23 @@ export function roundResult(state: RoundState): RoundResult | undefined {
 }
 
 export type RoundAction =
-  | { type: 'start'; config: RoundConfig; questions: readonly Question[]; now: number }
-  | { type: 'answer'; answer: string; correct: boolean; now: number }
-  | { type: 'next'; now: number };
+  { type: 'answer'; answer: string; correct: boolean; now: number } | { type: 'next'; now: number };
 
-/** The same transitions as a reducer, for `useReducer`. `null` means no round yet. */
-export function roundReducer(state: RoundState | null, action: RoundAction): RoundState | null {
+/** The same transitions as a reducer, for `useReducer` (start with `startRound`). */
+export function roundReducer(state: RoundState, action: RoundAction): RoundState {
   switch (action.type) {
-    case 'start':
-      return startRound(action.config, action.questions, action.now);
     case 'answer':
-      return state && answerQuestion(state, action.answer, action.correct, action.now);
+      return answerQuestion(state, action.answer, action.correct, action.now);
     case 'next':
-      return state && nextQuestion(state, action.now);
+      return nextQuestion(state, action.now);
   }
+}
+
+/** Picks up to `count` distinct target countries, in random order, as questions. */
+export function pickQuestions(
+  targetIds: readonly string[],
+  count: number,
+  rng: Rng = Math.random,
+): Question[] {
+  return pickRandom(targetIds, count, rng).map((targetId) => ({ targetId }));
 }

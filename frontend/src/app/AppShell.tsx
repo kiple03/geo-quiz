@@ -6,9 +6,11 @@ function AppShell() {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <Link to="/" className="app-brand">
-          Geo Quiz
-        </Link>
+        <div className="app-header-inner">
+          <Link to="/" className="app-brand">
+            Geo Quiz
+          </Link>
+        </div>
       </header>
       <main className="app-main">
         <Outlet />

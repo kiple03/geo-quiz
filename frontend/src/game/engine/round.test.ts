@@ -3,12 +3,14 @@ import {
   currentQuestion,
   lastAnswer,
   nextQuestion,
+  pickQuestions,
   roundReducer,
   roundResult,
   score,
   startRound,
   type RoundState,
 } from './round';
+import { seededRng } from './random';
 import type { RoundConfig } from './types';
 
 const config: RoundConfig = { modeId: 'test', questionCount: 2 };
@@ -74,15 +76,25 @@ describe('round engine', () => {
 
 describe('roundReducer', () => {
   it('runs the same transitions as the functions', () => {
-    let state = roundReducer(null, { type: 'start', config, questions, now: 0 });
+    let state = startRound(config, questions, 0);
     state = roundReducer(state, { type: 'answer', answer: 'AAA', correct: true, now: 1 });
-    expect(state?.phase).toBe('feedback');
+    expect(state.phase).toBe('feedback');
     state = roundReducer(state, { type: 'next', now: 2 });
-    expect(state && currentQuestion(state)).toEqual({ targetId: 'BBB' });
+    expect(currentQuestion(state)).toEqual({ targetId: 'BBB' });
+  });
+});
+
+describe('pickQuestions', () => {
+  const ids = ['AAA', 'BBB', 'CCC', 'DDD'];
+
+  it('picks distinct targets, at most as many as there are', () => {
+    const picked = pickQuestions(ids, 3, seededRng(1)).map((q) => q.targetId);
+    expect(picked).toHaveLength(3);
+    expect(new Set(picked).size).toBe(3);
+    expect(pickQuestions(ids, 10, seededRng(1))).toHaveLength(4);
   });
 
-  it('does nothing before a round is started', () => {
-    expect(roundReducer(null, { type: 'next', now: 0 })).toBeNull();
-    expect(roundReducer(null, { type: 'answer', answer: 'X', correct: true, now: 0 })).toBeNull();
+  it('is repeatable with a seeded rng', () => {
+    expect(pickQuestions(ids, 4, seededRng(9))).toEqual(pickQuestions(ids, 4, seededRng(9)));
   });
 });

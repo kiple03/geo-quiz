@@ -1,9 +1,9 @@
 import { mapClickMode } from './map-click/mode';
-import type { GameModeInfo } from './types';
+import type { GameMode } from './types';
 
 /** Every playable mode, in menu order. Register new modes here. */
-export const gameModes: readonly GameModeInfo[] = [mapClickMode];
+export const gameModes: readonly GameMode[] = [mapClickMode];
 
-export function findGameMode(id: string | undefined): GameModeInfo | undefined {
+export function findGameMode(id: string | undefined): GameMode | undefined {
   return gameModes.find((mode) => mode.id === id);
 }
