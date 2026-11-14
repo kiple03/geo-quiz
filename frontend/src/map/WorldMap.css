@@ -42,3 +42,11 @@
 .world-map__shape--wrong {
   fill: var(--color-wrong);
 }
+
+.world-map__shape--past-correct {
+  fill: var(--color-correct-soft);
+}
+
+.world-map__shape--past-wrong {
+  fill: var(--color-wrong-soft);
+}

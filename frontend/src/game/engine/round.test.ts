@@ -13,7 +13,7 @@ import {
 import { seededRng } from './random';
 import type { RoundConfig } from './types';
 
-const config: RoundConfig = { modeId: 'test', questionCount: 2 };
+const config: RoundConfig = { modeId: 'test', questionCount: 2, autoAdvanceMs: null };
 const questions = [{ targetId: 'AAA' }, { targetId: 'BBB' }];
 
 describe('round engine', () => {

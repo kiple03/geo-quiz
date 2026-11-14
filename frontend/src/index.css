@@ -26,6 +26,9 @@
   --color-on-accent: light-dark(#ffffff, #1b0f17);
   --color-correct: light-dark(#23845a, #4cc38a);
   --color-wrong: light-dark(#c4313b, #f0646c);
+  /* Earlier answers that stay on the map: same hues, mixed toward the land colour. */
+  --color-correct-soft: color-mix(in srgb, var(--color-correct) 50%, var(--color-land));
+  --color-wrong-soft: color-mix(in srgb, var(--color-wrong) 50%, var(--color-land));
 
   /* Type */
   --font: 'Archivo Variable', system-ui, 'Segoe UI', sans-serif;

@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import type { GameData } from '../data/load';
 import {
   currentQuestion,
@@ -31,6 +31,17 @@ function RoundView({ mode, data, config, onPlayAgain }: RoundViewProps) {
     return startRound(config, pickQuestions(pool, config.questionCount), Date.now());
   });
 
+  const feedback = lastAnswer(state);
+
+  // A correct answer moves on by itself after a short pause; a wrong one waits for
+  // "Next" so the player can study the map. Clicking "Next" early cancels the timer.
+  const autoAdvanceMs = feedback?.correct ? config.autoAdvanceMs : null;
+  useEffect(() => {
+    if (autoAdvanceMs === null) return;
+    const timer = setTimeout(() => dispatch({ type: 'next', now: Date.now() }), autoAdvanceMs);
+    return () => clearTimeout(timer);
+  }, [autoAdvanceMs, state.answers.length]);
+
   const result = roundResult(state);
   if (result) {
     return <ResultsView result={result} mode={mode} data={data} onPlayAgain={onPlayAgain} />;
@@ -38,7 +49,6 @@ function RoundView({ mode, data, config, onPlayAgain }: RoundViewProps) {
 
   const question = currentQuestion(state);
   if (!question) return null;
-  const feedback = lastAnswer(state);
   const isLast = state.current + 1 === state.questions.length;
   const Play = mode.Play;
 
@@ -84,7 +94,13 @@ function RoundView({ mode, data, config, onPlayAgain }: RoundViewProps) {
           </button>
         )}
       </div>
-      <Play data={data} question={question} feedback={feedback} onAnswer={answer} />
+      <Play
+        data={data}
+        question={question}
+        history={state.answers.slice(0, state.current)}
+        feedback={feedback}
+        onAnswer={answer}
+      />
     </div>
   );
 }

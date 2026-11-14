@@ -4,9 +4,10 @@ import './WorldMap.css';
 
 /**
  * How a shape is marked: `correct` = clicked and right, `wrong` = clicked and wrong,
- * `reveal` = the right answer, shown after a wrong click.
+ * `reveal` = the right answer, shown after a wrong click. `past-correct` and
+ * `past-wrong` are softer versions for earlier answers that stay on the map.
  */
-export type MapHighlight = 'correct' | 'wrong' | 'reveal';
+export type MapHighlight = 'correct' | 'wrong' | 'reveal' | 'past-correct' | 'past-wrong';
 
 interface WorldMapProps {
   world: WorldTopology;

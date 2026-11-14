@@ -19,6 +19,8 @@ export interface GameModeInfo {
 export interface PlayProps {
   data: GameData;
   question: Question;
+  /** Answers to the earlier questions of this round, in order. */
+  history: readonly AnswerRecord[];
   /** The answer to this question while its feedback is shown; undefined while asking. */
   feedback: AnswerRecord | undefined;
   /** Call once with the player's answer. Later calls are ignored by the engine. */
