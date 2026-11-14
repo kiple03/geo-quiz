@@ -11,8 +11,8 @@ interface ErrorBoundaryState {
 
 /**
  * Catches errors thrown while rendering a screen, so a bug shows a message with a way
- * back instead of a blank page. AppShell remounts it on navigation (via `key`), which
- * clears the error.
+ * back instead of a blank page. AppShell remounts it on every navigation (keyed by
+ * `location.key`), which clears the error.
  */
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = { error: null };

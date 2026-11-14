@@ -8,6 +8,10 @@ function Status() {
   return <p>{state.status}</p>;
 }
 
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 describe('GameDataProvider', () => {
   it('loads once and passes the abort signal to the loader', async () => {
     const load = vi.fn((signal: AbortSignal) => {
@@ -43,6 +47,5 @@ describe('GameDataProvider', () => {
   it('throws a clear error when used outside the provider', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     expect(() => render(<Status />)).toThrow(/inside <GameDataProvider>/);
-    vi.restoreAllMocks();
   });
 });

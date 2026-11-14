@@ -6,6 +6,11 @@ function Broken(): never {
   throw new Error('Kaboom');
 }
 
+// In afterEach, so a failing assertion can't leave console.error muted for later tests.
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 describe('ErrorBoundary', () => {
   it('shows the error and a way back instead of a blank page', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -20,7 +25,6 @@ describe('ErrorBoundary', () => {
     expect(screen.getByRole('heading', { name: 'Something went wrong' })).toBeInTheDocument();
     expect(screen.getByText('Kaboom')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Back to menu' })).toHaveAttribute('href', '/');
-    vi.restoreAllMocks();
   });
 
   it('renders its children when nothing fails', () => {

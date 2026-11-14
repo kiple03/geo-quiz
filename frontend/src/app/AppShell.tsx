@@ -15,8 +15,9 @@ function AppShell() {
         </div>
       </header>
       <main className="app-main">
-        {/* Keyed by path, so navigating away from a crashed screen clears the error. */}
-        <ErrorBoundary key={location.pathname}>
+        {/* location.key changes on every navigation (also to the same path, e.g. "Back
+            to menu" from a crashed menu), which remounts the boundary and clears the error. */}
+        <ErrorBoundary key={location.key}>
           <Outlet />
         </ErrorBoundary>
       </main>

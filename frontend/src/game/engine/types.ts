@@ -19,6 +19,16 @@ export interface RoundConfig {
   regions: readonly string[];
 }
 
+/** The settings a round uses unless the player (or later the URL) changes them. */
+export function defaultRoundConfig(modeId: string): RoundConfig {
+  return {
+    modeId,
+    questionCount: DEFAULT_QUESTION_COUNT,
+    autoAdvanceMs: DEFAULT_AUTO_ADVANCE_MS,
+    regions: [],
+  };
+}
+
 /** One question. Serializable, so it can be stored in results or come from a server. */
 export interface Question {
   /** What is asked about: a `Country.id` today, later e.g. a state code. */

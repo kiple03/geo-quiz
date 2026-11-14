@@ -1,3 +1,4 @@
+import { countryName } from '../../../data/load';
 import { getMapGeometry } from '../../../map/geometry';
 import type { GameMode } from '../types';
 import MapClickPlay from './MapClickPlay';
@@ -23,10 +24,9 @@ export const mapClickMode: GameMode = {
 
   isCorrect: (question, answer) => answer === question.targetId,
 
-  describeQuestion: (question, data) =>
-    data.countriesById.get(question.targetId)?.name ?? question.targetId,
+  describeQuestion: (question, data) => countryName(data, question.targetId),
 
-  describeAnswer: (answer, data) => data.countriesById.get(answer)?.name ?? answer,
+  describeAnswer: (answer, data) => countryName(data, answer),
 
   Play: MapClickPlay,
 };

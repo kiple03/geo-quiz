@@ -30,12 +30,14 @@ of hardcoding one quiz into `App.tsx`.
   for all modes at once. A round with no matching questions shows a message, and an
   error boundary in `AppShell` catches crashes so a screen never goes blank.
 - **One round engine for every mode.** A pure, React-free reducer in
-  `src/game/engine/` runs a round: build the questions, take an answer, record whether
-  it was right, go to the next one, and produce a result. Shared UI (score, progress,
-  "Next", results) lives in the game screen, not in the modes.
+  `src/game/engine/` runs a round from a list of questions: take an answer, record
+  whether it was right, go to the next one, and produce a result. Shared UI lives
+  outside the modes: score, progress and "Next" in `RoundView`, the end screen in
+  `ResultsView`. `GameScreen` only picks the mode and handles data loading.
 - **Settings and results are plain data.** `RoundConfig` (mode id, question count,
-  auto-advance pause, regions) has its defaults in one place. `RoundResult` (config, answers, score,
-  timestamps) is the shape a Phase 4 backend will receive when scores are saved.
+  auto-advance pause, regions) gets its defaults from one function,
+  `defaultRoundConfig()` in `src/game/engine/types.ts`. `RoundResult` (config, answers,
+  score, timestamps) is the shape a Phase 4 backend will receive when scores are saved.
 - **Data is loaded in one place.** `src/data/` is the only code that knows where the
   data comes from, so switching from static JSON to an API (ADR 0001) stays local.
 - **State:** React state, context and reducers. No state library for now.
@@ -54,7 +56,7 @@ of hardcoding one quiz into `App.tsx`.
 ## Planned extensions
 
 A review of this structure against the roadmap (zoom/pan map, region quizzes,
-subdivision quizzes such as US states, capital and flag modes) found five changes that
+subdivision quizzes such as US states, capital and flag modes) found changes that
 are best made together with the feature that needs them. Each fits into this structure
 without reworking it. Details and suggested approaches are in
 [docs/backlog.md](../backlog.md):
@@ -64,3 +66,4 @@ without reworking it. Details and suggested approaches are in
 3. Zoom and pan: a memoized shape layer under a transform; drags must not count as clicks.
 4. A view-aware `MIN_TARGET_AREA`, so tiny countries return once zoom exists.
 5. Per-mode datasets, loaded on demand instead of all at startup.
+6. Accessibility: keyboard and screen-reader input for the map, non-colour cues.

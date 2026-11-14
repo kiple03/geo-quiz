@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { useGameData } from '../data/gameDataContext';
-import { DEFAULT_AUTO_ADVANCE_MS, DEFAULT_QUESTION_COUNT } from './engine/types';
+import { defaultRoundConfig } from './engine/types';
 import { findGameMode } from './modes/registry';
 import RoundView from './RoundView';
 import './game.css';
@@ -44,12 +44,7 @@ function GameScreen() {
           mode={mode}
           data={dataState.data}
           // Settings UI comes later; for now every round uses the defaults.
-          config={{
-            modeId: mode.id,
-            questionCount: DEFAULT_QUESTION_COUNT,
-            autoAdvanceMs: DEFAULT_AUTO_ADVANCE_MS,
-            regions: [],
-          }}
+          config={defaultRoundConfig(mode.id)}
           onPlayAgain={() => setRoundNumber((n) => n + 1)}
         />
       )}

@@ -1,10 +1,10 @@
+import { countryName } from '../../../data/load';
 import WorldMap, { type MapHighlight } from '../../../map/WorldMap';
 import type { PlayProps } from '../types';
 
 /** One map-click question: "Click on <country>", then the map shows right and wrong. */
 function MapClickPlay({ data, question, history, feedback, onAnswer }: PlayProps) {
-  const target = data.countriesById.get(question.targetId);
-  const targetName = target?.name ?? question.targetId;
+  const targetName = countryName(data, question.targetId);
 
   // Countries asked earlier in the round stay marked: got it, or missed it.
   const highlights: Record<string, MapHighlight> = {};
@@ -17,7 +17,7 @@ function MapClickPlay({ data, question, history, feedback, onAnswer }: PlayProps
     highlights[question.targetId] = 'correct';
     message = `Correct! That is ${targetName}.`;
   } else if (feedback) {
-    const clicked = data.countriesById.get(feedback.answer)?.name ?? feedback.answer;
+    const clicked = countryName(data, feedback.answer);
     highlights[feedback.answer] = 'wrong';
     highlights[question.targetId] = 'reveal';
     message = `Not quite: you clicked ${clicked}. ${targetName} is shown in green.`;

@@ -22,6 +22,11 @@ async function fetchJson(file: string, signal?: AbortSignal): Promise<unknown> {
   return response.json();
 }
 
+/** The display name for a country id; falls back to the id itself if it is unknown. */
+export function countryName(data: GameData, id: string): string {
+  return data.countriesById.get(id)?.name ?? id;
+}
+
 export function createGameData(countries: readonly Country[], world: WorldTopology): GameData {
   return {
     countries,

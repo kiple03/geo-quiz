@@ -29,8 +29,8 @@ export interface PlayProps {
 }
 
 /**
- * The parts that make a mode its own. Everything else (round flow, score, progress,
- * "Next", results) is shared and lives in the game screen and the round engine.
+ * The parts that make a mode its own. Everything else is shared: the round flow in the
+ * engine (game/engine), score, progress and "Next" in RoundView, results in ResultsView.
  */
 export interface GameMode extends GameModeInfo {
   /**
