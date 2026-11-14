@@ -32,6 +32,18 @@ Read [docs/decisions/0001-static-data-first.md](docs/decisions/0001-static-data-
   extensions, since Node runs that code directly).
 - Significant decisions get a new ADR in `docs/decisions/` and a row in its `README.md`.
 
+## Frontend structure (ADR 0003)
+
+Keep it modular; new features should be additive. In `frontend/src/`:
+
+- `app/`: all routes (`App.tsx`) and the shared layout (`AppShell`). The router is
+  provided by `main.tsx` (BrowserRouter) or by tests (MemoryRouter).
+- `screens/`: non-game screens (main menu, not found; later login, leaderboard).
+- `game/modes/`: one folder per game mode, listed in `registry.ts`. The menu and game
+  screen read the registry, so a new mode never needs changes there.
+- `game/engine/`: the mode-agnostic round engine (pure, no React).
+- `data/`: the only place that knows where data is loaded from.
+
 ## Commands
 
 Node 24 (`.nvmrc`). The developer is on Windows (PowerShell or Git Bash). Run from
