@@ -1,5 +1,5 @@
 // mapshaper ships no type definitions; this covers the one function build.ts uses.
-declare module "mapshaper" {
+declare module 'mapshaper' {
   const mapshaper: {
     applyCommands(
       commands: string,

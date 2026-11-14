@@ -1,9 +1,17 @@
-import type { Country } from './types';
+// Explicit .ts extension: data/build.ts runs this file directly in Node, which needs it.
+import type { Country } from './types.ts';
 
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
 
 const isString = (v: unknown): v is string => typeof v === 'string';
+
+const isInRange = (v: unknown, limit: number): boolean =>
+  typeof v === 'number' && Number.isFinite(v) && Math.abs(v) <= limit;
+
+/** [latitude, longitude], both finite and within ±90 / ±180. */
+const isLatLng = (v: unknown): boolean =>
+  Array.isArray(v) && v.length === 2 && isInRange(v[0], 90) && isInRange(v[1], 180);
 
 /** Returns a list of problems with one country entry; empty when it is valid. */
 function countryProblems(v: unknown): string[] {
@@ -23,12 +31,7 @@ function countryProblems(v: unknown): string[] {
   expect(typeof v.unMember === 'boolean', 'unMember');
   expect(typeof v.independent === 'boolean', 'independent');
   expect(typeof v.area === 'number' && v.area >= 0, 'area');
-  expect(
-    Array.isArray(v.latlng) &&
-      v.latlng.length === 2 &&
-      v.latlng.every((n) => typeof n === 'number'),
-    'latlng',
-  );
+  expect(isLatLng(v.latlng), 'latlng');
   return problems;
 }
 

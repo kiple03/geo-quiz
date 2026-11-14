@@ -7,6 +7,7 @@ import { parseCountries } from './validate';
 const countries = parseCountries(JSON.parse(countriesRaw));
 const world = JSON.parse(worldRaw) as WorldTopology;
 const shapeIds = world.objects.world.geometries.map((g) => g.id);
+const shapeIdSet = new Set(shapeIds);
 
 describe('countries.json', () => {
   it('contains all UN members', () => {
@@ -35,9 +36,9 @@ describe('world.topo.json', () => {
   });
 
   it('has exactly one shape per country', () => {
-    const missing = countries.filter((c) => !shapeIds.includes(c.id)).map((c) => c.id);
+    const missing = countries.filter((c) => !shapeIdSet.has(c.id)).map((c) => c.id);
     expect(missing).toEqual([]);
-    expect(new Set(shapeIds).size).toBe(shapeIds.length);
+    expect(shapeIdSet.size).toBe(shapeIds.length);
   });
 
   it('has only a few neutral-land shapes without a country', () => {
@@ -51,5 +52,13 @@ describe('parseCountries', () => {
   it('rejects malformed entries with a useful message', () => {
     expect(() => parseCountries([{ id: 'NOR', name: 'Norway' }])).toThrow(/NOR: invalid iso2/);
     expect(() => parseCountries({})).toThrow(/expected an array/);
+  });
+
+  it('rejects coordinates that are not finite or out of range', () => {
+    const norway = countries.find((c) => c.id === 'NOR');
+    expect(() => parseCountries([{ ...norway, latlng: [Number.NaN, 10] }])).toThrow(
+      /NOR: invalid latlng/,
+    );
+    expect(() => parseCountries([{ ...norway, latlng: [62, 200] }])).toThrow(/NOR: invalid latlng/);
   });
 });
