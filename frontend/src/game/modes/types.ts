@@ -1,7 +1,8 @@
 import type { ComponentType } from 'react';
 import type { GameData } from '../../data/load';
 import type { Country } from '../../data/types';
-import type { AnswerRecord, Question } from '../engine/types';
+import type { Rng } from '../engine/random';
+import type { AnswerRecord, Question, RoundConfig } from '../engine/types';
 
 /**
  * A game mode is a plugin: the menu lists every registered mode and the game screen
@@ -32,9 +33,26 @@ export interface PlayProps {
  * "Next", results) is shared and lives in the game screen and the round engine.
  */
 export interface GameMode extends GameModeInfo {
-  /** The countries this mode can ask about. */
+  /**
+   * The countries this mode can ask about. Shared filters such as `RoundConfig.regions`
+   * are applied afterwards for every mode (game/setup.ts), so don't filter for them here.
+   */
   questionPool(data: GameData): readonly Country[];
+  /**
+   * Optional: builds the round's questions from the filtered pool, e.g. to add
+   * multiple-choice `options`. Without it, `config.questionCount` distinct countries
+   * are picked at random. May return fewer questions; an empty list is shown as
+   * "no questions match".
+   */
+  buildQuestions?(
+    pool: readonly Country[],
+    config: RoundConfig,
+    data: GameData,
+    rng: Rng,
+  ): Question[];
   isCorrect(question: Question, answer: string, data: GameData): boolean;
+  /** How a question reads in the results list, e.g. the country or capital asked for. */
+  describeQuestion(question: Question, data: GameData): string;
   /** How an answer reads in the results list, e.g. a country name. */
   describeAnswer(answer: string, data: GameData): string;
   /** Renders the prompt and the input for one question, plus its feedback. */

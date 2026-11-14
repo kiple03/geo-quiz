@@ -33,6 +33,10 @@ describe('map-click mode', () => {
     expect(mapClickMode.isCorrect(question, 'BBB', fixtureGameData)).toBe(false);
   });
 
+  it('describes a question by the name of the country asked for', () => {
+    expect(mapClickMode.describeQuestion({ targetId: 'AAA' }, fixtureGameData)).toBe('Alphaland');
+  });
+
   it('describes an answer by country name', () => {
     expect(mapClickMode.describeAnswer('BBB', fixtureGameData)).toBe('Betaland');
     expect(mapClickMode.describeAnswer('XYZ', fixtureGameData)).toBe('XYZ');

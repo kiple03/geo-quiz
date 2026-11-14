@@ -22,7 +22,7 @@ function ResultsView({ result, mode, data, onPlayAgain }: ResultsViewProps) {
         {result.answers.map(({ question, answer, correct }, i) => (
           <li key={i} className={correct ? 'results-item--correct' : 'results-item--wrong'}>
             <span className="results-mark">{correct ? '✓' : '✗'}</span>{' '}
-            {data.countriesById.get(question.targetId)?.name ?? question.targetId}
+            {mode.describeQuestion(question, data)}
             {!correct && (
               <span className="results-answer">
                 {' '}

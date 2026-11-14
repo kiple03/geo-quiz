@@ -48,6 +48,7 @@ function GameScreen() {
             modeId: mode.id,
             questionCount: DEFAULT_QUESTION_COUNT,
             autoAdvanceMs: DEFAULT_AUTO_ADVANCE_MS,
+            regions: [],
           }}
           onPlayAgain={() => setRoundNumber((n) => n + 1)}
         />

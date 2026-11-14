@@ -1,17 +1,18 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
+import { Link } from 'react-router';
 import type { GameData } from '../data/load';
 import {
   currentQuestion,
   lastAnswer,
-  pickQuestions,
   roundReducer,
   roundResult,
   score,
   startRound,
 } from './engine/round';
-import type { RoundConfig } from './engine/types';
+import type { Question, RoundConfig } from './engine/types';
 import type { GameMode } from './modes/types';
 import ResultsView from './ResultsView';
+import { createRoundQuestions } from './setup';
 
 interface RoundViewProps {
   mode: GameMode;
@@ -25,11 +26,34 @@ interface RoundViewProps {
  * `Play` component renders the question itself. Mount it with a new `key` to start a
  * new round.
  */
-function RoundView({ mode, data, config, onPlayAgain }: RoundViewProps) {
-  const [state, dispatch] = useReducer(roundReducer, undefined, () => {
-    const pool = mode.questionPool(data).map((country) => country.id);
-    return startRound(config, pickQuestions(pool, config.questionCount), Date.now());
-  });
+function RoundView(props: RoundViewProps) {
+  const { mode, data, config } = props;
+  // Picked once per mount; a new round is a new mount (see GameScreen).
+  const [questions] = useState(() => createRoundQuestions(mode, data, config));
+
+  if (questions.length === 0) {
+    return (
+      <div className="round-empty" role="alert">
+        <p>No questions match these settings. Try a different region or game.</p>
+        <Link to="/" className="button">
+          Back to menu
+        </Link>
+      </div>
+    );
+  }
+  return <ActiveRound {...props} questions={questions} />;
+}
+
+function ActiveRound({
+  mode,
+  data,
+  config,
+  onPlayAgain,
+  questions,
+}: RoundViewProps & { questions: readonly Question[] }) {
+  const [state, dispatch] = useReducer(roundReducer, undefined, () =>
+    startRound(config, questions, Date.now()),
+  );
 
   const feedback = lastAnswer(state);
 
@@ -95,6 +119,9 @@ function RoundView({ mode, data, config, onPlayAgain }: RoundViewProps) {
         )}
       </div>
       <Play
+        // A fresh instance per question, so state inside a mode (typed text, a chosen
+        // option) never carries over to the next question.
+        key={state.current}
         data={data}
         question={question}
         history={state.answers.slice(0, state.current)}

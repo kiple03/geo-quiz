@@ -6,18 +6,25 @@
 export const DEFAULT_QUESTION_COUNT = 10;
 export const DEFAULT_AUTO_ADVANCE_MS = 1000;
 
-/** How a round is set up. New options (regions, time limit, ...) are added here. */
+/** How a round is set up. New options (time limit, ...) are added here. */
 export interface RoundConfig {
   modeId: string;
   questionCount: number;
   /** Pause before moving on after a correct answer; null = always wait for "Next". */
   autoAdvanceMs: number | null;
+  /**
+   * Only ask about countries in these regions (`Country.region`, e.g. "Africa").
+   * Empty = the whole world. Applied to every mode in one place (game/setup.ts).
+   */
+  regions: readonly string[];
 }
 
-/** One question: which country it is about. Modes may extend this later (e.g. options). */
+/** One question. Serializable, so it can be stored in results or come from a server. */
 export interface Question {
-  /** A `Country.id`. */
+  /** What is asked about: a `Country.id` today, later e.g. a state code. */
   targetId: string;
+  /** Choices offered to the player, for multiple-choice modes (ids, like `targetId`). */
+  options?: readonly string[];
 }
 
 export interface AnswerRecord {

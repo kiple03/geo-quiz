@@ -21,13 +21,20 @@ of hardcoding one quiz into `App.tsx`.
   `src/game/modes/` and is listed in `registry.ts`. The menu and the game screen read
   the registry, so adding a mode does not touch either of them. A mode supplies its
   metadata (id, title, description), which countries can be asked, how an answer is
-  checked, and a component that renders the prompt and input for one question.
+  checked, how a question and an answer read in the results, and a component that
+  renders the prompt and input for one question (remounted for every question). It
+  may also build its own questions (e.g. multiple-choice `options`); by default
+  countries are picked at random.
+- **Shared filters live in one place.** `src/game/setup.ts` narrows every mode's pool
+  by `RoundConfig` (e.g. `regions`) before questions are built, so a new filter works
+  for all modes at once. A round with no matching questions shows a message, and an
+  error boundary in `AppShell` catches crashes so a screen never goes blank.
 - **One round engine for every mode.** A pure, React-free reducer in
   `src/game/engine/` runs a round: build the questions, take an answer, record whether
   it was right, go to the next one, and produce a result. Shared UI (score, progress,
   "Next", results) lives in the game screen, not in the modes.
-- **Settings and results are plain data.** `RoundConfig` (mode id, question count, and
-  later filters) has its defaults in one place. `RoundResult` (config, answers, score,
+- **Settings and results are plain data.** `RoundConfig` (mode id, question count,
+  auto-advance pause, regions) has its defaults in one place. `RoundResult` (config, answers, score,
   timestamps) is the shape a Phase 4 backend will receive when scores are saved.
 - **Data is loaded in one place.** `src/data/` is the only code that knows where the
   data comes from, so switching from static JSON to an API (ADR 0001) stays local.
@@ -43,3 +50,17 @@ of hardcoding one quiz into `App.tsx`.
   deployed.
 - **Follow-up:** No auth, settings UI or code splitting yet; add them when a feature needs
   them.
+
+## Planned extensions
+
+A review of this structure against the roadmap (zoom/pan map, region quizzes,
+subdivision quizzes such as US states, capital and flag modes) found five changes that
+are best made together with the feature that needs them. Each fits into this structure
+without reworking it. Details and suggested approaches are in
+[docs/backlog.md](../backlog.md):
+
+1. Round settings from the URL, restarting the round when they change (region picker).
+2. Map geometry for any topology layer and projection, not only the world (subdivisions).
+3. Zoom and pan: a memoized shape layer under a transform; drags must not count as clicks.
+4. A view-aware `MIN_TARGET_AREA`, so tiny countries return once zoom exists.
+5. Per-mode datasets, loaded on demand instead of all at startup.

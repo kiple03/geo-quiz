@@ -23,6 +23,9 @@ export const mapClickMode: GameMode = {
 
   isCorrect: (question, answer) => answer === question.targetId,
 
+  describeQuestion: (question, data) =>
+    data.countriesById.get(question.targetId)?.name ?? question.targetId,
+
   describeAnswer: (answer, data) => data.countriesById.get(answer)?.name ?? answer,
 
   Play: MapClickPlay,
