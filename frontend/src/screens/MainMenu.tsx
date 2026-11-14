@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from 'react-router';
 import { gameModes } from '../game/modes/registry';
-import { REGIONS } from '../game/regions';
+import { findRegionByName, REGIONS } from '../game/regions';
 import { roundConfigFromSearch, roundSearchFor } from '../game/settings';
 import './MainMenu.css';
 
@@ -13,10 +13,12 @@ const WORLD = '';
  */
 function MainMenu() {
   const [searchParams, setSearchParams] = useSearchParams();
-  // The same parsing as the game screen; the menu offers one region at a time.
+  // The same parsing as the game screen. The menu offers one region at a time; a link
+  // with several (e.g. back from such a round) checks none but keeps them all.
   const { regions } = roundConfigFromSearch('', searchParams);
-  const chosen = REGIONS.find((region) => region.name === regions[0]);
-  const search = roundSearchFor({ regions: chosen ? [chosen.name] : [] });
+  const checked =
+    regions.length === 0 ? WORLD : regions.length === 1 ? findRegionByName(regions[0])?.slug : null;
+  const search = roundSearchFor({ regions });
 
   const choose = (slug: string) =>
     setSearchParams(slug === WORLD ? {} : { region: slug }, { replace: true });
@@ -36,7 +38,7 @@ function MainMenu() {
                 type="radio"
                 name="region"
                 value={slug}
-                checked={(chosen?.slug ?? WORLD) === slug}
+                checked={checked === slug}
                 onChange={() => choose(slug)}
               />
               <span>{label}</span>

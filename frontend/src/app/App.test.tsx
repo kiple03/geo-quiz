@@ -36,6 +36,23 @@ describe('App routing', () => {
     );
   });
 
+  it('keeps several regions from a link, with no single one checked', () => {
+    renderApp('/?region=africa&region=asia');
+    for (const radio of screen.getAllByRole('radio')) expect(radio).not.toBeChecked();
+    expect(screen.getByRole('link', { name: /find the country/i })).toHaveAttribute(
+      'href',
+      '/play/map-click?region=africa&region=asia',
+    );
+  });
+
+  it('keeps the region when going back to the menu via the header', () => {
+    renderApp('/play/map-click?region=europe&foo=bar');
+    expect(screen.getByRole('link', { name: 'Geo Quiz' })).toHaveAttribute(
+      'href',
+      '/?region=europe',
+    );
+  });
+
   it('opens the game screen from the menu and goes back via the header', async () => {
     const user = userEvent.setup();
     renderApp('/');

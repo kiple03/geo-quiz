@@ -31,8 +31,9 @@ Oceania (24) and Antarctic (4).
   linked and bookmarked, and the browser's Back button works, with no extra state.
 - **The region is chosen in the main menu**, once for every mode: a row of radio
   buttons above the mode cards. The menu keeps the choice in its own URL
-  (`/?region=europe`), and "Back to menu" from a round links there, so the choice
-  survives a round. A separate setup step per mode was the alternative. It would have
+  (`/?region=europe`), and both "Back to menu" and the header link go there from a
+  round, so the choice survives it. A link with several regions checks none of the
+  buttons but keeps them all. A separate setup step per mode was the alternative. It would have
   added a click before every round, and the menu choice already covers all modes.
 - **Regions are defined once**, in `game/regions.ts`: the `Country.region` value, a
   URL slug, a label and a map frame. Antarctic is not offered: four questions do not

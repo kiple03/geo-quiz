@@ -99,7 +99,12 @@ export function projectBox(
   const points: [number, number][] = [];
   for (const lat of steps(south, north, BOX_SAMPLE_STEP)) points.push([west, lat], [east, lat]);
   for (const lon of steps(west, east, BOX_SAMPLE_STEP)) points.push([lon, south], [lon, north]);
-  const projected = points.map((p) => projection(p) ?? [0, 0]);
+  // A point the projection cannot place (null) is skipped, not counted as [0, 0].
+  const projected = points.flatMap((p) => {
+    const xy = projection(p);
+    return xy ? [xy] : [];
+  });
+  if (projected.length === 0) throw new Error('projectBox: no point of the box can be projected');
   const xs = projected.map(([x]) => x);
   const ys = projected.map(([, y]) => y);
   return [

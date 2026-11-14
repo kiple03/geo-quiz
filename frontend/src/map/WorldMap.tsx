@@ -187,11 +187,12 @@ function WorldMap({
     },
     [shapeById],
   );
+  const home = useMemo(() => homeArea && projectBox(world, homeArea), [world, homeArea]);
   const zoom = useMapZoom(svgRef, layerRef, {
     width,
     height,
     initialView,
-    home: homeArea && projectBox(world, homeArea),
+    home,
     onZoom: updateOverlays,
   });
   // Also after every render, in case React has just added markers or rings.

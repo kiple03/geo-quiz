@@ -11,6 +11,7 @@ function MapClickPlay({ data, config, question, history, feedback, onAnswer }: P
   // In a region round, only that region's countries can be clicked or reached with the
   // keyboard; the rest of the world is neutral land (ADR 0006).
   const clickableIds = useMemo(() => countryIdsInRound(data, config), [data, config]);
+  const homeArea = useMemo(() => regionsFrame(config.regions), [config.regions]);
 
   // Countries asked earlier in the round stay marked: got it, or missed it.
   const highlights: Record<string, MapHighlight> = {};
@@ -50,7 +51,7 @@ function MapClickPlay({ data, config, question, history, feedback, onAnswer }: P
         // Keep the player's zoom between questions; a new round starts on its region,
         // or the whole world.
         initialView={history.length === 0 ? 'home' : 'previous'}
-        homeArea={regionsFrame(config.regions)}
+        homeArea={homeArea}
         // Keyboard and screen-reader play (ADR 0005).
         description={`Find ${targetName}`}
         nameOf={(id) => countryName(data, id)}

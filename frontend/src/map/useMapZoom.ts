@@ -255,16 +255,9 @@ export function useMapZoom(
       behavior.transform(transition, constrained);
     };
 
-    const clampZoom = (k: number) => {
-      const [min, max] = behaviorRef.current?.scaleExtent() ?? [1, MAX_ZOOM];
-      return Math.min(max, Math.max(min, k));
-    };
-
-    /** Zooms by `factor`, keeping the middle of the map where it is. */
+    /** Zooms by `factor`, keeping the middle of the map where it is (moveTo clamps). */
     const zoomBy = (factor: number) =>
-      moveTo((t) =>
-        centeredOn(t.invert([width / 2, height / 2]), clampZoom(t.k * factor), width, height),
-      );
+      moveTo((t) => centeredOn(t.invert([width / 2, height / 2]), t.k * factor, width, height));
 
     return {
       zoomIn: () => zoomBy(BUTTON_ZOOM_STEP),
@@ -278,9 +271,17 @@ export function useMapZoom(
 
           const padX = (x1 - x0) * REVEAL_PADDING;
           const padY = (y1 - y0) * REVEAL_PADDING;
-          const fit = Math.min(width / (x1 - x0 + 2 * padX), height / (y1 - y0 + 2 * padY));
-          const k = clampZoom(Math.min(t.k, fit));
-          return centeredOn([(x0 + x1) / 2, (y0 + y1) / 2], k, width, height);
+          const fitted = viewOf(
+            [
+              [x0 - padX, y0 - padY],
+              [x1 + padX, y1 + padY],
+            ],
+            width,
+            height,
+          );
+          // Never zoom in: keep the current zoom if the bounds fit at it.
+          if (fitted.k <= t.k) return fitted;
+          return centeredOn([(x0 + x1) / 2, (y0 + y1) / 2], t.k, width, height);
         }),
     };
   }, [svgRef, width, height]);
