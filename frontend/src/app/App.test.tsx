@@ -13,6 +13,29 @@ describe('App routing', () => {
     );
   });
 
+  it('offers a region that applies to every game link', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    const link = () => screen.getByRole('link', { name: /find the country/i });
+    expect(screen.getByRole('radio', { name: 'Whole world' })).toBeChecked();
+
+    await user.click(screen.getByRole('radio', { name: 'Africa' }));
+    expect(screen.getByRole('radio', { name: 'Africa' })).toBeChecked();
+    expect(link()).toHaveAttribute('href', '/play/map-click?region=africa');
+
+    await user.click(screen.getByRole('radio', { name: 'Whole world' }));
+    expect(link()).toHaveAttribute('href', '/play/map-click');
+  });
+
+  it('reads the chosen region from its URL, e.g. after "Back to menu"', () => {
+    renderApp('/?region=asia');
+    expect(screen.getByRole('radio', { name: 'Asia' })).toBeChecked();
+    expect(screen.getByRole('link', { name: /find the country/i })).toHaveAttribute(
+      'href',
+      '/play/map-click?region=asia',
+    );
+  });
+
   it('opens the game screen from the menu and goes back via the header', async () => {
     const user = userEvent.setup();
     renderApp('/');

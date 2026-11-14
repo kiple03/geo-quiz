@@ -46,7 +46,7 @@ let rememberedView: ZoomTransform = zoomIdentity;
 export interface MapZoomControls {
   zoomIn(): void;
   zoomOut(): void;
-  /** Back to the whole map. */
+  /** Back to the home view: the `home` bounds, or the whole map. */
   reset(): void;
   /**
    * Pans, and zooms out if needed, so the bounds are in view. Does nothing if they
@@ -67,8 +67,16 @@ export interface MapZoomOptions {
   /** Size of the map's viewBox. */
   width: number;
   height: number;
-  /** `'previous'` restores the last view of any map; `'full'` shows the whole map. */
-  initialView: 'full' | 'previous';
+  /**
+   * `'previous'` restores the last view of any map; `'home'` starts on the home view
+   * (`home`, or the whole map).
+   */
+  initialView: 'home' | 'previous';
+  /**
+   * What the map starts on and `reset()` returns to, e.g. a region; the whole map if
+   * omitted. The player can still zoom out to the whole map.
+   */
+  home?: MapBounds;
   /** Called on every change (including each animation frame) and on resize. */
   onZoom?: (view: MapView) => void;
 }
@@ -84,6 +92,17 @@ function centeredOn([x, y]: [number, number], k: number, width: number, height: 
 }
 
 /**
+ * The view that fits `bounds` (as large as they fit, centered), or the whole map
+ * without bounds. Not yet clamped to the zoom and pan limits.
+ */
+function viewOf(bounds: MapBounds | undefined, width: number, height: number): ZoomTransform {
+  if (!bounds) return zoomIdentity;
+  const [[x0, y0], [x1, y1]] = bounds;
+  const k = Math.min(width / Math.max(x1 - x0, 1e-9), height / Math.max(y1 - y0, 1e-9));
+  return centeredOn([(x0 + x1) / 2, (y0 + y1) / 2], k, width, height);
+}
+
+/**
  * d3-zoom's default filter (no right-click, no ctrl+drag), plus: ignore events without a
  * window. Browsers always set `view`; synthetic events (e.g. user-event in jsdom) may
  * not, and d3-zoom needs it on mousedown.
@@ -92,6 +111,19 @@ function acceptsGesture(event: MouseEvent | WheelEvent | TouchEvent): boolean {
   const isWheel = event.type === 'wheel';
   const button = 'button' in event ? event.button : 0;
   return (!event.ctrlKey || isWheel) && !button && event.view != null;
+}
+
+/**
+ * `view` within the zoom and pan limits. zoom.transform() skips the limits that
+ * gestures get, so views set from code go through this.
+ */
+function clampView(behavior: Behavior, view: ZoomTransform, extent: MapBounds): ZoomTransform {
+  const [min, max] = behavior.scaleExtent();
+  const k = Math.min(max, Math.max(min, view.k));
+  const [, [width, height]] = extent;
+  // Keeps the middle of the view in the middle when the zoom is clamped.
+  const middle = view.invert([width / 2, height / 2]);
+  return behavior.constrain()(centeredOn(middle, k, width, height), extent, extent);
 }
 
 function prefersReducedMotion(): boolean {
@@ -109,7 +141,7 @@ function prefersReducedMotion(): boolean {
 export function useMapZoom(
   svgRef: RefObject<SVGSVGElement | null>,
   layerRef: RefObject<SVGGElement | null>,
-  { width, height, initialView, onZoom }: MapZoomOptions,
+  { width, height, initialView, home, onZoom }: MapZoomOptions,
 ): MapZoomControls {
   const behaviorRef = useRef<Behavior | null>(null);
   // Only the view a map starts with; changing it later does nothing.
@@ -117,9 +149,12 @@ export function useMapZoom(
   // Where a running zoom animation is heading; null when none is running.
   const pendingRef = useRef<ZoomTransform | null>(null);
   const onZoomRef = useRef(onZoom);
+  // A ref, so a new array with the same bounds does not set up the zoom again.
+  const homeRef = useRef(home);
   // Declared before the setup effect below, so it runs first.
   useLayoutEffect(() => {
     onZoomRef.current = onZoom;
+    homeRef.current = home;
   });
 
   // A layout effect: the restored view must be in place before the first paint, or the
@@ -160,10 +195,11 @@ export function useMapZoom(
     const selection = select(svg);
     // No double-click zoom: its first click would already have answered the question.
     selection.call(behavior).on('dblclick.zoom', null);
-    behavior.transform(
-      selection,
-      initialViewRef.current === 'previous' ? rememberedView : zoomIdentity,
-    );
+    const start =
+      initialViewRef.current === 'previous'
+        ? rememberedView
+        : clampView(behavior, viewOf(homeRef.current, width, height), extent);
+    behavior.transform(selection, start);
     behaviorRef.current = behavior;
 
     // jsdom has no ResizeObserver; the map size is unknown there anyway.
@@ -198,8 +234,7 @@ export function useMapZoom(
       // quickly zooms 2 × 2 × 2, not by whatever the animation had reached.
       const target = next(pendingRef.current ?? zoomTransform(svg));
       if (!target) return;
-      // zoom.transform() skips the pan limits that gestures get, so apply them here.
-      const constrained = behavior.constrain()(target, extent, extent);
+      const constrained = clampView(behavior, target, extent);
       const selection = select(svg);
       if (prefersReducedMotion()) {
         pendingRef.current = null;
@@ -234,7 +269,7 @@ export function useMapZoom(
     return {
       zoomIn: () => zoomBy(BUTTON_ZOOM_STEP),
       zoomOut: () => zoomBy(1 / BUTTON_ZOOM_STEP),
-      reset: () => moveTo(() => zoomIdentity),
+      reset: () => moveTo(() => viewOf(homeRef.current, width, height)),
       reveal: ([[x0, y0], [x1, y1]]) =>
         moveTo((t) => {
           const [left, top] = t.invert([0, 0]);

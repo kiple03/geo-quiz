@@ -4,6 +4,10 @@
   font-weight: 600;
 }
 
+.game-region {
+  color: var(--color-ink);
+}
+
 /* Round bar: progress pips, score, Next */
 
 .round-bar {

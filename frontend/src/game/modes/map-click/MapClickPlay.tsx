@@ -1,10 +1,16 @@
+import { useMemo } from 'react';
 import { countryName } from '../../../data/load';
 import WorldMap, { type MapHighlight } from '../../../map/WorldMap';
+import { regionsFrame } from '../../regions';
+import { countryIdsInRound } from '../../setup';
 import type { PlayProps } from '../types';
 
 /** One map-click question: "Click on <country>", then the map shows right and wrong. */
-function MapClickPlay({ data, question, history, feedback, onAnswer }: PlayProps) {
+function MapClickPlay({ data, config, question, history, feedback, onAnswer }: PlayProps) {
   const targetName = countryName(data, question.targetId);
+  // In a region round, only that region's countries can be clicked or reached with the
+  // keyboard; the rest of the world is neutral land (ADR 0006).
+  const clickableIds = useMemo(() => countryIdsInRound(data, config), [data, config]);
 
   // Countries asked earlier in the round stay marked: got it, or missed it.
   const highlights: Record<string, MapHighlight> = {};
@@ -34,15 +40,17 @@ function MapClickPlay({ data, question, history, feedback, onAnswer }: PlayProps
       </p>
       <WorldMap
         world={data.world}
-        clickableIds={data.countryIds}
+        clickableIds={clickableIds}
         highlights={highlights}
         onCountryClick={feedback ? undefined : onAnswer}
         // After a miss, make sure both the click and the right answer are on screen.
         revealIds={feedback && !feedback.correct ? [feedback.answer, question.targetId] : undefined}
         // ...and circle the right answer, in case it is too small to see.
         ringIds={feedback && !feedback.correct ? [question.targetId] : undefined}
-        // Keep the player's zoom between questions; a new round starts on the whole world.
-        initialView={history.length === 0 ? 'full' : 'previous'}
+        // Keep the player's zoom between questions; a new round starts on its region,
+        // or the whole world.
+        initialView={history.length === 0 ? 'home' : 'previous'}
+        homeArea={regionsFrame(config.regions)}
         // Keyboard and screen-reader play (ADR 0005).
         description={`Find ${targetName}`}
         nameOf={(id) => countryName(data, id)}

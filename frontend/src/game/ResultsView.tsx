@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import type { GameData } from '../data/load';
 import type { RoundResult } from './engine/types';
 import type { GameMode } from './modes/types';
+import { roundSearchFor } from './settings';
 
 interface ResultsViewProps {
   result: RoundResult;
@@ -36,7 +37,8 @@ function ResultsView({ result, mode, data, onPlayAgain }: ResultsViewProps) {
         <button type="button" className="button button--primary" onClick={onPlayAgain} autoFocus>
           Play again
         </button>
-        <Link to="/" className="button">
+        {/* Back to the menu with the same region chosen. */}
+        <Link to={{ pathname: '/', search: roundSearchFor(result.config) }} className="button">
           Back to menu
         </Link>
       </div>

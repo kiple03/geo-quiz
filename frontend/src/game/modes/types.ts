@@ -19,6 +19,8 @@ export interface GameModeInfo {
 /** What the game screen passes to a mode's `Play` component for one question. */
 export interface PlayProps {
   data: GameData;
+  /** The round's settings, e.g. its regions (shared filters are already applied). */
+  config: RoundConfig;
   question: Question;
   /** Answers to the earlier questions of this round, in order. */
   history: readonly AnswerRecord[];

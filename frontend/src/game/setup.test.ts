@@ -3,7 +3,7 @@ import { seededRng } from './engine/random';
 import type { RoundConfig } from './engine/types';
 import { mapClickMode } from './modes/map-click/mode';
 import type { GameMode } from './modes/types';
-import { applyRoundFilters, createRoundQuestions } from './setup';
+import { applyRoundFilters, countryIdsInRound, createRoundQuestions } from './setup';
 
 const config: RoundConfig = {
   modeId: 'map-click',
@@ -12,8 +12,8 @@ const config: RoundConfig = {
   regions: [],
 };
 
-const [alphaland, betaland] = fixtureCountries;
-const pool = [alphaland, { ...betaland, region: 'Europe' }];
+// Alphaland is in Europe, Betaland in Africa.
+const pool = fixtureCountries;
 
 describe('applyRoundFilters', () => {
   it('keeps the whole pool when no regions are chosen', () => {
@@ -21,8 +21,20 @@ describe('applyRoundFilters', () => {
   });
 
   it('keeps only countries in the chosen regions', () => {
-    expect(applyRoundFilters(pool, { ...config, regions: ['Europe'] })).toEqual([pool[1]]);
-    expect(applyRoundFilters(pool, { ...config, regions: ['Europe', 'Testregion'] })).toEqual(pool);
+    expect(applyRoundFilters(pool, { ...config, regions: ['Africa'] })).toEqual([pool[1]]);
+    expect(applyRoundFilters(pool, { ...config, regions: ['Europe', 'Africa'] })).toEqual(pool);
+  });
+});
+
+describe('countryIdsInRound', () => {
+  it("is the dataset's own id set when nothing is filtered", () => {
+    expect(countryIdsInRound(fixtureGameData, config)).toBe(fixtureGameData.countryIds);
+  });
+
+  it('keeps only the ids in the chosen regions', () => {
+    expect([...countryIdsInRound(fixtureGameData, { ...config, regions: ['Europe'] })]).toEqual([
+      'AAA',
+    ]);
   });
 });
 
@@ -46,7 +58,7 @@ describe('createRoundQuestions', () => {
       p.map((c) => ({ targetId: c.id, options: ['AAA', 'BBB'] })),
     );
     const mode: GameMode = { ...mapClickMode, buildQuestions };
-    const filtered = { ...config, regions: ['Testregion'] };
+    const filtered = { ...config, regions: ['Europe', 'Africa'] };
 
     const questions = createRoundQuestions(mode, fixtureGameData, filtered, seededRng(1));
 
