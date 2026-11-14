@@ -10,7 +10,7 @@ personal learning project. Repo: `github.com/kiple03/geo-quiz`, default branch `
 | Path              | Contents                                                                         |
 | ----------------- | -------------------------------------------------------------------------------- |
 | `frontend/`       | Vite 8 + React 19 + TypeScript 6.0, ESLint, Prettier, Vitest + RTL               |
-| `data/`           | Country dataset generation script (to be built)                                  |
+| `data/`           | `build.ts` generates `frontend/public/data/` (countries.json + world.topo.json)  |
 | `backend/`        | Placeholder. Spring Boot API arrives in Phase 4 (scores, accounts, leaderboards) |
 | `docs/decisions/` | ADRs (`NNNN-short-title.md`). Never rewrite an accepted ADR; supersede it        |
 
@@ -22,8 +22,14 @@ Read [docs/decisions/0001-static-data-first.md](docs/decisions/0001-static-data-
   JSON that the frontend loads directly. There is no backend and no runtime API for now.
 - Keep the JSON schema stable and typed in the frontend, so the Phase 4 backend can serve
   the same shape and the frontend can switch to an API with minimal changes.
-- The client downloads the whole dataset, so watch its size (especially future map
-  geometry).
+- The client downloads the whole dataset, so watch its size (especially map geometry).
+- Never hand-edit `frontend/public/data/`. Change `data/build.ts` and regenerate.
+- The core game mode is clicking the named country on a world map: Natural Earth 1:50m
+  shapes, rendered as SVG with d3-geo (ADR 0002). Each TopoJSON geometry `id` is a
+  `Country.id`; shapes with no matching country are neutral land, never asked about.
+- The `Country` type and `parseCountries()` in `frontend/src/data/` are shared: the
+  frontend uses them, and `data/build.ts` imports them (so imports there need `.ts`
+  extensions, since Node runs that code directly).
 - Significant decisions get a new ADR in `docs/decisions/` and a row in its `README.md`.
 
 ## Commands
@@ -49,6 +55,16 @@ Vitest runs in jsdom with globals enabled; `src/setupTests.ts` loads jest-dom ma
 Before suggesting a commit, run the full CI sequence locally:
 `npm run lint && npm run format:check && npm run typecheck && npm run test:run && npm run build`.
 
+Dataset, from `data/` (not part of CI; see `data/README.md`):
+
+```sh
+npm install
+npm run build          # node build.ts: downloads pinned sources to .cache/, writes frontend/public/data/
+npm run typecheck      # tsc --noEmit
+```
+
+Regenerating should leave `git status` clean unless the script or sources changed.
+
 ## CI
 
 `.github/workflows/ci.yml` has one job, `frontend (lint, typecheck, test)`:
@@ -65,7 +81,9 @@ a ruleset that requires this check. Renaming the job breaks the required check.
   and files with CRLF fail `format:check` locally even though CI passes. If Prettier
   flags a whole file you didn't edit, check its line endings first.
 - Prettier only checks `frontend/`. Root Markdown files (like this one) can be formatted
-  with `npx prettier --config .prettierrc.json --write ../<file>` from `frontend/`.
+  with `npx prettier --config .prettierrc.json --write ../<file>` from `frontend/`. The
+  `--config` flag is required: Prettier looks for config from the file's own directory,
+  so without it root and `data/` files get Prettier's defaults.
 
 ## Workflow
 
@@ -83,3 +101,15 @@ merges). Do not run them unless asked. Read-only commands (`git status`, `git di
   commands and a conventional commit message
 - when a PR is due, write the title and description in a copyable markdown block
   following `.github/pull_request_template.md`, ending with `Closes #N`
+
+## Code review format
+
+When reporting review findings (from `/code-review` or otherwise), group them by
+severity, most severe first, with the marker at the start of each finding:
+
+- 🔴 **Critical:** must fix before merge (bugs, broken behavior, wrong docs, security)
+- 🟠 **Recommended:** should fix, but not blocking (robustness, maintainability)
+- 🔵 **Suggestion:** optional, nice to have (small cleanups, polish)
+
+Each finding: file and line, one-line problem, why it matters, suggested fix. If you
+disagree with a finding, say so and why instead of listing it as-is.
