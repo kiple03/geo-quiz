@@ -43,6 +43,9 @@ Keep it modular; new features should be additive. In `frontend/src/`:
 - `screens/`: non-game screens (main menu, not found; later login, leaderboard).
 - `game/modes/`: one folder per game mode, listed in `registry.ts`. The menu and game
   screen read the registry, so a new mode never needs changes there.
+  A mode marks its main answer input with `data-autofocus`; `RoundView` moves focus
+  there after each question (ADR 0005). The map is keyboard-playable through
+  `WorldMap` (`description`, `nameOf`, `focusTarget`).
 - `game/engine/`: the mode-agnostic round engine (pure, no React).
 - `game/setup.ts`: shared round filters (`RoundConfig.regions`, ...) applied to every
   mode's pool. Put new cross-mode filters here, not in a mode.

@@ -38,7 +38,7 @@ afterEach(() => {
 async function startGame() {
   const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
   renderApp('/play/map-click');
-  await screen.findByRole('img', { name: 'World map' });
+  await screen.findByRole('application', { name: 'World map' });
   return user;
 }
 
@@ -134,6 +134,54 @@ describe('Map-click game', () => {
     await waitForAutoAdvance();
     await user.click(screen.getByRole('button', { name: 'Play again' }));
     expect(zoomLevel()).toMatch(/scale\(1\)$/);
+  });
+
+  it('can be played with the keyboard only, with focus back on the map each question', async () => {
+    const user = await startGame();
+    const map = screen.getByRole('application', { name: 'World map' });
+    // Focus starts on the map, so the arrow keys work right away.
+    expect(map).toHaveFocus();
+
+    // In the fixture, Alphaland (AAA) is left of Betaland (BBB). The first arrow press
+    // starts on Alphaland, the country nearest the middle of the map.
+    const answerByKeyboard = async (target: string) => {
+      await user.keyboard(target === 'AAA' ? '{ArrowLeft}' : '{ArrowRight}');
+      await user.keyboard('{Enter}');
+    };
+
+    await user.keyboard('{ArrowRight}');
+    await answerByKeyboard(currentTargets().target);
+    expect(screen.getByRole('status')).toHaveTextContent(/^Correct!/);
+
+    // Auto-advance removes the focused "Next" button; focus goes back to the map.
+    await waitForAutoAdvance();
+    expect(screen.getByText('Question 2 of 2')).toBeInTheDocument();
+    expect(screen.getByRole('application', { name: 'World map' })).toHaveFocus();
+
+    await answerByKeyboard(currentTargets().target);
+    await waitForAutoAdvance();
+    expect(screen.getByText(/You got/)).toHaveTextContent('You got 2 of 2 right.');
+  });
+
+  it('keeps the feedback after a wrong answer when Enter is held down', async () => {
+    const user = await startGame();
+    const { other } = currentTargets();
+    // The first arrow press lands on Alphaland (AAA); one more step right is Betaland.
+    await user.keyboard(other === 'AAA' ? '{ArrowRight}' : '{ArrowRight}{ArrowRight}');
+    // Held long enough to auto-repeat, then released. The repeats must not reach the
+    // "Next question" button that gets focus after the answer.
+    await user.keyboard('{Enter>4/}');
+    expect(screen.getByRole('status')).toHaveTextContent(/^Not quite/);
+    expect(screen.getByRole('button', { name: 'Next question' })).toHaveFocus();
+    expect(screen.getByText('Question 1 of 2')).toBeInTheDocument();
+  });
+
+  it('leaves focus alone if the player moved it out of the round', async () => {
+    const user = await startGame();
+    await user.click(shape(currentTargets().target));
+    screen.getByRole('link', { name: 'Geo Quiz' }).focus();
+    await waitForAutoAdvance();
+    expect(screen.getByRole('link', { name: 'Geo Quiz' })).toHaveFocus();
   });
 
   it('ignores clicks on neutral land', async () => {

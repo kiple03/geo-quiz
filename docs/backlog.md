@@ -7,7 +7,8 @@ quiz), which checked the structure against the roadmap. See also
 
 When one of these is picked up, turn it into a GitHub issue and remove it from here.
 Zoom and pan, and the view-aware size threshold (items 3 and 4 in ADR 0003's list),
-were done in [ADR 0004](decisions/0004-map-zoom-and-markers.md).
+were done in [ADR 0004](decisions/0004-map-zoom-and-markers.md); accessibility of the
+map game (item 6) in [ADR 0005](decisions/0005-map-keyboard-and-screen-reader-play.md).
 
 ## 1. Round settings from the URL
 
@@ -39,18 +40,4 @@ were done in [ADR 0004](decisions/0004-map-zoom-and-markers.md).
 - **Today:** `loadGameData` loads `countries.json` and `world.topo.json` together at
   startup for every mode, and the game screen always says "Loading the map…".
 - **Approach:** let each mode declare the datasets it needs; `data/` loads and caches
-  each dataset separately. Fine to defer: the map is 43 KB gzipped today.
-
-## 4. Accessibility of the map game
-
-- **Needed for:** players using a keyboard, a screen reader, or with red-green colour
-  blindness. Not tied to one feature; builds on the map's zoom buttons (ADR 0004).
-- **Today:** countries can only be clicked with a mouse or touch; the map's SVG has
-  `role="img"`, so its shapes are hidden from assistive tech. After the 1 s auto-advance
-  the focused "Next question" button disappears and focus falls back to the page.
-  Earlier answers on the map and the progress pips show right/wrong by colour only.
-- **Approach:** a keyboard and screen-reader way to answer that does not mean tabbing
-  through ~240 shapes, e.g. a searchable country list as an alternative input, or
-  arrow-key navigation between neighbouring countries; move focus to the new prompt
-  after each question; add a non-colour cue for wrong answers (hatching or a dashed
-  outline on the map, ✓/✗ marks on the pips).
+  each dataset separately. Fine to defer: the map is 90 KB gzipped today.

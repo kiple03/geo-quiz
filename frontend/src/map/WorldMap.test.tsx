@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import worldRaw from '../../public/data/world.topo.json?raw';
 import { parseWorld } from '../data/validate';
@@ -19,7 +19,7 @@ function shape(container: HTMLElement, id: string) {
 describe('WorldMap', () => {
   it('draws one path per shape plus the ocean', () => {
     const { container } = render(<WorldMap world={world} clickableIds={countryIds} />);
-    expect(screen.getByRole('img', { name: 'World map' })).toBeInTheDocument();
+    expect(screen.getByRole('application', { name: 'World map' })).toBeInTheDocument();
     expect(container.querySelectorAll('[data-id]')).toHaveLength(3);
     expect(container.querySelector('.world-map__ocean')).not.toBeNull();
   });
@@ -233,5 +233,120 @@ describe('WorldMap zoom', () => {
       );
       expect(view(next.container).k).toBe(2);
     });
+  });
+});
+
+describe('WorldMap keyboard play', () => {
+  const names: Record<string, string> = { AAA: 'Alphaland', BBB: 'Betaland' };
+  const nameOf = (id: string) => names[id] ?? id;
+  const map = () => screen.getByRole('application', { name: 'World map' });
+  const cursorIds = (container: HTMLElement) =>
+    [...container.querySelectorAll('[data-cursor-for]')].map((el) =>
+      el.getAttribute('data-cursor-for'),
+    );
+
+  it('is a single tab stop, with the task and the keys in its description', async () => {
+    const user = userEvent.setup();
+    render(<WorldMap world={world} clickableIds={countryIds} description="Find Alphaland" />);
+    await user.tab();
+    expect(map()).toHaveFocus();
+    expect(map()).toHaveAccessibleDescription(/^Find Alphaland\. Use the arrow keys/);
+    // The next tab stop is the zoom buttons, not the countries.
+    await user.tab();
+    expect(screen.getByRole('button', { name: 'Zoom in' })).toHaveFocus();
+  });
+
+  it('moves a cursor with the arrow keys, announces it, and answers with Enter', async () => {
+    const user = userEvent.setup();
+    const onCountryClick = vi.fn();
+    const { container } = render(
+      <WorldMap
+        world={world}
+        clickableIds={countryIds}
+        onCountryClick={onCountryClick}
+        nameOf={nameOf}
+      />,
+    );
+    map().focus();
+    // No cursor until the first arrow key, so mouse players never see one.
+    expect(cursorIds(container)).toEqual([]);
+
+    // The first press starts at the country nearest the middle of the view (AAA, at
+    // 0–10°E); neutral land (NEU) is skipped.
+    await user.keyboard('{ArrowRight}');
+    expect(cursorIds(container)).toEqual(['AAA']);
+    expect(screen.getByText('Alphaland')).toBeInTheDocument();
+
+    await user.keyboard('{ArrowRight}');
+    expect(cursorIds(container)).toEqual(['BBB']);
+    expect(screen.getByText('Betaland')).toBeInTheDocument();
+    // Nothing further right that is a country: the cursor stays.
+    await user.keyboard('{ArrowRight}');
+    expect(cursorIds(container)).toEqual(['BBB']);
+
+    await user.keyboard('{ArrowLeft}{Enter}');
+    expect(onCountryClick).toHaveBeenCalledExactlyOnceWith('AAA');
+  });
+
+  it('lets the cursor move on a read-only map, but Enter does nothing', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<WorldMap world={world} clickableIds={countryIds} />);
+    map().focus();
+    await user.keyboard('{ArrowRight}{Enter} ');
+    expect(cursorIds(container)).toEqual(['AAA']);
+  });
+
+  it('answers when Enter is released, once, and only if it was pressed on the map', async () => {
+    const user = userEvent.setup();
+    const onCountryClick = vi.fn();
+    render(<WorldMap world={world} clickableIds={countryIds} onCountryClick={onCountryClick} />);
+    map().focus();
+    await user.keyboard('{ArrowRight}');
+
+    // Held down (with auto-repeat): nothing until it is released, then one answer.
+    await user.keyboard('{Enter>3}');
+    expect(onCountryClick).not.toHaveBeenCalled();
+    await user.keyboard('{/Enter}');
+    expect(onCountryClick).toHaveBeenCalledExactlyOnceWith('AAA');
+
+    // A release whose press happened elsewhere (e.g. on "Next question") is ignored.
+    fireEvent.keyUp(map(), { key: 'Enter' });
+    fireEvent.keyUp(map(), { key: ' ' });
+    expect(onCountryClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('leaves browser shortcuts with Ctrl, Cmd or Alt alone', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<WorldMap world={world} clickableIds={countryIds} />);
+    map().focus();
+    await user.keyboard('{Control>}+0{/Control}{Meta>}+{/Meta}{Alt>}{ArrowRight}{/Alt}');
+    expect(view(container).k).toBe(1);
+    expect(cursorIds(container)).toEqual([]);
+  });
+
+  it('does not bring back a remembered cursor that this map cannot click', async () => {
+    const user = userEvent.setup();
+    const first = render(<WorldMap world={world} clickableIds={countryIds} />);
+    map().focus();
+    await user.keyboard('{ArrowRight}{ArrowRight}');
+    expect(cursorIds(first.container)).toEqual(['BBB']);
+    first.unmount();
+
+    const other = render(
+      <WorldMap world={world} clickableIds={new Set(['AAA'])} initialView="previous" />,
+    );
+    expect(cursorIds(other.container)).toEqual([]);
+  });
+
+  it('zooms with +, - and 0', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<WorldMap world={world} clickableIds={countryIds} />);
+    map().focus();
+    await user.keyboard('++');
+    expect(view(container).k).toBe(4);
+    await user.keyboard('-');
+    expect(view(container).k).toBe(2);
+    await user.keyboard('0');
+    expect(view(container).k).toBe(1);
   });
 });
