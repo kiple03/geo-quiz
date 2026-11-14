@@ -1,0 +1,52 @@
+/* Colours come from the design tokens in index.css. */
+.world-map {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+
+.world-map__ocean {
+  fill: var(--color-water);
+}
+
+.world-map__shape {
+  stroke: var(--color-border);
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transition: fill 120ms ease-out;
+}
+
+.world-map__shape--country {
+  fill: var(--color-land);
+}
+
+.world-map__shape--neutral {
+  fill: var(--color-land-neutral);
+}
+
+.world-map__shape--clickable {
+  cursor: pointer;
+}
+
+.world-map__shape--clickable:hover {
+  fill: var(--color-land-hover);
+}
+
+.world-map__shape--correct,
+.world-map__shape--reveal {
+  fill: var(--color-correct);
+}
+
+.world-map__shape--wrong {
+  fill: var(--color-wrong);
+}
+
+.world-map__shape--past-correct {
+  fill: var(--color-correct-soft);
+}
+
+.world-map__shape--past-wrong {
+  fill: var(--color-wrong-soft);
+}

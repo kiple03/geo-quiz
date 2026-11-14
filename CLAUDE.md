@@ -13,6 +13,7 @@ personal learning project. Repo: `github.com/kiple03/geo-quiz`, default branch `
 | `data/`           | `build.ts` generates `frontend/public/data/` (countries.json + world.topo.json)  |
 | `backend/`        | Placeholder. Spring Boot API arrives in Phase 4 (scores, accounts, leaderboards) |
 | `docs/decisions/` | ADRs (`NNNN-short-title.md`). Never rewrite an accepted ADR; supersede it        |
+| `docs/backlog.md` | Deferred design items for planned features (zoom, regions, subdivisions)         |
 
 ## Architecture: static data first (ADR 0001)
 
@@ -31,6 +32,23 @@ Read [docs/decisions/0001-static-data-first.md](docs/decisions/0001-static-data-
   frontend uses them, and `data/build.ts` imports them (so imports there need `.ts`
   extensions, since Node runs that code directly).
 - Significant decisions get a new ADR in `docs/decisions/` and a row in its `README.md`.
+
+## Frontend structure (ADR 0003)
+
+Keep it modular; new features should be additive. In `frontend/src/`:
+
+- `app/`: all routes (`App.tsx`) and the shared layout (`AppShell`). The router is
+  provided by `main.tsx` (BrowserRouter) or by tests (MemoryRouter).
+- `screens/`: non-game screens (main menu, not found; later login, leaderboard).
+- `game/modes/`: one folder per game mode, listed in `registry.ts`. The menu and game
+  screen read the registry, so a new mode never needs changes there.
+- `game/engine/`: the mode-agnostic round engine (pure, no React).
+- `game/setup.ts`: shared round filters (`RoundConfig.regions`, ...) applied to every
+  mode's pool. Put new cross-mode filters here, not in a mode.
+- `data/`: the only place that knows where data is loaded from.
+
+Known follow-ups for zoom, region and subdivision features are in `docs/backlog.md`;
+check it before starting those features.
 
 ## Commands
 

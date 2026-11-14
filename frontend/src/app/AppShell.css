@@ -1,0 +1,27 @@
+.app-header {
+  border-bottom: 1.5px solid var(--color-rule);
+}
+
+.app-header-inner {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-4);
+}
+
+.app-brand {
+  font-stretch: var(--stretch-wide);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.app-brand:hover {
+  color: var(--color-accent);
+}
+
+.app-main {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4);
+}

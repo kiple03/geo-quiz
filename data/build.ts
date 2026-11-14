@@ -18,7 +18,7 @@ import path from 'node:path';
 import mapshaper from 'mapshaper';
 // Shared with the frontend, so the output and the app agree on one schema.
 import type { Country } from '../frontend/src/data/types.ts';
-import { parseCountries } from '../frontend/src/data/validate.ts';
+import { parseCountries, parseWorld } from '../frontend/src/data/validate.ts';
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -225,6 +225,7 @@ const { countries, shapes } = join(world, metadata);
 parseCountries(countries); // the same check the frontend applies; throws if invalid
 const countriesJson = JSON.stringify(countries, null, 2) + '\n';
 const topoJson = await toTopoJson(shapes);
+parseWorld(JSON.parse(topoJson)); // likewise for the map; throws if invalid
 
 await mkdir(OUT_DIR, { recursive: true });
 await writeFile(path.join(OUT_DIR, 'countries.json'), countriesJson);

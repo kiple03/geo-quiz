@@ -1,5 +1,5 @@
 // Explicit .ts extension: data/build.ts runs this file directly in Node, which needs it.
-import type { Country } from './types.ts';
+import type { Country, WorldTopology } from './types.ts';
 
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -50,4 +50,30 @@ export function parseCountries(data: unknown): Country[] {
     throw new Error(`countries.json is invalid:\n  ${errors.join('\n  ')}`);
   }
   return data as Country[];
+}
+
+const worldError = (why: string) => new Error(`world.topo.json is invalid: ${why}`);
+
+/**
+ * Checks the parts of world.topo.json the app relies on (see `WorldTopology`) and
+ * returns it typed. The arcs themselves are left to the TopoJSON library.
+ */
+export function parseWorld(data: unknown): WorldTopology {
+  if (!isRecord(data) || data.type !== 'Topology') {
+    throw worldError('expected a TopoJSON Topology');
+  }
+  if (!Array.isArray(data.arcs)) throw worldError('missing arcs');
+
+  const world = isRecord(data.objects) ? data.objects.world : undefined;
+  if (!isRecord(world) || world.type !== 'GeometryCollection' || !Array.isArray(world.geometries)) {
+    throw worldError('expected objects.world to be a GeometryCollection');
+  }
+
+  const bad = world.geometries.flatMap((g: unknown, i) =>
+    isRecord(g) && isString(g.id) && g.id.length > 0 && isString(g.type) ? [] : [`#${i}`],
+  );
+  if (bad.length > 0) {
+    throw worldError(`geometries without a valid id or type: ${bad.join(', ')}`);
+  }
+  return data as unknown as WorldTopology;
 }

@@ -1,9 +1,128 @@
+/*
+ * Design tokens: the one place colours, type and spacing are defined. Components use
+ * these variables, never raw values. Look: a nautical chart (pale water, buff land,
+ * chart-magenta for what matters, starboard green / port red for right and wrong).
+ * light-dark() follows the OS theme; dark mode is a "night chart".
+ */
 :root {
   color-scheme: light dark;
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+
+  /* Surfaces and text */
+  --color-page: light-dark(#e9f0f0, #0f1e29);
+  --color-surface: light-dark(#f6f9f9, #152836);
+  --color-ink: light-dark(#1b2a35, #dce7ea);
+  --color-ink-muted: light-dark(#4e5f6a, #93a7b0);
+  --color-rule: light-dark(#c3d0d4, #2a4150);
+
+  /* Map */
+  --color-water: light-dark(#cfe2e8, #17313f);
+  --color-land: light-dark(#f5edd6, #3e4c52);
+  --color-land-hover: light-dark(#e8d9ad, #566870);
+  --color-land-neutral: light-dark(#ddd6c2, #2c383e);
+  --color-border: light-dark(#9a9180, #0f1e29);
+
+  /* Meaning */
+  --color-accent: light-dark(#a3236f, #e25daf);
+  --color-on-accent: light-dark(#ffffff, #1b0f17);
+  --color-correct: light-dark(#23845a, #4cc38a);
+  --color-wrong: light-dark(#c4313b, #f0646c);
+  /* Earlier answers that stay on the map: same hues, mixed toward the land colour. */
+  --color-correct-soft: color-mix(in srgb, var(--color-correct) 50%, var(--color-land));
+  --color-wrong-soft: color-mix(in srgb, var(--color-wrong) 50%, var(--color-land));
+
+  /* Type */
+  --font: 'Archivo Variable', system-ui, 'Segoe UI', sans-serif;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.75rem;
+  --text-display: clamp(2rem, 5vw, 3.25rem);
+  /* Wide, heavy setting used for names on the map and other key labels. */
+  --stretch-wide: 125%;
+
+  /* Space and shape */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --radius: 0.375rem;
+  --content-width: 72rem;
+
+  font-family: var(--font);
+  font-size: var(--text-base);
   line-height: 1.5;
+  color: var(--color-ink);
+  background: var(--color-page);
 }
 
 body {
   margin: 0;
+}
+
+h1,
+h2 {
+  margin: 0 0 var(--space-4);
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: var(--text-xl);
+}
+
+h2 {
+  font-size: var(--text-lg);
+}
+
+p {
+  margin: 0 0 var(--space-4);
+}
+
+a {
+  color: var(--color-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Buttons are shared by every screen. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0 var(--space-4);
+  border: 1.5px solid var(--color-rule);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-ink);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  border-color: var(--color-ink-muted);
+}
+
+.button--primary {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.button--primary:hover {
+  border-color: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0s !important;
+  }
 }

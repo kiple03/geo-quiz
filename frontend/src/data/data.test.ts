@@ -1,11 +1,10 @@
 import countriesRaw from '../../public/data/countries.json?raw';
 import worldRaw from '../../public/data/world.topo.json?raw';
-import type { WorldTopology } from './types';
-import { parseCountries } from './validate';
+import { parseCountries, parseWorld } from './validate';
 
 // Tests the generated files in public/data/ (see data/README.md).
 const countries = parseCountries(JSON.parse(countriesRaw));
-const world = JSON.parse(worldRaw) as WorldTopology;
+const world = parseWorld(JSON.parse(worldRaw));
 const shapeIds = world.objects.world.geometries.map((g) => g.id);
 const shapeIdSet = new Set(shapeIds);
 
@@ -60,5 +59,29 @@ describe('parseCountries', () => {
       /NOR: invalid latlng/,
     );
     expect(() => parseCountries([{ ...norway, latlng: [62, 200] }])).toThrow(/NOR: invalid latlng/);
+  });
+});
+
+describe('parseWorld', () => {
+  it('rejects data that is not a topology with a world collection', () => {
+    expect(() => parseWorld([])).toThrow(/expected a TopoJSON Topology/);
+    expect(() => parseWorld({ type: 'Topology', objects: {} })).toThrow(/missing arcs/);
+    expect(() => parseWorld({ type: 'Topology', arcs: [], objects: {} })).toThrow(
+      /objects.world to be a GeometryCollection/,
+    );
+  });
+
+  it('lists geometries without a valid id', () => {
+    const topology = {
+      type: 'Topology',
+      arcs: [],
+      objects: {
+        world: {
+          type: 'GeometryCollection',
+          geometries: [{ type: 'Polygon', id: 'NOR' }, { type: 'Polygon' }, { id: '' }],
+        },
+      },
+    };
+    expect(() => parseWorld(topology)).toThrow(/without a valid id or type: #1, #2/);
   });
 });
