@@ -1,10 +1,12 @@
 import { Link, useParams } from 'react-router';
+import { useGameData } from '../data/gameDataContext';
 import { findGameMode } from './modes/registry';
 
 /** Runs one game mode, chosen by the `/play/:modeId` route. */
 function GameScreen() {
   const { modeId } = useParams();
   const mode = findGameMode(modeId);
+  const dataState = useGameData();
 
   if (!mode) {
     return (
@@ -20,8 +22,19 @@ function GameScreen() {
   return (
     <section>
       <h1>{mode.title}</h1>
-      <p>{mode.description}</p>
-      <p>The game is not playable yet.</p>
+      {dataState.status === 'loading' && <p role="status">Loading the map…</p>}
+      {dataState.status === 'error' && (
+        <div role="alert">
+          <p>Could not load the game data.</p>
+          <p>{dataState.error.message}</p>
+          <button type="button" onClick={dataState.retry}>
+            Try again
+          </button>
+        </div>
+      )}
+      {dataState.status === 'ready' && (
+        <p>{dataState.data.countries.length} countries loaded. The game is not playable yet.</p>
+      )}
     </section>
   );
 }

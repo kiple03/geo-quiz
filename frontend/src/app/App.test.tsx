@@ -1,19 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router';
-import App from './App';
-
-function renderAt(path: string) {
-  return render(
-    <MemoryRouter initialEntries={[path]}>
-      <App />
-    </MemoryRouter>,
-  );
-}
+import { fixtureGameData } from '../test/fixtures';
+import { renderApp } from '../test/renderApp';
 
 describe('App routing', () => {
   it('shows the main menu with a link per game mode', () => {
-    renderAt('/');
+    renderApp('/');
     expect(screen.getByRole('heading', { level: 1, name: 'Geo Quiz' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /find the country/i })).toHaveAttribute(
       'href',
@@ -23,7 +15,7 @@ describe('App routing', () => {
 
   it('opens the game screen from the menu and goes back via the header', async () => {
     const user = userEvent.setup();
-    renderAt('/');
+    renderApp('/');
 
     await user.click(screen.getByRole('link', { name: /find the country/i }));
     expect(screen.getByRole('heading', { name: 'Find the country' })).toBeInTheDocument();
@@ -33,12 +25,36 @@ describe('App routing', () => {
   });
 
   it('shows an error for an unknown game mode', () => {
-    renderAt('/play/does-not-exist');
+    renderApp('/play/does-not-exist');
     expect(screen.getByRole('heading', { name: 'Unknown game mode' })).toBeInTheDocument();
   });
 
   it('shows a not-found page for unknown paths', () => {
-    renderAt('/some/where');
+    renderApp('/some/where');
     expect(screen.getByRole('heading', { name: 'Page not found' })).toBeInTheDocument();
+  });
+});
+
+describe('Game screen data loading', () => {
+  it('shows a loading state, then the loaded data', async () => {
+    renderApp('/play/map-click');
+    expect(screen.getByRole('status')).toHaveTextContent(/loading/i);
+    expect(await screen.findByText(/2 countries loaded/)).toBeInTheDocument();
+  });
+
+  it('shows the error and recovers when "Try again" succeeds', async () => {
+    const user = userEvent.setup();
+    const load = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('Could not load countries.json (HTTP 500)'))
+      .mockResolvedValue(fixtureGameData);
+    renderApp('/play/map-click', { load });
+
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveTextContent('Could not load countries.json (HTTP 500)');
+
+    await user.click(screen.getByRole('button', { name: 'Try again' }));
+    expect(await screen.findByText(/2 countries loaded/)).toBeInTheDocument();
+    expect(load).toHaveBeenCalledTimes(2);
   });
 });

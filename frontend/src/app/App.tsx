@@ -5,8 +5,8 @@ import NotFound from '../screens/NotFound';
 import AppShell from './AppShell';
 
 /**
- * All routes in one place (ADR 0003). The router itself is provided by the caller:
- * BrowserRouter in main.tsx, MemoryRouter in tests.
+ * All routes in one place (ADR 0003). The router and the data provider come from the
+ * caller: main.tsx in the app, `renderApp()` in tests.
  */
 function App() {
   return (
