@@ -50,8 +50,11 @@ const NEUTRAL_LAND = new Set([
   'ATC', // Ashmore and Cartier Islands
 ]);
 
-/** Percentage of vertices mapshaper keeps. Lower = smaller file, coarser borders. */
-const SIMPLIFY_PERCENT = 10;
+/**
+ * Percentage of vertices mapshaper keeps. Lower = smaller file, coarser borders. 30 keeps
+ * borders sharp up to about 16x zoom (ADR 0004) at ~90 KB gzipped.
+ */
+const SIMPLIFY_PERCENT = 30;
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const CACHE_DIR = path.join(import.meta.dirname, '.cache');

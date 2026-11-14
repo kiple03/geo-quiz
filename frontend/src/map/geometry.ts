@@ -6,6 +6,9 @@ import type { WorldTopology } from '../data/types';
 /** Width of the map's coordinate system (the SVG viewBox); the height follows from it. */
 export const MAP_WIDTH = 1000;
 
+/** `[[left, top], [right, bottom]]` in viewBox units. */
+export type MapBounds = [[number, number], [number, number]];
+
 export interface MapShape {
   /** A `Country.id`, or a neutral-land code (ADR 0002). */
   id: string;
@@ -13,6 +16,9 @@ export interface MapShape {
   d: string;
   /** Projected area in viewBox units², i.e. how big the shape looks on the map. */
   area: number;
+  /** Area-weighted center, in viewBox units; where a marker for a tiny shape goes. */
+  centroid: [number, number];
+  bounds: MapBounds;
 }
 
 export interface MapGeometry {
@@ -48,6 +54,8 @@ export function getMapGeometry(world: WorldTopology): MapGeometry {
       id: String(f.id),
       d: path(f) ?? '',
       area: path.area(f),
+      centroid: path.centroid(f),
+      bounds: path.bounds(f),
     })),
   };
   cache.set(world, geometry);

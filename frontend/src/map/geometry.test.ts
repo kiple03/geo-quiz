@@ -27,6 +27,18 @@ describe('getMapGeometry', () => {
     expect(shapes[0].area).toBeCloseTo(shapes[1].area, 6);
   });
 
+  it('gives each shape its bounds and a centroid inside them', () => {
+    const [a] = getMapGeometry(fixtureGameData.world).shapes;
+    const [[x0, y0], [x1, y1]] = a.bounds;
+    expect(x1).toBeGreaterThan(x0);
+    expect(y1).toBeGreaterThan(y0);
+    const [cx, cy] = a.centroid;
+    expect(cx).toBeGreaterThan(x0);
+    expect(cx).toBeLessThan(x1);
+    expect(cy).toBeGreaterThan(y0);
+    expect(cy).toBeLessThan(y1);
+  });
+
   describe('with the real world map', () => {
     const geometry = getMapGeometry(parseWorld(JSON.parse(worldRaw)));
     const byId = new Map(geometry.shapes.map((s) => [s.id, s]));
