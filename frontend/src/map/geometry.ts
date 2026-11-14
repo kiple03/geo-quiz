@@ -1,4 +1,5 @@
-import { geoEqualEarth, geoPath } from 'd3-geo';
+import { geoEqualEarth, geoPath, type GeoPath } from 'd3-geo';
+import type { Feature, Polygon } from 'geojson';
 import { feature } from 'topojson-client';
 import type { GeometryCollection, Topology } from 'topojson-specification';
 import type { WorldTopology } from '../data/types';
@@ -18,6 +19,12 @@ export interface MapShape {
   area: number;
   /** Area-weighted center, in viewBox units; where a marker for a tiny shape goes. */
   centroid: [number, number];
+  /**
+   * Center of the shape's largest part, in viewBox units: where the country "is" for
+   * keyboard navigation (ADR 0005). Unlike `centroid`, it is not pulled away by
+   * far-off parts (Alaska and Hawaii for the US, French Guiana for France).
+   */
+  labelPoint: [number, number];
   bounds: MapBounds;
 }
 
@@ -30,6 +37,23 @@ export interface MapGeometry {
 }
 
 const cache = new WeakMap<WorldTopology, MapGeometry>();
+
+/** The center of a feature's largest polygon (the feature itself if it has one part). */
+function largestPartCenter(feature: Feature, path: GeoPath): [number, number] {
+  const { geometry } = feature;
+  if (geometry?.type !== 'MultiPolygon') return path.centroid(feature);
+  let largest: Polygon | null = null;
+  let largestArea = -1;
+  for (const coordinates of geometry.coordinates) {
+    const part: Polygon = { type: 'Polygon', coordinates };
+    const area = path.area(part);
+    if (area > largestArea) {
+      largest = part;
+      largestArea = area;
+    }
+  }
+  return largest ? path.centroid(largest) : path.centroid(feature);
+}
 
 /**
  * Projects the world to SVG paths (Equal Earth, so countries keep their relative size).
@@ -55,6 +79,7 @@ export function getMapGeometry(world: WorldTopology): MapGeometry {
       d: path(f) ?? '',
       area: path.area(f),
       centroid: path.centroid(f),
+      labelPoint: largestPartCenter(f, path),
       bounds: path.bounds(f),
     })),
   };

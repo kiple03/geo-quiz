@@ -39,7 +39,7 @@ describe('Game screen data loading', () => {
   it('shows a loading state, then the loaded data', async () => {
     renderApp('/play/map-click');
     expect(screen.getByRole('status')).toHaveTextContent(/loading/i);
-    expect(await screen.findByRole('img', { name: 'World map' })).toBeInTheDocument();
+    expect(await screen.findByRole('application', { name: 'World map' })).toBeInTheDocument();
   });
 
   it('shows the error and recovers when "Try again" succeeds', async () => {
@@ -54,7 +54,7 @@ describe('Game screen data loading', () => {
     expect(alert).toHaveTextContent('Could not load countries.json (HTTP 500)');
 
     await user.click(screen.getByRole('button', { name: 'Try again' }));
-    expect(await screen.findByRole('img', { name: 'World map' })).toBeInTheDocument();
+    expect(await screen.findByRole('application', { name: 'World map' })).toBeInTheDocument();
     expect(load).toHaveBeenCalledTimes(2);
   });
 });

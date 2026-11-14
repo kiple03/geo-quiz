@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import type { GameData } from '../data/load';
 import {
@@ -57,6 +57,23 @@ function ActiveRound({
 
   const feedback = lastAnswer(state);
 
+  // When a new question starts, put focus where the player answers (the element the
+  // mode marks with `data-autofocus`, else the round itself), so keyboard and
+  // screen-reader players can go on (ADR 0005). Only if focus was lost, e.g. because
+  // auto-advance removed the focused "Next" button, or is still inside the round:
+  // focus the player moved elsewhere (e.g. to the header) is left alone.
+  const roundRef = useRef<HTMLDivElement>(null);
+  const questionIndex = state.current;
+  useEffect(() => {
+    const round = roundRef.current;
+    if (!round) return;
+    const active = document.activeElement;
+    const lost = !active || active === document.body;
+    if (!lost && !round.contains(active)) return;
+    const target = round.querySelector<HTMLElement | SVGElement>('[data-autofocus]') ?? round;
+    target.focus();
+  }, [questionIndex]);
+
   // A correct answer moves on by itself after a short pause; a wrong one waits for
   // "Next" so the player can study the map. Clicking "Next" early cancels the timer.
   const autoAdvanceMs = feedback?.correct ? config.autoAdvanceMs : null;
@@ -85,7 +102,7 @@ function ActiveRound({
     });
 
   return (
-    <div className="round">
+    <div className="round" ref={roundRef} tabIndex={-1}>
       <div className="round-bar">
         {/* One pip per question: answered ones show right/wrong, the current one is lit. */}
         <ol className="round-progress" aria-hidden="true">

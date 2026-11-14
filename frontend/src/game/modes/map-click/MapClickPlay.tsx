@@ -20,7 +20,7 @@ function MapClickPlay({ data, question, history, feedback, onAnswer }: PlayProps
     const clicked = countryName(data, feedback.answer);
     highlights[feedback.answer] = 'wrong';
     highlights[question.targetId] = 'reveal';
-    message = `Not quite: you clicked ${clicked}. ${targetName} is shown in green.`;
+    message = `Not quite: you clicked ${clicked}. ${targetName} is highlighted on the map.`;
   }
 
   return (
@@ -43,6 +43,10 @@ function MapClickPlay({ data, question, history, feedback, onAnswer }: PlayProps
         ringIds={feedback && !feedback.correct ? [question.targetId] : undefined}
         // Keep the player's zoom between questions; a new round starts on the whole world.
         initialView={history.length === 0 ? 'full' : 'previous'}
+        // Keyboard and screen-reader play (ADR 0005).
+        description={`Find ${targetName}`}
+        nameOf={(id) => countryName(data, id)}
+        focusTarget
       />
     </div>
   );

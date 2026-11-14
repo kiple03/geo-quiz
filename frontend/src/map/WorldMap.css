@@ -23,6 +23,11 @@
   cursor: grabbing;
 }
 
+.world-map__svg:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
 /*
  * On a phone held upright the whole world is a thin strip, so give the map more
  * height. The SVG keeps its aspect ratio ("meet"); the extra room shows more of the
@@ -91,6 +96,11 @@
   stroke: var(--color-wrong);
 }
 
+.world-map__ring--cursor {
+  stroke: var(--color-accent);
+  stroke-dasharray: 4 3;
+}
+
 .world-map__shape--correct,
 .world-map__shape--reveal {
   fill: var(--color-correct);
@@ -106,6 +116,23 @@
 
 .world-map__shape--past-wrong {
   fill: var(--color-wrong-soft);
+}
+
+/* Not by colour alone: wrong answers also get a dashed outline (ADR 0005). */
+.world-map__shape--wrong,
+.world-map__shape--past-wrong {
+  stroke: var(--color-ink);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 2;
+}
+
+/*
+ * The keyboard cursor (ADR 0005). Last, so it shows on answered countries too; it keeps
+ * a wrong answer's dashes, so that cue stays while the cursor is on it.
+ */
+.world-map__shape--cursor {
+  stroke: var(--color-accent);
+  stroke-width: 2.5;
 }
 
 /* Zoom buttons, stacked in the top-right corner like on a chart table. */

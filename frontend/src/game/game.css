@@ -51,8 +51,18 @@
   background: var(--color-correct);
 }
 
+/* Striped, so a miss is not shown by colour alone (ADR 0005). */
 .round-pip--wrong {
-  background: var(--color-wrong);
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--color-wrong) 0 3px,
+    var(--color-wrong-soft) 3px 5px
+  );
+}
+
+/* Focused only as a fallback for modes without a `data-autofocus` element. */
+.round:focus {
+  outline: none;
 }
 
 /* Prompt: the country name is set like a label on a map. */

@@ -52,6 +52,21 @@ describe('getMapGeometry', () => {
       }
     });
 
+    it('puts the label point on the main part of a country with far-off parts', () => {
+      // SVG y grows downwards, so "north of" means a smaller y.
+      // Alaska pulls the US centroid north; the label point is in the contiguous states.
+      const usa = byId.get('USA')!;
+      expect(usa.labelPoint[1]).toBeGreaterThan(usa.centroid[1]);
+
+      // French Guiana pulls France's centroid south-west, onto Spain. The label point is
+      // where France is: north-east of Spain.
+      const fra = byId.get('FRA')!;
+      const esp = byId.get('ESP')!;
+      expect(fra.centroid[1]).toBeGreaterThan(esp.labelPoint[1]);
+      expect(fra.labelPoint[0]).toBeGreaterThan(esp.labelPoint[0]);
+      expect(fra.labelPoint[1]).toBeLessThan(esp.labelPoint[1]);
+    });
+
     it('keeps relative sizes (equal-area projection)', () => {
       expect(byId.get('RUS')!.area).toBeGreaterThan(byId.get('NOR')!.area * 30);
       expect(byId.get('NOR')!.area).toBeGreaterThan(byId.get('VAT')?.area ?? 0);
