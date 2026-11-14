@@ -92,7 +92,11 @@ describe('Map-click game', () => {
 
     const first = currentTargets();
     await user.click(shape(first.other));
+    expect(document.querySelector(`[data-ring-for="${first.target}"]`)).not.toBeNull();
     await user.click(screen.getByRole('button', { name: 'Next question' }));
+
+    // While the feedback is shown, the right answer was circled; now it is not.
+    expect(document.querySelector('[data-ring-for]')).toBeNull();
 
     // The missed country is marked; the wrongly clicked one is back to normal.
     expect(shape(first.target)).toHaveClass('world-map__shape--past-wrong');

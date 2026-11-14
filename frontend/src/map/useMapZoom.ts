@@ -4,8 +4,25 @@ import { zoom, zoomIdentity, zoomTransform, type ZoomBehavior, type ZoomTransfor
 import { useLayoutEffect, useMemo, useRef, type RefObject } from 'react';
 import type { MapBounds } from './geometry';
 
-/** How far in the map can be zoomed, as a multiple of the full-map view (ADR 0004). */
-export const MAX_ZOOM = 16;
+/**
+ * How far in the map can be zoomed on a desktop-sized map, as a multiple of the
+ * full-map view (ADR 0004). Deep enough that the tiniest neighbours (the two halves of
+ * Saint Martin) can be told apart.
+ */
+export const MAX_ZOOM = 32;
+
+/**
+ * Screen pixels per map unit that `MAX_ZOOM` is meant for: a map about 1150 px wide.
+ * Smaller maps (phones) may zoom further, so the deepest zoom shows the same detail on
+ * every screen.
+ */
+const REFERENCE_PIXELS_PER_UNIT = 1.15;
+
+/** The deepest zoom for a map drawn at `pixelsPerUnit`; 0 means "size unknown". */
+export function maxZoomFor(pixelsPerUnit: number): number {
+  if (pixelsPerUnit <= 0) return MAX_ZOOM;
+  return MAX_ZOOM * Math.max(1, REFERENCE_PIXELS_PER_UNIT / pixelsPerUnit);
+}
 
 /** How much one press of the +/− buttons zooms. */
 const BUTTON_ZOOM_STEP = 2;
@@ -38,19 +55,25 @@ export interface MapZoomControls {
   reveal(bounds: MapBounds): void;
 }
 
+/** What the map shows right now. */
+export interface MapView {
+  /** Zoom level, 1 = the whole map. */
+  k: number;
+  /** Screen pixels per map unit at zoom 1; 0 when the size is unknown (e.g. in jsdom). */
+  pixelsPerUnit: number;
+}
+
 export interface MapZoomOptions {
   /** Size of the map's viewBox. */
   width: number;
   height: number;
   /** `'previous'` restores the last view of any map; `'full'` shows the whole map. */
   initialView: 'full' | 'previous';
-  /** Called with the zoom level on every change, including each animation frame. */
-  onZoom?: (k: number) => void;
+  /** Called on every change (including each animation frame) and on resize. */
+  onZoom?: (view: MapView) => void;
 }
 
 type Behavior = ZoomBehavior<SVGSVGElement, unknown>;
-
-const clampZoom = (k: number) => Math.min(MAX_ZOOM, Math.max(1, k));
 
 /** The view at zoom `k`, with map point `[x, y]` in the middle of the viewBox. */
 function centeredOn([x, y]: [number, number], k: number, width: number, height: number) {
@@ -110,6 +133,7 @@ export function useMapZoom(
       [0, 0],
       [width, height],
     ];
+    let pixelsPerUnit = 0;
     const behavior = zoom<SVGSVGElement, unknown>()
       .extent(extent)
       .translateExtent(extent)
@@ -122,8 +146,16 @@ export function useMapZoom(
         // During an animation, keep remembering its end view (set in moveTo), so a map
         // that unmounts halfway (the next question) does not restore an in-between view.
         if (!pendingRef.current) rememberedView = transform;
-        onZoomRef.current?.(transform.k);
+        onZoomRef.current?.({ k: transform.k, pixelsPerUnit });
       });
+
+    // The SVG keeps its aspect ratio ("meet"), so the smaller of the two scales applies.
+    const measure = () => {
+      const { width: w, height: h } = svg.getBoundingClientRect();
+      pixelsPerUnit = Math.min(w / width, h / height) || 0;
+      behavior.scaleExtent([1, maxZoomFor(pixelsPerUnit)]);
+    };
+    measure();
 
     const selection = select(svg);
     // No double-click zoom: its first click would already have answered the question.
@@ -134,7 +166,18 @@ export function useMapZoom(
     );
     behaviorRef.current = behavior;
 
+    // jsdom has no ResizeObserver; the map size is unknown there anyway.
+    const observer =
+      typeof ResizeObserver === 'function'
+        ? new ResizeObserver(() => {
+            measure();
+            onZoomRef.current?.({ k: zoomTransform(svg).k, pixelsPerUnit });
+          })
+        : null;
+    observer?.observe(svg);
+
     return () => {
+      observer?.disconnect();
       selection.interrupt().on('.zoom', null);
       behaviorRef.current = null;
     };
@@ -175,6 +218,11 @@ export function useMapZoom(
         .on('end.pending', settle)
         .on('interrupt.pending', settle);
       behavior.transform(transition, constrained);
+    };
+
+    const clampZoom = (k: number) => {
+      const [min, max] = behaviorRef.current?.scaleExtent() ?? [1, MAX_ZOOM];
+      return Math.min(max, Math.max(min, k));
     };
 
     /** Zooms by `factor`, keeping the middle of the map where it is. */

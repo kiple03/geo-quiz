@@ -52,7 +52,7 @@ const NEUTRAL_LAND = new Set([
 
 /**
  * Percentage of vertices mapshaper keeps. Lower = smaller file, coarser borders. 30 keeps
- * borders sharp up to the map's maximum zoom (ADR 0004) at ~90 KB gzipped.
+ * borders sharp up to about 16x zoom (ADR 0004) at ~90 KB gzipped.
  */
 const SIMPLIFY_PERCENT = 30;
 

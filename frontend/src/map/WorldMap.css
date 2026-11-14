@@ -66,10 +66,29 @@
   fill: var(--color-land-hover);
 }
 
-/* A dot on top of a country too small to click; WorldMap.tsx sets its radius. */
+/* A dot on top of a country too small to click; WorldMap.tsx sets its radius and
+   hides it once the country is big enough on screen. */
 .world-map__marker {
   stroke-width: 1;
   fill-opacity: 0.85;
+}
+
+/* A circle around a shape that may be too small to see, e.g. the right answer. */
+.world-map__ring {
+  fill: none;
+  stroke: var(--color-ink);
+  stroke-width: 2.5;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.world-map__ring--correct,
+.world-map__ring--reveal {
+  stroke: var(--color-correct);
+}
+
+.world-map__ring--wrong {
+  stroke: var(--color-wrong);
 }
 
 .world-map__shape--correct,

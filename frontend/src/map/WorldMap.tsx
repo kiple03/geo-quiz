@@ -1,8 +1,7 @@
-import { zoomTransform } from 'd3-zoom';
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import type { WorldTopology } from '../data/types';
 import { getMapGeometry, type MapBounds, type MapShape } from './geometry';
-import { useMapZoom } from './useMapZoom';
+import { useMapZoom, type MapView } from './useMapZoom';
 import './WorldMap.css';
 
 /**
@@ -27,6 +26,19 @@ export const MARKER_MAX_AREA = MIN_CLICKABLE_AREA / MARKER_ZOOM ** 2;
 /** Marker radius in viewBox units, unless CSS sets `--marker-radius` on the map. */
 const DEFAULT_MARKER_RADIUS = 5;
 
+/**
+ * A marker is hidden once its shape is this wide on screen (px): big enough to click by
+ * itself. This also separates neighbouring markers (Saint Martin's two halves) when
+ * zoomed in far enough.
+ */
+const MARKER_HIDE_SIZE = 5;
+
+/** Rings are this many times a marker's radius, so a ring fits around a marker. */
+const RING_SCALE = 2.5;
+
+/** A ring is hidden once its shape is this wide on screen (px): easy to spot by itself. */
+const RING_HIDE_SIZE = 24;
+
 interface WorldMapProps {
   world: WorldTopology;
   /** Shapes the player can click. All others are drawn as neutral land. */
@@ -39,6 +51,11 @@ interface WorldMapProps {
    * and zooms out if needed, whenever this list changes.
    */
   revealIds?: readonly string[];
+  /**
+   * Shapes to circle, so they can be found even when tiny (e.g. the right answer after a
+   * wrong click). A ring is hidden while its shape is big enough on screen to see.
+   */
+  ringIds?: readonly string[];
   /** `'previous'` keeps the view of the last map shown (e.g. the previous question). */
   initialView?: 'full' | 'previous';
 }
@@ -65,29 +82,64 @@ function WorldMap({
   highlights = {},
   onCountryClick,
   revealIds,
+  ringIds = [],
   initialView = 'full',
 }: WorldMapProps) {
   const { width, height, sphere, shapes } = getMapGeometry(world);
   const svgRef = useRef<SVGSVGElement>(null);
   const layerRef = useRef<SVGGElement>(null);
 
-  // Markers keep the same size on screen: their radius shrinks as the map zooms in. Set
-  // here rather than with the CSS `r` property, which Safari does not support.
-  const sizeMarkers = useCallback((k: number) => {
-    const svg = svgRef.current;
-    if (!svg) return;
-    const radius =
-      parseFloat(getComputedStyle(svg).getPropertyValue('--marker-radius')) ||
-      DEFAULT_MARKER_RADIUS;
-    for (const marker of svg.querySelectorAll('.world-map__marker')) {
-      marker.setAttribute('r', String(radius / k));
-    }
-  }, []);
-  const zoom = useMapZoom(svgRef, layerRef, { width, height, initialView, onZoom: sizeMarkers });
-  // Also after every render, in case React has just added markers.
-  useLayoutEffect(() => {
-    if (svgRef.current) sizeMarkers(zoomTransform(svgRef.current).k);
+  const areaById = useMemo(() => new Map(shapes.map((s) => [s.id, s.area])), [shapes]);
+  const viewRef = useRef<MapView>({ k: 1, pixelsPerUnit: 0 });
+
+  /**
+   * Sizes markers and rings for the current view (ADR 0004). They keep the same size on
+   * screen, so their radius shrinks as the map zooms in, and they are hidden once their
+   * shape is big enough on screen to see and click by itself. Done here rather than in
+   * CSS, because Safari does not support the CSS `r` property.
+   */
+  const updateOverlays = useCallback(
+    (view: MapView) => {
+      viewRef.current = view;
+      const svg = svgRef.current;
+      if (!svg) return;
+      const { k, pixelsPerUnit } = view;
+      // Size unknown (jsdom): treat one map unit as one pixel.
+      const scale = k * (pixelsPerUnit || 1);
+      const radius =
+        parseFloat(getComputedStyle(svg).getPropertyValue('--marker-radius')) ||
+        DEFAULT_MARKER_RADIUS;
+
+      const overlays = [
+        { selector: '.world-map__marker', idAttr: 'data-id', r: radius, hideAt: MARKER_HIDE_SIZE },
+        {
+          selector: '.world-map__ring',
+          idAttr: 'data-ring-for',
+          r: radius * RING_SCALE,
+          hideAt: RING_HIDE_SIZE,
+        },
+      ];
+      for (const { selector, idAttr, r, hideAt } of overlays) {
+        for (const el of svg.querySelectorAll(selector)) {
+          // How wide the shape is on screen, in px (as if it were a square).
+          const area = areaById.get(el.getAttribute(idAttr) ?? '') ?? 0;
+          const size = Math.sqrt(area) * scale;
+          el.setAttribute('r', String(r / k));
+          if (size >= hideAt) el.setAttribute('display', 'none');
+          else el.removeAttribute('display');
+        }
+      }
+    },
+    [areaById],
+  );
+  const zoom = useMapZoom(svgRef, layerRef, {
+    width,
+    height,
+    initialView,
+    onZoom: updateOverlays,
   });
+  // Also after every render, in case React has just added markers or rings.
+  useLayoutEffect(() => updateOverlays(viewRef.current));
 
   // A string, so a new array with the same ids does not move the map again.
   const revealKey = revealIds?.join(',');
@@ -102,6 +154,7 @@ function WorldMap({
   const plain = shapes.filter((s) => !highlights[s.id]);
   const highlighted = shapes.filter((s) => highlights[s.id]);
   const markers = shapes.filter((s) => clickableIds.has(s.id) && s.area < MARKER_MAX_AREA);
+  const rings = shapes.filter((s) => ringIds.includes(s.id));
 
   const classesFor = (id: string, base: string) => {
     const clickable = clickableIds.has(id);
@@ -161,6 +214,17 @@ function WorldMap({
               data-id={id}
               className={classesFor(id, 'world-map__shape world-map__marker')}
               onClick={clickHandler(id)}
+            />
+          ))}
+          {rings.map(({ id, centroid: [cx, cy] }) => (
+            <circle
+              key={id}
+              cx={cx}
+              cy={cy}
+              data-ring-for={id}
+              className={['world-map__ring', highlights[id] && `world-map__ring--${highlights[id]}`]
+                .filter(Boolean)
+                .join(' ')}
             />
           ))}
         </g>

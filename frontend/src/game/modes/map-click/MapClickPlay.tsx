@@ -39,6 +39,8 @@ function MapClickPlay({ data, question, history, feedback, onAnswer }: PlayProps
         onCountryClick={feedback ? undefined : onAnswer}
         // After a miss, make sure both the click and the right answer are on screen.
         revealIds={feedback && !feedback.correct ? [feedback.answer, question.targetId] : undefined}
+        // ...and circle the right answer, in case it is too small to see.
+        ringIds={feedback && !feedback.correct ? [question.targetId] : undefined}
         // Keep the player's zoom between questions; a new round starts on the whole world.
         initialView={history.length === 0 ? 'full' : 'previous'}
       />

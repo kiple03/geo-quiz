@@ -4,7 +4,7 @@ import worldRaw from '../../public/data/world.topo.json?raw';
 import { parseWorld } from '../data/validate';
 import { fixtureGameData } from '../test/fixtures';
 import { getMapGeometry } from './geometry';
-import { MAX_ZOOM } from './useMapZoom';
+import { MAX_ZOOM, maxZoomFor } from './useMapZoom';
 import WorldMap from './WorldMap';
 
 const world = fixtureGameData.world;
@@ -89,6 +89,39 @@ describe('WorldMap', () => {
     await user.click(screen.getByRole('button', { name: 'Zoom in' }));
     expect(marker.getAttribute('r')).toBe('1.25');
   });
+
+  it('hides a marker once its country is big enough on screen to click by itself', async () => {
+    const user = userEvent.setup();
+    const realWorld = parseWorld(JSON.parse(worldRaw));
+    const { container } = render(
+      <WorldMap world={realWorld} clickableIds={new Set(['JEY', 'VAT'])} />,
+    );
+    const marker = (id: string) => container.querySelector(`.world-map__marker[data-id="${id}"]`)!;
+    expect(marker('JEY')).not.toHaveAttribute('display');
+
+    // At full zoom Jersey is several pixels wide; Vatican City still is not.
+    for (let i = 0; i < 5; i++) await user.click(screen.getByRole('button', { name: 'Zoom in' }));
+    expect(marker('JEY')).toHaveAttribute('display', 'none');
+    expect(marker('VAT')).not.toHaveAttribute('display');
+  });
+
+  it('circles small ring shapes, but not ones that are easy to see', () => {
+    const realWorld = parseWorld(JSON.parse(worldRaw));
+    const { container } = render(
+      <WorldMap
+        world={realWorld}
+        clickableIds={new Set(['LUX', 'RUS'])}
+        highlights={{ LUX: 'reveal' }}
+        ringIds={['LUX', 'RUS']}
+      />,
+    );
+    const ring = (id: string) => container.querySelector(`[data-ring-for="${id}"]`)!;
+    expect(ring('LUX')).toHaveClass('world-map__ring--reveal');
+    expect(ring('LUX')).not.toHaveAttribute('display');
+    expect(ring('RUS')).toHaveAttribute('display', 'none');
+    // Rings are decoration, not extra click targets.
+    expect(ring('LUX')).not.toHaveAttribute('data-id');
+  });
 });
 
 /** The zoom transform d3-zoom wrote to the map layer, as x/y offset and scale. */
@@ -99,6 +132,15 @@ function view(container: HTMLElement) {
   const [x, y, k] = match.slice(1).map(Number);
   return { x, y, k };
 }
+
+describe('maxZoomFor', () => {
+  it('lets smaller maps zoom further, so the deepest zoom shows the same detail', () => {
+    expect(maxZoomFor(0)).toBe(MAX_ZOOM);
+    expect(maxZoomFor(1.15)).toBe(MAX_ZOOM);
+    expect(maxZoomFor(2.3)).toBe(MAX_ZOOM);
+    expect(maxZoomFor(0.375)).toBeCloseTo(MAX_ZOOM * (1.15 / 0.375));
+  });
+});
 
 describe('WorldMap zoom', () => {
   const { width, height, shapes } = getMapGeometry(world);
