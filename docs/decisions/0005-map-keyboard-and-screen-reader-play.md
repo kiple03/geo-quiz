@@ -26,8 +26,10 @@ tests nothing. A keyboard way to answer has to be spatial, like the mouse one.
   countries straight ahead. Distances run between each country's `labelPoint`, the
   center of its largest part, so far-off territories (Alaska, French Guiana) do not
   pull a country somewhere else. Every country, including Vatican City and Tuvalu, can
-  be reached; a test checks this on the real map. Enter or Space answers, and `+`, `-`
-  and `0` zoom. The map pans to keep the cursor in view. The cursor only appears after
+  be reached; a test checks this on the real map. Enter or Space answers when the key
+  is released (so a held key cannot also press the "Next question" button that gets
+  focus), and `+`, `-` and `0` zoom; with Ctrl, Cmd or Alt they stay browser
+  shortcuts. The map pans to keep the cursor in view. The cursor only appears after
   the first arrow press, so mouse and touch players never see it, and it carries over
   to the next question like the zoom does.
 - **Screen readers hear the name of the country under the cursor** (a polite live

@@ -127,12 +127,21 @@
 }
 
 /*
- * The keyboard cursor (ADR 0005). Last, so it shows on answered countries too; it keeps
- * a wrong answer's dashes, so that cue stays while the cursor is on it.
+ * The keyboard cursor (ADR 0005): an outline drawn over the shape. It keeps a wrong
+ * answer's dashes, so that cue stays while the cursor is on it.
  */
-.world-map__shape--cursor {
+.world-map__cursor {
+  fill: none;
   stroke: var(--color-accent);
   stroke-width: 2.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.world-map__cursor--wrong,
+.world-map__cursor--past-wrong {
+  stroke-dasharray: 4 2;
 }
 
 /* Zoom buttons, stacked in the top-right corner like on a chart table. */

@@ -25,6 +25,8 @@ export interface MapShape {
    * far-off parts (Alaska and Hawaii for the US, French Guiana for France).
    */
   labelPoint: [number, number];
+  /** Bounds of the shape's largest part; what the map moves into view for the cursor. */
+  labelBounds: MapBounds;
   bounds: MapBounds;
 }
 
@@ -38,10 +40,10 @@ export interface MapGeometry {
 
 const cache = new WeakMap<WorldTopology, MapGeometry>();
 
-/** The center of a feature's largest polygon (the feature itself if it has one part). */
-function largestPartCenter(feature: Feature, path: GeoPath): [number, number] {
+/** A feature's largest polygon, or the feature itself if it has only one part. */
+function largestPart(feature: Feature, path: GeoPath): Feature | Polygon {
   const { geometry } = feature;
-  if (geometry?.type !== 'MultiPolygon') return path.centroid(feature);
+  if (geometry?.type !== 'MultiPolygon') return feature;
   let largest: Polygon | null = null;
   let largestArea = -1;
   for (const coordinates of geometry.coordinates) {
@@ -52,7 +54,7 @@ function largestPartCenter(feature: Feature, path: GeoPath): [number, number] {
       largestArea = area;
     }
   }
-  return largest ? path.centroid(largest) : path.centroid(feature);
+  return largest ?? feature;
 }
 
 /**
@@ -74,14 +76,18 @@ export function getMapGeometry(world: WorldTopology): MapGeometry {
     width: MAP_WIDTH,
     height: Math.ceil(bottom),
     sphere: path({ type: 'Sphere' }) ?? '',
-    shapes: collection.features.map((f) => ({
-      id: String(f.id),
-      d: path(f) ?? '',
-      area: path.area(f),
-      centroid: path.centroid(f),
-      labelPoint: largestPartCenter(f, path),
-      bounds: path.bounds(f),
-    })),
+    shapes: collection.features.map((f) => {
+      const main = largestPart(f, path);
+      return {
+        id: String(f.id),
+        d: path(f) ?? '',
+        area: path.area(f),
+        centroid: path.centroid(f),
+        labelPoint: path.centroid(main),
+        labelBounds: path.bounds(main),
+        bounds: path.bounds(f),
+      };
+    }),
   };
   cache.set(world, geometry);
   return geometry;

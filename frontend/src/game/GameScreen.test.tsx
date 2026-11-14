@@ -163,6 +163,19 @@ describe('Map-click game', () => {
     expect(screen.getByText(/You got/)).toHaveTextContent('You got 2 of 2 right.');
   });
 
+  it('keeps the feedback after a wrong answer when Enter is held down', async () => {
+    const user = await startGame();
+    const { other } = currentTargets();
+    // The first arrow press lands on Alphaland (AAA); one more step right is Betaland.
+    await user.keyboard(other === 'AAA' ? '{ArrowRight}' : '{ArrowRight}{ArrowRight}');
+    // Held long enough to auto-repeat, then released. The repeats must not reach the
+    // "Next question" button that gets focus after the answer.
+    await user.keyboard('{Enter>4/}');
+    expect(screen.getByRole('status')).toHaveTextContent(/^Not quite/);
+    expect(screen.getByRole('button', { name: 'Next question' })).toHaveFocus();
+    expect(screen.getByText('Question 1 of 2')).toBeInTheDocument();
+  });
+
   it('leaves focus alone if the player moved it out of the round', async () => {
     const user = await startGame();
     await user.click(shape(currentTargets().target));

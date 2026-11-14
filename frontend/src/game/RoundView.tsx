@@ -71,7 +71,8 @@ function ActiveRound({
     const lost = !active || active === document.body;
     if (!lost && !round.contains(active)) return;
     const target = round.querySelector<HTMLElement | SVGElement>('[data-autofocus]') ?? round;
-    target.focus();
+    // No scrolling: on a phone the tall map would push the prompt off screen.
+    target.focus({ preventScroll: true });
   }, [questionIndex]);
 
   // A correct answer moves on by itself after a short pause; a wrong one waits for

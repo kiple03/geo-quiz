@@ -65,6 +65,9 @@ describe('getMapGeometry', () => {
       expect(fra.centroid[1]).toBeGreaterThan(esp.labelPoint[1]);
       expect(fra.labelPoint[0]).toBeGreaterThan(esp.labelPoint[0]);
       expect(fra.labelPoint[1]).toBeLessThan(esp.labelPoint[1]);
+      // Its label bounds are those of metropolitan France, not France with Guiana.
+      const width = ([[x0], [x1]]: [[number, number], [number, number]]) => x1 - x0;
+      expect(width(fra.labelBounds)).toBeLessThan(width(fra.bounds) / 5);
     });
 
     it('keeps relative sizes (equal-area projection)', () => {

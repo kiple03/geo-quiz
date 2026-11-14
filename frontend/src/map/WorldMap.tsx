@@ -123,14 +123,19 @@ function WorldMap({
   const layerRef = useRef<SVGGElement>(null);
   const descriptionId = useId();
 
+  const shapeById = useMemo(() => new Map(shapes.map((s) => [s.id, s])), [shapes]);
+
   // The keyboard cursor: null until the player first presses an arrow key, so mouse
-  // and touch players never see it.
+  // and touch players never see it. A remembered cursor from another map (e.g. with
+  // other clickable shapes) is ignored.
   const [cursorId, setCursorId] = useState<string | null>(() =>
-    initialView === 'previous' ? rememberedCursor : null,
+    initialView === 'previous' && rememberedCursor && clickableIds.has(rememberedCursor)
+      ? rememberedCursor
+      : null,
   );
   const [announcement, setAnnouncement] = useState('');
-
-  const areaById = useMemo(() => new Map(shapes.map((s) => [s.id, s.area])), [shapes]);
+  // Enter or Space pressed down on the map; the answer is sent when it is released.
+  const answerKeyRef = useRef<string | null>(null);
   const viewRef = useRef<MapView>({ k: 1, pixelsPerUnit: 0 });
 
   /**
@@ -163,7 +168,7 @@ function WorldMap({
       for (const { selector, idAttr, r, hideAt } of overlays) {
         for (const el of svg.querySelectorAll(selector)) {
           // How wide the shape is on screen, in px (as if it were a square).
-          const area = areaById.get(el.getAttribute(idAttr) ?? '') ?? 0;
+          const area = shapeById.get(el.getAttribute(idAttr) ?? '')?.area ?? 0;
           const size = Math.sqrt(area) * scale;
           el.setAttribute('r', String(r / k));
           if (size >= hideAt) el.setAttribute('display', 'none');
@@ -171,7 +176,7 @@ function WorldMap({
         }
       }
     },
-    [areaById],
+    [shapeById],
   );
   const zoom = useMapZoom(svgRef, layerRef, {
     width,
@@ -204,11 +209,15 @@ function WorldMap({
     setCursorId(id);
     rememberedCursor = id;
     setAnnouncement(nameOf(id));
-    const shape = shapes.find((s) => s.id === id);
-    if (shape) zoom.reveal(shape.bounds);
+    // The main part only: revealing all of France would zoom out to French Guiana.
+    const shape = shapeById.get(id);
+    if (shape) zoom.reveal(shape.labelBounds);
   };
 
   const handleKeyDown = (event: KeyboardEvent<SVGSVGElement>) => {
+    // Leave browser shortcuts alone: Ctrl/Cmd with +, - or 0 zooms the page, and
+    // Alt/Cmd with an arrow goes back or forward.
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
     const direction = ARROW_KEYS[event.key];
     if (direction) {
       event.preventDefault(); // no page scrolling
@@ -224,20 +233,37 @@ function WorldMap({
       if (next) moveCursor(next.id);
       return;
     }
-    const action = (
-      {
-        Enter: () => cursorId && onCountryClick?.(cursorId),
-        ' ': () => cursorId && onCountryClick?.(cursorId),
-        '+': zoom.zoomIn,
-        '=': zoom.zoomIn,
-        '-': zoom.zoomOut,
-        '0': zoom.reset,
-      } as Record<string, (() => void) | undefined>
-    )[event.key];
-    if (action) {
-      event.preventDefault();
-      action();
+    switch (event.key) {
+      case 'Enter':
+      case ' ':
+        // Answer on release, not here: after the answer, focus moves to the "Next
+        // question" button, which would then get the auto-repeat of a held key (or,
+        // for Space, possibly its release) and skip the feedback.
+        event.preventDefault();
+        if (!event.repeat) answerKeyRef.current = event.key;
+        return;
+      case '+':
+      case '=':
+        zoom.zoomIn();
+        break;
+      case '-':
+        zoom.zoomOut();
+        break;
+      case '0':
+        zoom.reset();
+        break;
+      default:
+        return;
     }
+    event.preventDefault();
+  };
+
+  const handleKeyUp = (event: KeyboardEvent<SVGSVGElement>) => {
+    // Only a key that was also pressed down here: Enter on "Next question" brings
+    // focus back to the map before the key is released, and must not answer.
+    if (event.key !== answerKeyRef.current) return;
+    answerKeyRef.current = null;
+    if (cursorId && clickableIds.has(cursorId)) onCountryClick?.(cursorId);
   };
 
   // Highlighted shapes go last, so their outline is drawn on top of their neighbours'.
@@ -246,7 +272,7 @@ function WorldMap({
   const markers = shapes.filter((s) => clickableIds.has(s.id) && s.area < MARKER_MAX_AREA);
   const rings = shapes.filter((s) => ringIds.includes(s.id));
   // The cursor is an outline on the shape, plus a ring while the shape is small.
-  const cursorShape = shapes.find((s) => s.id === cursorId);
+  const cursorShape = cursorId ? shapeById.get(cursorId) : undefined;
 
   const classesFor = (id: string, base: string) => {
     const clickable = clickableIds.has(id);
@@ -256,7 +282,6 @@ function WorldMap({
       clickable ? 'world-map__shape--country' : 'world-map__shape--neutral',
       clickable && onCountryClick ? 'world-map__shape--clickable' : '',
       highlight ? `world-map__shape--${highlight}` : '',
-      id === cursorId ? 'world-map__shape--cursor' : '',
     ]
       .filter(Boolean)
       .join(' ');
@@ -297,6 +322,8 @@ function WorldMap({
         aria-describedby={descriptionId}
         tabIndex={0}
         onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
+        onBlur={() => (answerKeyRef.current = null)}
         data-autofocus={focusTarget || undefined}
       >
         {/* d3-zoom sets this group's transform; React never does. */}
@@ -314,6 +341,20 @@ function WorldMap({
               onClick={clickHandler(id)}
             />
           ))}
+          {cursorShape && (
+            // Its own outline on top of everything, so neighbours do not cover it. It
+            // keeps a wrong answer's dashes (ADR 0005).
+            <path
+              d={cursorShape.d}
+              data-cursor-for={cursorShape.id}
+              className={[
+                'world-map__cursor',
+                highlights[cursorShape.id] && `world-map__cursor--${highlights[cursorShape.id]}`,
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            />
+          )}
           {rings.map(({ id, centroid: [cx, cy] }) => (
             <circle
               key={`ring-${id}`}
@@ -328,8 +369,8 @@ function WorldMap({
           {cursorShape && (
             <circle
               key={`cursor-${cursorShape.id}`}
-              cx={cursorShape.centroid[0]}
-              cy={cursorShape.centroid[1]}
+              cx={cursorShape.labelPoint[0]}
+              cy={cursorShape.labelPoint[1]}
               data-ring-for={cursorShape.id}
               className="world-map__ring world-map__ring--cursor"
             />
