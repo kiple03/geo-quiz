@@ -5,6 +5,8 @@ import { parseCountries, parseWorld } from './validate';
 export interface GameData {
   countries: readonly Country[];
   countriesById: ReadonlyMap<string, Country>;
+  /** Ids of all countries; map shapes not in here are neutral land (ADR 0002). */
+  countryIds: ReadonlySet<string>;
   world: WorldTopology;
 }
 
@@ -24,6 +26,7 @@ export function createGameData(countries: readonly Country[], world: WorldTopolo
   return {
     countries,
     countriesById: new Map(countries.map((country) => [country.id, country])),
+    countryIds: new Set(countries.map((country) => country.id)),
     world,
   };
 }

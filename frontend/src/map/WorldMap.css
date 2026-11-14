@@ -1,0 +1,54 @@
+/* Colours are placeholders until the styling pass; light-dark() follows the OS theme. */
+.world-map {
+  --map-ocean: light-dark(#d6e6f2, #13232f);
+  --map-land: light-dark(#f4f1e8, #3a4148);
+  --map-land-hover: light-dark(#e3d9b8, #56606a);
+  --map-neutral: light-dark(#dcd8cc, #2b3137);
+  --map-border: light-dark(#8a8578, #1a1f24);
+  --map-correct: #3c9a5f;
+  --map-wrong: #d1495b;
+
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+
+.world-map__ocean {
+  fill: var(--map-ocean);
+}
+
+.world-map__shape {
+  stroke: var(--map-border);
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.world-map__shape--country {
+  fill: var(--map-land);
+}
+
+.world-map__shape--neutral {
+  fill: var(--map-neutral);
+}
+
+.world-map__shape--clickable {
+  cursor: pointer;
+}
+
+.world-map__shape--clickable:hover {
+  fill: var(--map-land-hover);
+}
+
+.world-map__shape--correct,
+.world-map__shape--reveal,
+.world-map__shape--correct:hover,
+.world-map__shape--reveal:hover {
+  fill: var(--map-correct);
+}
+
+.world-map__shape--wrong,
+.world-map__shape--wrong:hover {
+  fill: var(--map-wrong);
+}

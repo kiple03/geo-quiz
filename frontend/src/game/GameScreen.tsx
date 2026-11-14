@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router';
 import { useGameData } from '../data/gameDataContext';
+import WorldMap from '../map/WorldMap';
 import { findGameMode } from './modes/registry';
 
 /** Runs one game mode, chosen by the `/play/:modeId` route. */
@@ -33,7 +34,10 @@ function GameScreen() {
         </div>
       )}
       {dataState.status === 'ready' && (
-        <p>{dataState.data.countries.length} countries loaded. The game is not playable yet.</p>
+        <>
+          <p>The game is not playable yet. This is a preview of the map.</p>
+          <WorldMap world={dataState.data.world} clickableIds={dataState.data.countryIds} />
+        </>
       )}
     </section>
   );
