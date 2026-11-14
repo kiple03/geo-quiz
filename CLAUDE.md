@@ -49,9 +49,12 @@ Keep it modular; new features should be additive. In `frontend/src/`:
 - `game/engine/`: the mode-agnostic round engine (pure, no React).
 - `game/setup.ts`: shared round filters (`RoundConfig.regions`, ...) applied to every
   mode's pool. Put new cross-mode filters here, not in a mode.
+- `game/settings.ts`: round settings in the URL (`/play/map-click?region=europe`),
+  parsed on top of `defaultRoundConfig()`; `game/regions.ts`: the regions the menu
+  offers, with their map frames (ADR 0006). Modes get the config via `PlayProps.config`.
 - `data/`: the only place that knows where data is loaded from.
 
-Known follow-ups for zoom, region and subdivision features are in `docs/backlog.md`;
+Known follow-ups for subdivision features and per-mode datasets are in `docs/backlog.md`;
 check it before starting those features.
 
 ## Commands
@@ -106,6 +109,16 @@ a ruleset that requires this check. Renaming the job breaks the required check.
   with `npx prettier --config .prettierrc.json --write ../<file>` from `frontend/`. The
   `--config` flag is required: Prettier looks for config from the file's own directory,
   so without it root and `data/` files get Prettier's defaults.
+- Don't write files with PowerShell `Set-Content` or `-replace` round trips: they mangle
+  UTF-8 (… ✓ ²) and add a BOM. Use the Edit/Write tools, or Python/Node with UTF-8.
+- Stopping a background `npx vite` task leaves the node process running. Kill it by
+  port, after checking that the process's command line is vite.
+- jsdom can't test gestures, real focus or accessibility behaviour. For those, drive
+  headless Chrome (`C:/Program Files/Google/Chrome/Application/chrome.exe` with
+  `--headless=new --remote-debugging-port=...`) over the DevTools protocol with Node
+  24's built-in WebSocket: clicks, wheel, keys, screenshots,
+  `Accessibility.getFullAXTree`. Keep such scripts in the scratchpad, not the repo.
+- When a test guards a fix, temporarily undo the fix and check that the test fails.
 
 ## Workflow
 
@@ -123,6 +136,10 @@ merges). Do not run them unless asked. Read-only commands (`git status`, `git di
   commands and a conventional commit message
 - when a PR is due, write the title and description in a copyable markdown block
   following `.github/pull_request_template.md`, ending with `Closes #N`
+
+After each merged PR (or earlier if the conversation gets long), recommend starting a
+new conversation, get everything ready for the switch, and give a paste-ready handoff
+message.
 
 ## Code review format
 

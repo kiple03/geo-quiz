@@ -10,3 +10,4 @@ Short records of significant decisions and why they were made. Number them seque
 | [0003](0003-frontend-structure.md)                  | Frontend structure: routing, mode registry, engine        | Accepted |
 | [0004](0004-map-zoom-and-markers.md)                | Map zoom and pan with d3-zoom; markers for tiny countries | Accepted |
 | [0005](0005-map-keyboard-and-screen-reader-play.md) | Keyboard and screen-reader play for the map game          | Accepted |
+| [0006](0006-region-quizzes.md)                      | Region quizzes: settings in the URL, region as the field  | Accepted |
