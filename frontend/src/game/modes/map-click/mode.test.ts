@@ -13,17 +13,15 @@ describe('map-click mode', () => {
     );
     const poolIds = new Set(mapClickMode.questionPool(data).map((c) => c.id));
 
-    it('asks about countries that are big enough to click', () => {
-      for (const id of ['NOR', 'BRA', 'JPN', 'LBN']) expect(poolIds, id).toContain(id);
+    it('asks about every country, including the tiniest (zoom and markers)', () => {
+      for (const id of ['NOR', 'BRA', 'LUX', 'SGP', 'MCO', 'VAT', 'TUV']) {
+        expect(poolIds, id).toContain(id);
+      }
+      expect(poolIds.size).toBe(data.countries.length);
     });
 
-    it('leaves out countries too small to click', () => {
-      for (const id of ['VAT', 'MCO', 'LUX', 'SGP']) expect(poolIds, id).not.toContain(id);
-    });
-
-    it('never includes neutral land, and still has plenty of countries', () => {
+    it('never includes neutral land', () => {
       for (const id of poolIds) expect(data.countryIds.has(id)).toBe(true);
-      expect(poolIds.size).toBeGreaterThan(150);
     });
   });
 

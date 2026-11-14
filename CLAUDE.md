@@ -26,7 +26,8 @@ Read [docs/decisions/0001-static-data-first.md](docs/decisions/0001-static-data-
 - The client downloads the whole dataset, so watch its size (especially map geometry).
 - Never hand-edit `frontend/public/data/`. Change `data/build.ts` and regenerate.
 - The core game mode is clicking the named country on a world map: Natural Earth 1:50m
-  shapes, rendered as SVG with d3-geo (ADR 0002). Each TopoJSON geometry `id` is a
+  shapes, rendered as SVG with d3-geo (ADR 0002), with zoom and pan via d3-zoom and
+  markers for countries too small to click (ADR 0004). Each TopoJSON geometry `id` is a
   `Country.id`; shapes with no matching country are neutral land, never asked about.
 - The `Country` type and `parseCountries()` in `frontend/src/data/` are shared: the
   frontend uses them, and `data/build.ts` imports them (so imports there need `.ts`

@@ -1,9 +1,41 @@
 /* Colours come from the design tokens in index.css. */
 .world-map {
+  /* Marker radius on screen, at the map's normal size (see .world-map__marker). */
+  --marker-radius: 5px;
+
+  position: relative;
+  overflow: hidden;
+  background: var(--color-page);
+}
+
+.world-map__svg {
   display: block;
   width: 100%;
   height: auto;
   user-select: none;
+  /* d3-zoom handles touch: one finger pans the map, two fingers zoom it. */
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: grab;
+}
+
+.world-map__svg:active {
+  cursor: grabbing;
+}
+
+/*
+ * On a phone held upright the whole world is a thin strip, so give the map more
+ * height. The SVG keeps its aspect ratio ("meet"); the extra room shows more of the
+ * map once the player zooms in.
+ */
+@media (max-width: 40rem) and (orientation: portrait) {
+  .world-map {
+    --marker-radius: 12px;
+  }
+
+  .world-map__svg {
+    height: min(65vh, 32rem);
+  }
 }
 
 .world-map__ocean {
@@ -34,6 +66,16 @@
   fill: var(--color-land-hover);
 }
 
+/*
+ * A dot on top of a country too small to click (ADR 0004). d3-zoom sets --map-zoom on
+ * the SVG, so dividing by it keeps the dot the same size on screen at any zoom.
+ */
+.world-map__marker {
+  r: calc(var(--marker-radius) / var(--map-zoom, 1));
+  stroke-width: 1;
+  fill-opacity: 0.85;
+}
+
 .world-map__shape--correct,
 .world-map__shape--reveal {
   fill: var(--color-correct);
@@ -49,4 +91,49 @@
 
 .world-map__shape--past-wrong {
   fill: var(--color-wrong-soft);
+}
+
+/* Zoom buttons, stacked in the top-right corner like on a chart table. */
+
+.world-map__controls {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius);
+  background: var(--color-rule);
+}
+
+.world-map__control {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 0;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.world-map__control:hover {
+  background: var(--color-land-hover);
+}
+
+.world-map__control:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.world-map__control svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
 }

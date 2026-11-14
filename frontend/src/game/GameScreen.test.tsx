@@ -111,6 +111,27 @@ describe('Map-click game', () => {
     expect(screen.getByText('Question 2 of 2')).toBeInTheDocument();
   });
 
+  it('keeps the zoom between questions, and starts the next round on the whole map', async () => {
+    const user = await startGame();
+    const zoomLevel = () =>
+      document.querySelector('.world-map__svg > g')?.getAttribute('transform') ?? '';
+
+    await user.click(screen.getByRole('button', { name: 'Zoom in' }));
+    expect(zoomLevel()).toMatch(/scale\(2\)$/);
+
+    // A miss reveals the answer; at 2× around the middle both fixture countries are
+    // already in view, so the zoom stays as the player set it.
+    await user.click(shape(currentTargets().other));
+    expect(zoomLevel()).toMatch(/scale\(2\)$/);
+    await user.click(screen.getByRole('button', { name: 'Next question' }));
+    expect(zoomLevel()).toMatch(/scale\(2\)$/);
+
+    await user.click(shape(currentTargets().target));
+    await waitForAutoAdvance();
+    await user.click(screen.getByRole('button', { name: 'Play again' }));
+    expect(zoomLevel()).toMatch(/scale\(1\)$/);
+  });
+
   it('ignores clicks on neutral land', async () => {
     const user = await startGame();
 
