@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { zoomTransform } from 'd3-zoom';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import type { WorldTopology } from '../data/types';
 import { getMapGeometry, type MapBounds, type MapShape } from './geometry';
 import { useMapZoom } from './useMapZoom';
@@ -11,13 +12,20 @@ import './WorldMap.css';
  */
 export type MapHighlight = 'correct' | 'wrong' | 'reveal' | 'past-correct' | 'past-wrong';
 
+/** Smallest shape (viewBox units², about px² on a desktop screen) that is easy to hit. */
+const MIN_CLICKABLE_AREA = 5;
+/** Zoom level a player can be expected to reach without hunting for a country. */
+const MARKER_ZOOM = 8;
+
 /**
- * Clickable shapes smaller than this (viewBox units², about px² on a desktop screen)
- * also get a round marker, because even at 8× zoom they would be under 5 units², too
- * small to hit. That covers microstates and small islands such as Vatican City,
- * Monaco and Tuvalu (ADR 0004).
+ * Clickable shapes smaller than this also get a round marker: even at `MARKER_ZOOM`
+ * they would be under `MIN_CLICKABLE_AREA`. That covers microstates and small islands
+ * such as Vatican City, Monaco and Tuvalu (ADR 0004).
  */
-export const MARKER_MAX_AREA = 5 / 8 ** 2;
+export const MARKER_MAX_AREA = MIN_CLICKABLE_AREA / MARKER_ZOOM ** 2;
+
+/** Marker radius in viewBox units, unless CSS sets `--marker-radius` on the map. */
+const DEFAULT_MARKER_RADIUS = 5;
 
 interface WorldMapProps {
   world: WorldTopology;
@@ -62,12 +70,30 @@ function WorldMap({
   const { width, height, sphere, shapes } = getMapGeometry(world);
   const svgRef = useRef<SVGSVGElement>(null);
   const layerRef = useRef<SVGGElement>(null);
-  const zoom = useMapZoom(svgRef, layerRef, { width, height, initialView });
+
+  // Markers keep the same size on screen: their radius shrinks as the map zooms in. Set
+  // here rather than with the CSS `r` property, which Safari does not support.
+  const sizeMarkers = useCallback((k: number) => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    const radius =
+      parseFloat(getComputedStyle(svg).getPropertyValue('--marker-radius')) ||
+      DEFAULT_MARKER_RADIUS;
+    for (const marker of svg.querySelectorAll('.world-map__marker')) {
+      marker.setAttribute('r', String(radius / k));
+    }
+  }, []);
+  const zoom = useMapZoom(svgRef, layerRef, { width, height, initialView, onZoom: sizeMarkers });
+  // Also after every render, in case React has just added markers.
+  useLayoutEffect(() => {
+    if (svgRef.current) sizeMarkers(zoomTransform(svgRef.current).k);
+  });
 
   // A string, so a new array with the same ids does not move the map again.
-  const revealKey = revealIds?.join(' ') ?? '';
+  const revealKey = revealIds?.join(',');
   useEffect(() => {
-    const ids = new Set(revealKey.split(' '));
+    if (!revealKey) return;
+    const ids = new Set(revealKey.split(','));
     const bounds = unionBounds(shapes.filter((s) => ids.has(s.id)));
     if (bounds) zoom.reveal(bounds);
   }, [revealKey, shapes, zoom]);
@@ -132,7 +158,6 @@ function WorldMap({
               key={id}
               cx={cx}
               cy={cy}
-              r={5}
               data-id={id}
               className={classesFor(id, 'world-map__shape world-map__marker')}
               onClick={clickHandler(id)}

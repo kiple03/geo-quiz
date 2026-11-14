@@ -1,4 +1,4 @@
-﻿# Backlog: deferred design items
+# Backlog: deferred design items
 
 Changes that are known to be needed for planned features, but are best built together
 with the feature itself. They come from the `/code-review high` of the Phase 2 PR (map
@@ -37,7 +37,7 @@ were done in [ADR 0004](decisions/0004-map-zoom-and-markers.md).
 
 - **Needed for:** flag/capital modes (no map needed) and subdivision datasets.
 - **Today:** `loadGameData` loads `countries.json` and `world.topo.json` together at
-  startup for every mode, and the game screen always says "Loading the mapâ€¦".
+  startup for every mode, and the game screen always says "Loading the map…".
 - **Approach:** let each mode declare the datasets it needs; `data/` loads and caches
   each dataset separately. Fine to defer: the map is 43 KB gzipped today.
 
@@ -53,4 +53,4 @@ were done in [ADR 0004](decisions/0004-map-zoom-and-markers.md).
   through ~240 shapes, e.g. a searchable country list as an alternative input, or
   arrow-key navigation between neighbouring countries; move focus to the new prompt
   after each question; add a non-colour cue for wrong answers (hatching or a dashed
-  outline on the map, âœ“/âœ— marks on the pips).
+  outline on the map, ✓/✗ marks on the pips).

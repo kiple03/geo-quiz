@@ -14,8 +14,8 @@ Some countries stay too small even when zoomed far in. With Natural Earth 1:50m 
 on a 1000-unit-wide map, Vatican City is 0.0007 units² and Tuvalu 0.004. Making
 Vatican City as big as Luxembourg looks unzoomed would take about 85× zoom.
 
-Two problems from the Phase 2 review apply here ([backlog](../backlog.md), items 3 and
-4): a drag that starts and ends on one country must not count as a click, and redrawing
+Two problems from the Phase 2 review apply here (planned extensions 3 and 4 in
+[ADR 0003](0003-frontend-structure.md#planned-extensions)): a drag that starts and ends on one country must not count as a click, and redrawing
 ~240 paths on every pan frame would lag on phones.
 
 ## Decision
@@ -56,5 +56,5 @@ Two problems from the Phase 2 review apply here ([backlog](../backlog.md), items
   events without a `view`, which browsers always set but jsdom test events may not.
   While the pointer is over the map, the mouse wheel and touch gestures zoom the map
   instead of scrolling the page.
-- **Follow-up:** Keyboard and screen-reader input for the map (backlog item 6) builds on
-  the zoom buttons added here.
+- **Follow-up:** Keyboard and screen-reader input for the map ("Accessibility of the map
+  game" in [docs/backlog.md](../backlog.md)) builds on the zoom buttons added here.

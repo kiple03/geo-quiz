@@ -1,7 +1,7 @@
 /* Colours come from the design tokens in index.css. */
 .world-map {
-  /* Marker radius on screen, at the map's normal size (see .world-map__marker). */
-  --marker-radius: 5px;
+  /* Marker radius in map units at the full view; WorldMap.tsx reads it (ADR 0004). */
+  --marker-radius: 5;
 
   position: relative;
   overflow: hidden;
@@ -30,7 +30,7 @@
  */
 @media (max-width: 40rem) and (orientation: portrait) {
   .world-map {
-    --marker-radius: 12px;
+    --marker-radius: 12;
   }
 
   .world-map__svg {
@@ -66,12 +66,8 @@
   fill: var(--color-land-hover);
 }
 
-/*
- * A dot on top of a country too small to click (ADR 0004). d3-zoom sets --map-zoom on
- * the SVG, so dividing by it keeps the dot the same size on screen at any zoom.
- */
+/* A dot on top of a country too small to click; WorldMap.tsx sets its radius. */
 .world-map__marker {
-  r: calc(var(--marker-radius) / var(--map-zoom, 1));
   stroke-width: 1;
   fill-opacity: 0.85;
 }

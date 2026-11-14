@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import worldRaw from '../../public/data/world.topo.json?raw';
 import { parseWorld } from '../data/validate';
@@ -77,6 +77,18 @@ describe('WorldMap', () => {
     await user.click(markers.find((m) => m.getAttribute('data-id') === 'VAT')!);
     expect(onCountryClick).toHaveBeenCalledWith('VAT');
   });
+
+  it('shrinks markers as the map zooms in, so they keep their size on screen', async () => {
+    const user = userEvent.setup();
+    const realWorld = parseWorld(JSON.parse(worldRaw));
+    const { container } = render(<WorldMap world={realWorld} clickableIds={new Set(['VAT'])} />);
+    const marker = container.querySelector('.world-map__marker')!;
+    expect(marker.getAttribute('r')).toBe('5');
+
+    await user.click(screen.getByRole('button', { name: 'Zoom in' }));
+    await user.click(screen.getByRole('button', { name: 'Zoom in' }));
+    expect(marker.getAttribute('r')).toBe('1.25');
+  });
 });
 
 /** The zoom transform d3-zoom wrote to the map layer, as x/y offset and scale. */
@@ -147,5 +159,37 @@ describe('WorldMap zoom', () => {
 
     const fresh = render(<WorldMap world={world} clickableIds={countryIds} />);
     expect(view(fresh.container).k).toBe(1);
+  });
+
+  describe('with animations (no reduced-motion preference)', () => {
+    beforeEach(() => {
+      vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }));
+    });
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it('adds up quick button presses instead of restarting from mid-animation', async () => {
+      const user = userEvent.setup();
+      const { container } = render(<WorldMap world={world} clickableIds={countryIds} />);
+      const zoomIn = screen.getByRole('button', { name: 'Zoom in' });
+      await user.click(zoomIn);
+      await user.click(zoomIn);
+      await user.click(zoomIn);
+      await waitFor(() => expect(view(container).k).toBe(8));
+    });
+
+    it('remembers where an animation was heading if the map unmounts halfway', async () => {
+      const user = userEvent.setup();
+      const first = render(<WorldMap world={world} clickableIds={countryIds} />);
+      await user.click(screen.getByRole('button', { name: 'Zoom in' }));
+      expect(view(first.container).k).toBeLessThan(2);
+      first.unmount();
+
+      const next = render(
+        <WorldMap world={world} clickableIds={countryIds} initialView="previous" />,
+      );
+      expect(view(next.container).k).toBe(2);
+    });
   });
 });

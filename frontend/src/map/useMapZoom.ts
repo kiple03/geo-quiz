@@ -44,6 +44,8 @@ export interface MapZoomOptions {
   height: number;
   /** `'previous'` restores the last view of any map; `'full'` shows the whole map. */
   initialView: 'full' | 'previous';
+  /** Called with the zoom level on every change, including each animation frame. */
+  onZoom?: (k: number) => void;
 }
 
 type Behavior = ZoomBehavior<SVGSVGElement, unknown>;
@@ -84,11 +86,18 @@ function prefersReducedMotion(): boolean {
 export function useMapZoom(
   svgRef: RefObject<SVGSVGElement | null>,
   layerRef: RefObject<SVGGElement | null>,
-  { width, height, initialView }: MapZoomOptions,
+  { width, height, initialView, onZoom }: MapZoomOptions,
 ): MapZoomControls {
   const behaviorRef = useRef<Behavior | null>(null);
   // Only the view a map starts with; changing it later does nothing.
   const initialViewRef = useRef(initialView);
+  // Where a running zoom animation is heading; null when none is running.
+  const pendingRef = useRef<ZoomTransform | null>(null);
+  const onZoomRef = useRef(onZoom);
+  // Declared before the setup effect below, so it runs first.
+  useLayoutEffect(() => {
+    onZoomRef.current = onZoom;
+  });
 
   // A layout effect: the restored view must be in place before the first paint, or the
   // whole world flashes up for a frame at the start of every question.
@@ -110,9 +119,10 @@ export function useMapZoom(
       .filter(acceptsGesture)
       .on('zoom', ({ transform }: { transform: ZoomTransform }) => {
         layer.setAttribute('transform', transform.toString());
-        // Lets CSS keep markers the same size on screen at any zoom.
-        svg.style.setProperty('--map-zoom', String(transform.k));
-        rememberedView = transform;
+        // During an animation, keep remembering its end view (set in moveTo), so a map
+        // that unmounts halfway (the next question) does not restore an in-between view.
+        if (!pendingRef.current) rememberedView = transform;
+        onZoomRef.current?.(transform.k);
       });
 
     const selection = select(svg);
@@ -141,16 +151,30 @@ export function useMapZoom(
       const svg = svgRef.current;
       const behavior = behaviorRef.current;
       if (!svg || !behavior) return;
-      const target = next(zoomTransform(svg));
+      // Start from where a running animation is going, so pressing + three times
+      // quickly zooms 2 × 2 × 2, not by whatever the animation had reached.
+      const target = next(pendingRef.current ?? zoomTransform(svg));
       if (!target) return;
       // zoom.transform() skips the pan limits that gestures get, so apply them here.
       const constrained = behavior.constrain()(target, extent, extent);
       const selection = select(svg);
       if (prefersReducedMotion()) {
+        pendingRef.current = null;
         behavior.transform(selection, constrained);
-      } else {
-        behavior.transform(selection.transition().duration(ANIMATION_MS), constrained);
+        return;
       }
+      pendingRef.current = constrained;
+      rememberedView = constrained;
+      // Ends, or is cut short by a gesture, a newer animation or unmounting.
+      const settle = () => {
+        if (pendingRef.current === constrained) pendingRef.current = null;
+      };
+      const transition = selection
+        .transition()
+        .duration(ANIMATION_MS)
+        .on('end.pending', settle)
+        .on('interrupt.pending', settle);
+      behavior.transform(transition, constrained);
     };
 
     /** Zooms by `factor`, keeping the middle of the map where it is. */
