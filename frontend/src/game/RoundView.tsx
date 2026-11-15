@@ -31,6 +31,7 @@ function RoundView(props: RoundViewProps) {
   const { mode, data, config } = props;
   // Picked once per mount; a new round is a new mount (see GameScreen).
   const [questions] = useState(() => createRoundQuestions(mode, data, config));
+  useEffect(() => mode.preload?.(questions, data), [mode, questions, data]);
 
   if (questions.length === 0) {
     return (

@@ -14,6 +14,8 @@ export interface GameModeInfo {
   id: string;
   title: string;
   description: string;
+  /** Optional: country ids whose flags decorate the mode's menu card (ADR 0008). */
+  previewFlags?: readonly string[];
 }
 
 /** What the game screen passes to a mode's `Play` component for one question. */
@@ -58,6 +60,11 @@ export interface GameMode extends GameModeInfo {
     data: GameData,
     rng: Rng,
   ): Question[];
+  /**
+   * Optional: called once when a round starts, e.g. to fetch the round's flag images
+   * ahead, so later questions don't wait for them.
+   */
+  preload?(questions: readonly Question[], data: GameData): void;
   isCorrect(question: Question, answer: string, data: GameData): boolean;
   /** How a question reads in the results list, e.g. the country or capital asked for. */
   describeQuestion(question: Question, data: GameData): string;

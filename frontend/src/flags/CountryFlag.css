@@ -1,0 +1,31 @@
+/* Flags (ADR 0008): 4:3, with a thin rule so white flags (Japan) keep their edge. */
+
+.flag {
+  display: inline-block;
+  aspect-ratio: 4 / 3;
+  border-radius: 2px;
+  outline: 1px solid var(--color-rule);
+  outline-offset: -1px;
+  background: var(--color-surface);
+}
+
+.flag--inline {
+  width: auto;
+  height: 0.9em;
+  margin-right: 0.3em;
+  vertical-align: -0.08em;
+}
+
+.flag--large {
+  display: block;
+  width: min(100%, 18rem);
+  height: auto;
+  margin: var(--space-4) 0 var(--space-3);
+  box-shadow: 0 2px 10px light-dark(rgb(27 42 53 / 0.18), rgb(0 0 0 / 0.45));
+}
+
+.flag--fill {
+  display: block;
+  width: 100%;
+  height: auto;
+}

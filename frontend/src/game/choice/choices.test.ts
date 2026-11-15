@@ -83,6 +83,18 @@ describe('pickOptions', () => {
     expect(options).toEqual(['AAA']);
   });
 
+  it('never puts two conflicting countries in the same question', () => {
+    // Sweden conflicts with Denmark, e.g. two flags that look the same.
+    const conflicts = (a: Country, b: Country) => [a.id, b.id].sort().join() === 'DNK,SWE';
+    for (let seed = 0; seed < 100; seed++) {
+      for (const target of ['NOR', 'SWE', 'DNK']) {
+        const options = pickOptions(byId.get(target)!, { ...settings, conflicts }, seededRng(seed));
+        expect(options).toHaveLength(4);
+        expect(options.includes('SWE') && options.includes('DNK'), options.join()).toBe(false);
+      }
+    }
+  });
+
   it('gives fewer options when there are not enough candidates', () => {
     const candidates = europe.slice(0, 2);
     const options = pickOptions(candidates[0], { ...settings, candidates }, seededRng(1));

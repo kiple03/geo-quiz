@@ -14,6 +14,11 @@ export interface ChoiceSettings {
    * them apart; the answer is still checked by country id.
    */
   labelOf: (country: Country) => string;
+  /**
+   * Optional: two countries that must never be options in the same question, even
+   * with different labels, e.g. flags that look the same (Chad and Romania).
+   */
+  conflicts?: (a: Country, b: Country) => boolean;
   optionCount?: number;
 }
 
@@ -39,15 +44,20 @@ export function buildChoiceQuestions(
  * first (harder, and it keeps region rounds in the region); only if it runs out are the
  * rest topped up from other regions, so a question can then mix regions. Every region
  * the menu offers has enough. Fewer options only if there are not enough candidates
- * with distinct labels.
+ * with distinct labels and no conflicts.
  */
 export function pickOptions(
   target: Country,
-  { candidates, labelOf, optionCount = DEFAULT_OPTION_COUNT }: ChoiceSettings,
+  {
+    candidates,
+    labelOf,
+    conflicts = () => false,
+    optionCount = DEFAULT_OPTION_COUNT,
+  }: ChoiceSettings,
   rng: Rng,
 ): string[] {
   const key = (country: Country) => labelOf(country).trim().toLocaleLowerCase();
-  const chosen = [target.id];
+  const chosen = [target];
   const labels = new Set([key(target)]);
   const sameRegion = candidates.filter((c) => c.region === target.region);
   const elsewhere = candidates.filter((c) => c.region !== target.region);
@@ -56,8 +66,12 @@ export function pickOptions(
     if (chosen.length >= optionCount) break;
     const label = key(candidate);
     if (candidate.id === target.id || labels.has(label)) continue;
-    chosen.push(candidate.id);
+    if (chosen.some((option) => conflicts(option, candidate))) continue;
+    chosen.push(candidate);
     labels.add(label);
   }
-  return shuffle(chosen, rng);
+  return shuffle(
+    chosen.map((country) => country.id),
+    rng,
+  );
 }
