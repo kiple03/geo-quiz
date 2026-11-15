@@ -3,9 +3,10 @@
 A browser-based geography quiz game. Players are tested on countries: where they are on
 the map, their capitals and their flags.
 
-The game starts as a fully static frontend: country data is generated ahead of time and
-shipped as JSON alongside the app. A backend is added later (Phase 4). See
-[ADR 0001](docs/decisions/0001-static-data-first.md).
+Country data is generated ahead of time and shipped as JSON alongside the app, so the
+game itself needs no server ([ADR 0001](docs/decisions/0001-static-data-first.md)). A
+Spring Boot backend for accounts, saved scores and leaderboards is being built in
+Phase 4 ([ADR 0010](docs/decisions/0010-backend-stack.md)).
 
 ## How to play
 
@@ -31,7 +32,7 @@ and Enter answers; in the other modes, press 1 to 4.
 | 1     | Country dataset and world map geometry (`data/`)                      | Done    |
 | 2     | First playable map quiz, main menu, modular game structure            | Done    |
 | 3     | Capital and flag modes; map polish (zoom, markers for tiny countries) | Done    |
-| 4     | Spring Boot backend: accounts, saved scores, leaderboards             | Planned |
+| 4     | Spring Boot backend: accounts, saved scores, leaderboards             | Started |
 
 ## Repository layout
 
@@ -39,7 +40,7 @@ and Enter answers; in the other modes, press 1 to 4.
 | ----------------- | --------------------------------------------------------------------- |
 | `frontend/`       | Vite + React + TypeScript app (ESLint, Prettier, Vitest)              |
 | `data/`           | Script that generates the country data and map (see `data/README.md`) |
-| `backend/`        | Spring Boot API, placeholder until Phase 4                            |
+| `backend/`        | Spring Boot API (see `backend/README.md`)                             |
 | `docs/decisions/` | Architecture Decision Records (ADRs)                                  |
 
 The frontend is built to grow: game modes are plugins in a registry, and one round
@@ -66,3 +67,7 @@ npm test              # Vitest, watch mode
 npm run test:run      # Vitest, single run
 npm run build         # Production build to frontend/dist
 ```
+
+The backend needs Java 25. Run `./mvnw spring-boot:run` in `backend/` (PowerShell:
+`.\mvnw.cmd spring-boot:run`); the dev server forwards `/api` to it. See
+[backend/README.md](backend/README.md).

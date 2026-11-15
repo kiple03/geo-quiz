@@ -14,3 +14,4 @@ Short records of significant decisions and why they were made. Number them seque
 | [0007](0007-multiple-choice-and-datasets-per-mode.md) | Multiple-choice modes and datasets loaded per mode        | Accepted |
 | [0008](0008-flag-images-and-flag-modes.md)            | Flag images and flag modes                                | Accepted |
 | [0009](0009-reverse-capital-mode.md)                  | Reverse capital mode: name the country from its capital   | Accepted |
+| [0010](0010-backend-stack.md)                         | Backend stack: Spring Boot, Maven, PostgreSQL, `/api`     | Accepted |
