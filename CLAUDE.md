@@ -10,7 +10,7 @@ personal learning project. Repo: `github.com/kiple03/geo-quiz`, default branch `
 | Path              | Contents                                                                         |
 | ----------------- | -------------------------------------------------------------------------------- |
 | `frontend/`       | Vite 8 + React 19 + TypeScript 6.0, ESLint, Prettier, Vitest + RTL               |
-| `data/`           | `build.ts` generates `frontend/public/data/` (countries.json + world.topo.json)  |
+| `data/`           | `build.ts` generates `frontend/public/data/` (countries, world map, flags/)      |
 | `backend/`        | Placeholder. Spring Boot API arrives in Phase 4 (scores, accounts, leaderboards) |
 | `docs/decisions/` | ADRs (`NNNN-short-title.md`). Never rewrite an accepted ADR; supersede it        |
 | `docs/backlog.md` | Deferred design items for planned features (zoom, regions, subdivisions)         |
@@ -53,8 +53,14 @@ Keep it modular; new features should be additive. In `frontend/src/`:
   parsed on top of `defaultRoundConfig()`; `game/regions.ts`: the regions the menu
   offers, with their map frames (ADR 0006). Modes get the config via `PlayProps.config`.
 - `game/choice/`: shared multiple-choice parts (ADR 0007): `buildChoiceQuestions`
-  (options are country ids, wrong ones from the same region, no repeated labels) and
-  the `MultipleChoice` component. Capital mode uses them; the flag mode will too.
+  (options are country ids, wrong ones from the same region, no repeated labels, optional
+  `conflicts`) and the `MultipleChoice` component (options can show `content`, e.g. a
+  flag, with a neutral `askingLabel`). Used by the capital and both flag modes.
+- Flags (ADR 0008): one SVG per country in `public/data/flags/<id>.svg`, from a pinned
+  flag-icons package, shown with `<img>` via `CountryFlag`/`FlagImage` in `flags/`. The
+  rules (no flag, shared flags, look-alikes) are in `data/flags.ts`, shared with the
+  build. A flag may go next to a country's name, never where it would give the answer
+  away (e.g. not on capital options).
 - `data/`: the only place that knows where data is loaded from. Datasets (`Datasets`
   in `load.ts`: `countries`, `world`) load separately, on first use, and stay cached
   (ADR 0007). A mode lists what it needs besides the countries in `GameMode.datasets`

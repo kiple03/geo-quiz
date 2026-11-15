@@ -25,6 +25,7 @@ download them again. Commit the regenerated files in `frontend/public/data/`.
 | ----------------- | ---------------------------------------------------------------------------- |
 | `countries.json`  | One entry per country on the map: id, names, capitals, region, area, …       |
 | `world.topo.json` | TopoJSON, object `world`. Each geometry's `id` matches a `countries.json` id |
+| `flags/<id>.svg`  | One 4:3 flag per country id (not Antarctica), plus `LICENSE.txt` (ADR 0008)  |
 
 Shapes whose `id` is not in `countries.json` are neutral land (e.g. Somaliland): drawn,
 but never asked about. Territories without a Natural Earth shape (e.g. Gibraltar,
@@ -36,11 +37,16 @@ Réunion) are not in the dataset.
 | -------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------ |
 | [Natural Earth](https://www.naturalearthdata.com/) 1:50m admin-0, `v5.1.2` | Country shapes   | Public domain                                          |
 | [mledoze/countries](https://github.com/mledoze/countries), pinned commit   | Country metadata | [ODbL](https://opendatacommons.org/licenses/odbl/1-0/) |
+| [flag-icons](https://github.com/lipis/flag-icons), exact npm version       | Flag SVGs        | MIT                                                    |
 
-Versions are pinned at the top of `build.ts`.
+Versions are pinned at the top of `build.ts`, and flag-icons in `package.json`.
 
 ## When the build fails
 
 The script stops if a shape can't be matched to metadata, or a UN member has no shape.
 Fix it in `build.ts` by adding the code to `NE_TO_CCA3` (the two sources use different
 codes for the same country) or to `NEUTRAL_LAND` (a shape that should not be asked about).
+
+The flag step stops if a country has no flag in flag-icons, or if two flags are identical.
+Fix it in `frontend/src/data/flags.ts`: `NO_FLAG` for a country without a flag,
+`SHARED_FLAGS` for one that flies another country's flag.
