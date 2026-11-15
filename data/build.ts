@@ -4,14 +4,16 @@
  * Inputs (pinned, downloaded once into .cache/):
  *   - Natural Earth 1:50m admin-0 countries (geometry, public domain)
  *   - mledoze/countries (metadata, ODbL)
+ *   - flag-icons, an exact npm devDependency (flag SVGs, MIT; ADR 0008)
  *
  * Outputs (committed):
  *   - frontend/public/data/countries.json  — metadata, one entry per country on the map
  *   - frontend/public/data/world.topo.json — simplified TopoJSON, geometry id = country id
+ *   - frontend/public/data/flags/<id>.svg  — one 4:3 flag per country, plus LICENSE.txt
  *
  * Run with: npm run build (from data/)
  */
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import path from 'node:path';
@@ -19,6 +21,7 @@ import mapshaper from 'mapshaper';
 // Shared with the frontend, so the output and the app agree on one schema.
 import type { Country } from '../frontend/src/data/types.ts';
 import { parseCountries, parseWorld } from '../frontend/src/data/validate.ts';
+import { LOOK_ALIKE_FLAGS, NO_FLAG, SHARED_FLAGS } from '../frontend/src/data/flags.ts';
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -59,6 +62,9 @@ const SIMPLIFY_PERCENT = 30;
 const ROOT = path.resolve(import.meta.dirname, '..');
 const CACHE_DIR = path.join(import.meta.dirname, '.cache');
 const OUT_DIR = path.join(ROOT, 'frontend', 'public', 'data');
+const FLAGS_OUT_DIR = path.join(OUT_DIR, 'flags');
+/** flag-icons' 4:3 SVGs, named by lower-case ISO alpha-2 code (the version is in package.json). */
+const FLAG_ICONS_DIR = path.join(import.meta.dirname, 'node_modules', 'flag-icons');
 
 // ---------------------------------------------------------------------------
 // Source types (only the fields we use)
@@ -206,9 +212,56 @@ async function toTopoJson(world: FeatureCollection): Promise<string> {
   return JSON.stringify(topo);
 }
 
+const kb = (bytes: number) => `${(bytes / 1024).toFixed(0)} KB`;
+
 function sizeReport(name: string, content: string): string {
-  const kb = (bytes: number) => `${(bytes / 1024).toFixed(0)} KB`;
   return `${name}: ${kb(Buffer.byteLength(content))} (${kb(gzipSync(content).length)} gzipped)`;
+}
+
+/**
+ * One flag per country, by `Country.id`, except NO_FLAG (ADR 0008). Drops flag-icons'
+ * `id` attribute, which names the country. Fails if a country has no flag, if the flag
+ * rules name an unknown country, or if two flags are identical and not in SHARED_FLAGS
+ * (a flag round could not tell them apart). Returns the files to write.
+ */
+async function buildFlags(countries: Country[]): Promise<Map<string, string>> {
+  const ids = new Set(countries.map((c) => c.id));
+  const errors: string[] = [];
+  const ruleIds = [
+    ...NO_FLAG,
+    ...Object.keys(SHARED_FLAGS),
+    ...Object.values(SHARED_FLAGS),
+    ...LOOK_ALIKE_FLAGS.flat(),
+  ];
+  for (const id of ruleIds) {
+    if (!ids.has(id)) errors.push(`The flag rules in flags.ts name ${id}, which is not a country.`);
+  }
+
+  const files = new Map<string, string>();
+  const byContent = new Map<string, string[]>();
+  for (const country of countries) {
+    if (NO_FLAG.has(country.id)) continue;
+    const source = path.join(FLAG_ICONS_DIR, 'flags', '4x3', `${country.iso2.toLowerCase()}.svg`);
+    if (!existsSync(source)) {
+      errors.push(`${country.id} (${country.name}) has no flag. Add it to NO_FLAG in flags.ts.`);
+      continue;
+    }
+    const svg = (await readFile(source, 'utf8')).replace(/ id="flag-icons-[a-z-]+"/, '');
+    files.set(`${country.id}.svg`, svg);
+    byContent.set(svg, [...(byContent.get(svg) ?? []), country.id]);
+  }
+
+  for (const same of byContent.values()) {
+    const own = same.filter((id) => !(id in SHARED_FLAGS));
+    if (same.length > 1 && own.length > 1) {
+      errors.push(`Identical flags: ${same.join(', ')}. List all but one in SHARED_FLAGS.`);
+    }
+  }
+
+  if (errors.length > 0) throw new Error(`Flags failed:\n  ${errors.join('\n  ')}`);
+  // MIT: the licence goes with the copies.
+  files.set('LICENSE.txt', await readFile(path.join(FLAG_ICONS_DIR, 'LICENSE'), 'utf8'));
+  return files;
 }
 
 // ---------------------------------------------------------------------------
@@ -229,10 +282,15 @@ parseCountries(countries); // the same check the frontend applies; throws if inv
 const countriesJson = JSON.stringify(countries, null, 2) + '\n';
 const topoJson = await toTopoJson(shapes);
 parseWorld(JSON.parse(topoJson)); // likewise for the map; throws if invalid
+const flags = await buildFlags(countries);
 
 await mkdir(OUT_DIR, { recursive: true });
 await writeFile(path.join(OUT_DIR, 'countries.json'), countriesJson);
 await writeFile(path.join(OUT_DIR, 'world.topo.json'), topoJson);
+// Rewritten from scratch, so a flag that is no longer needed does not linger.
+await rm(FLAGS_OUT_DIR, { recursive: true, force: true });
+await mkdir(FLAGS_OUT_DIR);
+for (const [name, content] of flags) await writeFile(path.join(FLAGS_OUT_DIR, name), content);
 
 console.log(
   `Countries: ${countries.length} (${countries.filter((c) => c.unMember).length} UN members)`,
@@ -240,3 +298,9 @@ console.log(
 console.log(`Neutral land shapes: ${NEUTRAL_LAND.size}`);
 console.log(sizeReport('countries.json', countriesJson));
 console.log(sizeReport('world.topo.json', topoJson));
+const svgs = [...flags].filter(([name]) => name.endsWith('.svg')).map(([, svg]) => svg);
+const largest = Math.max(...svgs.map((svg) => gzipSync(svg).length));
+console.log(
+  `flags/: ${svgs.length} SVGs, ${kb(svgs.reduce((sum, svg) => sum + Buffer.byteLength(svg), 0))}` +
+    ` (largest ${kb(largest)} gzipped; loaded one by one, when shown)`,
+);
