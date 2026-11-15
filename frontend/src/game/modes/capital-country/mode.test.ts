@@ -25,6 +25,8 @@ describe('capital-country mode', () => {
   it('finds countries that share a capital', () => {
     expect(sharesCapital(country('JAM'), country('NFK'))).toBe(true);
     expect(sharesCapital(country('JAM'), country('NOR'))).toBe(false);
+    // Written differently: George Town (Cayman Islands) and Georgetown (Guyana).
+    expect(sharesCapital(country('CYM'), country('GUY'))).toBe(true);
     // Any of South Africa's capitals counts, not only the first.
     const other = { ...country('NOR'), capitals: [' cape town'] };
     expect(sharesCapital(country('ZAF'), other)).toBe(true);
@@ -63,10 +65,14 @@ describe('capital-country mode', () => {
       }
     });
 
-    it('never offers Jamaica and Norfolk Island together, even with few candidates', () => {
-      // They are in different regions, so with the full data the region-first options
-      // hide the problem. With four countries, every one is a candidate for each other.
-      const few = createGameData(['JAM', 'NFK', 'NOR', 'SWE'].map(country));
+    // Jamaica and Norfolk Island are in different regions, so with the full data the
+    // region-first options hide the problem. With four countries, every one is a
+    // candidate for each other.
+    it.each([
+      ['JAM', 'NFK'],
+      ['GUY', 'CYM'],
+    ])('never offers %s and %s together, even with few candidates', (a, b) => {
+      const few = createGameData([a, b, 'NOR', 'SWE'].map(country));
       for (let seed = 0; seed < 20; seed++) {
         const questions = capitalCountryMode.buildQuestions!(
           few.countries,
@@ -77,7 +83,7 @@ describe('capital-country mode', () => {
         expect(questions).toHaveLength(4);
         for (const { options = [] } of questions) {
           expect(options).toHaveLength(3);
-          expect(options.includes('JAM') && options.includes('NFK'), options.join()).toBe(false);
+          expect(options.includes(a) && options.includes(b), options.join()).toBe(false);
         }
       }
     });

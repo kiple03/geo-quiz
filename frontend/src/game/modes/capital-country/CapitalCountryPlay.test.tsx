@@ -1,9 +1,11 @@
-import { act, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createGameData } from '../../../data/load';
 import type { Country } from '../../../data/types';
 import { fixtureCountries, fixtureLoaders } from '../../../test/fixtures';
 import { renderApp } from '../../../test/renderApp';
-import { DEFAULT_AUTO_ADVANCE_MS } from '../../engine/types';
+import { DEFAULT_AUTO_ADVANCE_MS, defaultRoundConfig } from '../../engine/types';
+import CapitalCountryPlay from './CapitalCountryPlay';
 
 // Two shared Kingstons (like Jamaica and Norfolk Island), one country with three
 // capitals (like South Africa), and one without a capital that is never asked.
@@ -93,7 +95,7 @@ describe('Whose capital? game', () => {
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
 
-  it('explains a wrong answer, with every capital of the asked country', async () => {
+  it('explains a wrong answer and waits for "Next"', async () => {
     const { user } = await startGame();
     const capital = askedCapital();
     const right = rightAnswer();
@@ -104,15 +106,58 @@ describe('Whose capital? game', () => {
     await user.click(option(wrong));
     const status = screen.getByRole('status');
     expect(status).toHaveTextContent(
-      `Not quite: the capital of ${wrong} is ${wrongCountry.capitals[0]}.`,
+      `Not quite: the capital of ${wrong} is ${wrongCountry.capitals[0]}`,
     );
     expect(status).toHaveTextContent(`The capital of ${right} is ${capital}`);
-    if (rightCountry.id === 'DDD') {
-      expect(status).toHaveTextContent('Delta Port (also Delta Hill and Delta Bay)');
-    }
     expect(status.querySelector(`img[src$="/${rightCountry.id}.svg"]`)).not.toBeNull();
     expect(option(`${wrong}, your answer`)).toBeInTheDocument();
     expect(option(`${right}, right answer`)).toBeInTheDocument();
+
+    await act(() => vi.advanceTimersByTime(DEFAULT_AUTO_ADVANCE_MS * 2));
+    expect(screen.getByText('Question 1 of 6')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Next question' })).toHaveFocus();
+  });
+
+  // Rendered directly with a fixed question, so the case is tested on every run.
+  describe('feedback for a country with several capitals', () => {
+    const data = createGameData(countries);
+    const question = { targetId: 'DDD', options: ['AAA', 'DDD', 'CCC', 'FFF'] };
+    const renderFeedback = (targetId: string, answer: string) =>
+      render(
+        <CapitalCountryPlay
+          data={data}
+          config={defaultRoundConfig('capital-country')}
+          question={{ ...question, targetId }}
+          history={[]}
+          feedback={{ question, answer, correct: answer === targetId, answeredAt: 0 }}
+          onAnswer={() => {}}
+        />,
+      );
+    const all = 'Delta Port (also Delta Hill and Delta Bay)';
+
+    it('asks it by its first capital, and lists all of them when answered right', () => {
+      renderFeedback('DDD', 'DDD');
+      expect(screen.getByText(/^Which country has the capital/)).toHaveTextContent(
+        'Which country has the capital Delta Port?',
+      );
+      expect(screen.getByRole('status')).toHaveTextContent(
+        `Correct! The capital of Deltaland is ${all}.`,
+      );
+    });
+
+    it('lists all of them when it is the asked country', () => {
+      renderFeedback('DDD', 'AAA');
+      expect(screen.getByRole('status')).toHaveTextContent(
+        `Not quite: the capital of Alphaland is Alpha City. The capital of Deltaland is ${all}.`,
+      );
+    });
+
+    it('lists all of them when it is the wrongly picked country', () => {
+      renderFeedback('AAA', 'DDD');
+      expect(screen.getByRole('status')).toHaveTextContent(
+        `Not quite: the capital of Deltaland is ${all}. The capital of Alphaland is Alpha City.`,
+      );
+    });
   });
 
   it('asks only about the chosen region', async () => {

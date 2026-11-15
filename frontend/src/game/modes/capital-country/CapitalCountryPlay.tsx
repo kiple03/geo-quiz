@@ -12,6 +12,9 @@ function CapitalCountryPlay({ data, question, feedback, onAnswer }: PlayProps) {
   const name = countryName(data, question.targetId);
   const target = data.countriesById.get(question.targetId);
   const capitals = target ? capitalsText(target) : capital;
+  // All of them, also for the picked country: "Pretoria (also ...)" for South Africa.
+  const pickedCountry = feedback && data.countriesById.get(feedback.answer);
+  const pickedCapitals = pickedCountry ? capitalsText(pickedCountry) : '';
   // Plain names, no flags, as in the other multiple-choice modes (ADR 0009).
   const options = (question.options ?? []).map((id) => ({ id, label: countryName(data, id) }));
 
@@ -33,8 +36,8 @@ function CapitalCountryPlay({ data, question, feedback, onAnswer }: PlayProps) {
     message = (
       <>
         Not quite: the capital of <CountryFlag data={data} id={feedback.answer} />
-        {countryName(data, feedback.answer)} is {capitalOf(data, feedback.answer)}. The capital of{' '}
-        {asked} is {capitals}.
+        {countryName(data, feedback.answer)} is {pickedCapitals}. The capital of {asked} is{' '}
+        {capitals}.
       </>
     );
   }

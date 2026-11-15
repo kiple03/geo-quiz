@@ -1,6 +1,6 @@
 import { countryName } from '../../../data/load';
 import { buildChoiceQuestions, isTargetAnswer } from '../../choice/choices';
-import { capitalsText, hasCapital, sharesCapital } from '../capital/capitals';
+import { describeCapitalQuestion, hasCapital, sharesCapital } from '../capital/capitals';
 import type { GameMode } from '../types';
 import CapitalCountryPlay from './CapitalCountryPlay';
 
@@ -18,7 +18,7 @@ export const capitalCountryMode: GameMode = {
 
   // Options are country names, which are always different. Countries that share a
   // capital are never options together: "Kingston" would fit both Jamaica and Norfolk
-  // Island. Wrong options come from the target's region first, as in capital mode.
+  // Island, "Georgetown" both Guyana and the Cayman Islands (George Town). Wrong options come from the target's region first, as in capital mode.
   buildQuestions: (pool, config, data, rng) =>
     buildChoiceQuestions(pool, config, rng, {
       candidates: data.countries.filter(hasCapital),
@@ -28,12 +28,8 @@ export const capitalCountryMode: GameMode = {
 
   isCorrect: isTargetAnswer,
 
-  // As in capital mode, so the results read the same: "South Africa: Pretoria (also ...)".
-  describeQuestion: (question, data) => {
-    const country = data.countriesById.get(question.targetId);
-    const name = countryName(data, question.targetId);
-    return country ? `${name}: ${capitalsText(country)}` : name;
-  },
+  // As in capital mode, so the results read the same.
+  describeQuestion: describeCapitalQuestion,
 
   describeAnswer: (answer, data) => countryName(data, answer),
 

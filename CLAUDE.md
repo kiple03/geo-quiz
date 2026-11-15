@@ -55,7 +55,7 @@ Keep it modular; new features should be additive. In `frontend/src/`:
 - `game/choice/`: shared multiple-choice parts (ADR 0007): `buildChoiceQuestions`
   (options are country ids, wrong ones from the same region, no repeated labels, optional
   `conflicts`) and the `MultipleChoice` component (options can show `content`, e.g. a
-  flag, with a neutral `askingLabel`). Used by the capital and both flag modes.
+  flag, with a neutral `askingLabel`). Used by both capital modes and both flag modes.
 - Flags (ADR 0008): one SVG per country in `public/data/flags/<id>.svg`, from a pinned
   flag-icons package, shown with `<img>` via `CountryFlag`/`FlagImage` in `flags/`. The
   rules (no flag, shared flags, look-alikes) are in `data/flags.ts`, shared with the
