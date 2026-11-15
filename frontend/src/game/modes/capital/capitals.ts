@@ -1,7 +1,10 @@
 import type { GameData } from '../../../data/load';
 import type { Country } from '../../../data/types';
 
-/** Countries that can be asked about: those with a capital (not Antarctica or Macau). */
+/**
+ * Countries that can be asked about: those with a capital. Not Antarctica, Heard Island
+ * and McDonald Islands, or Macau.
+ */
 export const hasCapital = (country: Country) => country.capitals.length > 0;
 
 /**

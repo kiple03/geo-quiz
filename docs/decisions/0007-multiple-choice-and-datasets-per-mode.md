@@ -33,8 +33,11 @@ Macau have no capital; South Africa has three (Pretoria, Bloemfontein, Cape Town
 - **Multiple-choice options are country ids**, like `Question.targetId`, so the answer
   is checked by country, never by the text shown. `game/choice/choices.ts` builds the
   questions: four options, the wrong ones from the target's region first (harder, and
-  in a region round they stay in the region), then from anywhere. No two options show
-  the same label, so Jamaica and Norfolk Island are never offered together.
+  it keeps region rounds in the region), topped up from other regions only if the
+  region runs out. Every region the menu offers has at least 24 distinct capitals;
+  only the Antarctic entries (asked in world rounds) get options from elsewhere. No
+  two options show the same label, so Jamaica and Norfolk Island are never offered
+  together.
 - **One shared `MultipleChoice` component** (`game/choice/`) renders the options as
   buttons in a named group. Click, Enter or Space, or the number key picks one. The
   first button has `data-autofocus` (ADR 0005). Enter and Space answer on release, and

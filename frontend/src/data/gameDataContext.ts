@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import {
   createGameData,
   type DatasetId,
@@ -6,6 +6,7 @@ import {
   type ExtraDatasetId,
   type GameData,
 } from './load';
+import type { Country } from './types';
 
 export type GameDataState =
   | { status: 'loading' }
@@ -44,7 +45,17 @@ export function useGameData(extra: readonly ExtraDatasetId[] = []): GameDataStat
     request(['countries', ...idsFromKey(key)]);
   }, [request, key]);
 
-  return useMemo(() => stateFor(entries, idsFromKey(key), request), [entries, key, request]);
+  // Failed entries that were already there when this screen mounted, from an earlier
+  // visit. The request above retries them, so they read as loading: the alert must not
+  // flash up before the retry starts. A new failure is a new entry, so it still shows.
+  const [staleErrors] = useState(
+    () => new Set(Object.values(entries).filter((e) => e?.status === 'error')),
+  );
+
+  return useMemo(
+    () => stateFor(entries, idsFromKey(key), request, staleErrors),
+    [entries, key, request, staleErrors],
+  );
 }
 
 const idsFromKey = (key: string) => (key ? (key.split(',') as ExtraDatasetId[]) : []);
@@ -53,11 +64,13 @@ function stateFor(
   entries: DatasetEntries,
   extra: readonly ExtraDatasetId[],
   request: GameDataContextValue['request'],
+  staleErrors: ReadonlySet<unknown>,
 ): GameDataState {
   const ids: DatasetId[] = ['countries', ...extra];
   for (const id of ids) {
     const entry = entries[id];
     if (entry?.status === 'error') {
+      if (staleErrors.has(entry)) return LOADING;
       return { status: 'error', error: entry.error, retry: () => request(ids) };
     }
   }
@@ -69,5 +82,27 @@ function stateFor(
     if (entry?.status !== 'ready') return LOADING;
     datasets[id] = entry.value;
   }
-  return { status: 'ready', data: createGameData(countries.value, datasets) };
+  return { status: 'ready', data: gameDataFor(countries.value, datasets, extra) };
+}
+
+/**
+ * One `GameData` per combination of loaded datasets, so its identity only changes when
+ * a dataset this screen uses does: another dataset loading in the background (e.g. the
+ * map, for a later screen) must not hand a running round new data.
+ */
+const gameDataCache = new WeakMap<readonly Country[], Map<string, GameData>>();
+
+function gameDataFor(
+  countries: readonly Country[],
+  datasets: GameData['datasets'],
+  extra: readonly ExtraDatasetId[],
+): GameData {
+  let byIds = gameDataCache.get(countries);
+  if (!byIds) gameDataCache.set(countries, (byIds = new Map()));
+  const key = extra.join(',');
+  const cached = byIds.get(key);
+  if (cached && extra.every((id) => cached.datasets[id] === datasets[id])) return cached;
+  const data = createGameData(countries, datasets);
+  byIds.set(key, data);
+  return data;
 }

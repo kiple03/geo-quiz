@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { StrictMode } from 'react';
 import { fixtureCountries, fixtureLoaders, fixtureWorld } from '../test/fixtures';
 import { useGameData } from './gameDataContext';
 import { GameDataProvider } from './GameDataProvider';
-import type { ExtraDatasetId } from './load';
+import type { ExtraDatasetId, GameData } from './load';
 
 /** Shows the state of `useGameData(extra)`, with the datasets it got when ready. */
 function Status({ name, extra }: { name: string; extra?: readonly ExtraDatasetId[] }) {
@@ -117,6 +117,61 @@ describe('GameDataProvider', () => {
     expect(await screen.findByText('A ready: 2 countries, world')).toBeInTheDocument();
     expect(loaders.world).toHaveBeenCalledTimes(2);
     expect(loaders.countries).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps the same data object when a dataset the screen does not use loads', async () => {
+    const seen: GameData[] = [];
+    function Recorder() {
+      const state = useGameData();
+      if (state.status === 'ready') seen.push(state.data);
+      return null;
+    }
+    const loaders = spyLoaders();
+    const { rerender } = render(
+      <GameDataProvider loaders={loaders}>
+        <Recorder />
+      </GameDataProvider>,
+    );
+    await waitFor(() => expect(seen.length).toBeGreaterThan(0));
+    // Another screen asks for the map, e.g. one opened in the background.
+    rerender(
+      <GameDataProvider loaders={loaders}>
+        <Recorder />
+        <Status name="B" extra={['world']} />
+      </GameDataProvider>,
+    );
+    await screen.findByText('B ready: 2 countries, world');
+    expect(new Set(seen).size).toBe(1);
+  });
+
+  it('does not flash an earlier error when a screen asks again', async () => {
+    const statuses: string[] = [];
+    function Recorder() {
+      const state = useGameData(['world']);
+      statuses.push(state.status);
+      return <p>{state.status}</p>;
+    }
+    const loaders = {
+      ...spyLoaders(),
+      world: vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValue(fixtureWorld),
+    };
+    const { rerender } = render(
+      <GameDataProvider loaders={loaders}>
+        <Recorder key="first" />
+      </GameDataProvider>,
+    );
+    await screen.findByText('error');
+
+    // Back to the menu and into the game again: a new screen, which retries the map.
+    statuses.length = 0;
+    rerender(
+      <GameDataProvider loaders={loaders}>
+        <Recorder key="second" />
+      </GameDataProvider>,
+    );
+    await screen.findByText('ready');
+    expect(statuses).not.toContain('error');
+    expect(loaders.world).toHaveBeenCalledTimes(2);
   });
 
   it('turns a non-Error rejection into an Error', async () => {

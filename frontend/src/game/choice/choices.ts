@@ -36,8 +36,10 @@ export function buildChoiceQuestions(
 
 /**
  * The target plus wrong options, shuffled. Wrong options come from the target's region
- * when it has enough (harder, and it fits region rounds), else from anywhere. Fewer
- * options only if there are not enough candidates with distinct labels.
+ * first (harder, and it keeps region rounds in the region); only if it runs out are the
+ * rest topped up from other regions, so a question can then mix regions. Every region
+ * the menu offers has enough. Fewer options only if there are not enough candidates
+ * with distinct labels.
  */
 export function pickOptions(
   target: Country,
