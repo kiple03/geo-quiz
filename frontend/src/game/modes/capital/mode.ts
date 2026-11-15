@@ -1,8 +1,7 @@
-import { countryName } from '../../../data/load';
 import { buildChoiceQuestions, isTargetAnswer } from '../../choice/choices';
 import type { GameMode } from '../types';
 import CapitalPlay from './CapitalPlay';
-import { capitalOf, capitalsText, hasCapital, mainCapital } from './capitals';
+import { capitalOf, describeCapitalQuestion, hasCapital, mainCapital } from './capitals';
 
 /** Multiple choice (ADR 0007): the game names a country, the player picks its capital. */
 export const capitalMode: GameMode = {
@@ -24,11 +23,7 @@ export const capitalMode: GameMode = {
   // By country, not by name: Kingston is the capital of Jamaica and Norfolk Island.
   isCorrect: isTargetAnswer,
 
-  describeQuestion: (question, data) => {
-    const country = data.countriesById.get(question.targetId);
-    const name = countryName(data, question.targetId);
-    return country ? `${name}: ${capitalsText(country)}` : name;
-  },
+  describeQuestion: describeCapitalQuestion,
 
   describeAnswer: (answer, data) => capitalOf(data, answer),
 

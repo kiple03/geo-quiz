@@ -1,7 +1,7 @@
 import type { Country } from '../../data/types';
 import { seededRng } from '../engine/random';
 import { defaultRoundConfig } from '../engine/types';
-import { buildChoiceQuestions, pickOptions } from './choices';
+import { buildChoiceQuestions, labelKey, pickOptions } from './choices';
 
 function country(id: string, region: string, capital: string): Country {
   return {
@@ -36,6 +36,20 @@ const all = [...europe, ...americas, ...oceania];
 const byId = new Map(all.map((c) => [c.id, c]));
 const settings = { candidates: all, labelOf: (c: Country) => c.capitals[0] };
 const labelsOf = (ids: readonly string[]) => ids.map((id) => byId.get(id)!.capitals[0]);
+
+describe('labelKey', () => {
+  it('ignores case, accents, spaces and punctuation', () => {
+    expect(labelKey('George Town')).toBe(labelKey('Georgetown'));
+    expect(labelKey(' São Tomé ')).toBe(labelKey('Sao Tome'));
+    expect(labelKey("N'Djamena")).toBe(labelKey('Ndjamena'));
+    expect(labelKey('Port-au-Prince')).toBe(labelKey('Port au Prince'));
+  });
+
+  it('keeps names apart that differ in letters', () => {
+    expect(labelKey('Kingston')).not.toBe(labelKey('Kingstown'));
+    expect(labelKey('Niger')).not.toBe(labelKey('Nigeria'));
+  });
+});
 
 describe('pickOptions', () => {
   it('gives the target and three others from its region, all different', () => {
@@ -81,6 +95,18 @@ describe('pickOptions', () => {
     const candidates = [country('AAA', 'X', 'Alpha'), country('BBB', 'X', ' alpha ')];
     const options = pickOptions(candidates[0], { ...settings, candidates }, seededRng(1));
     expect(options).toEqual(['AAA']);
+  });
+
+  it('never offers George Town and Georgetown together', () => {
+    const candidates = [
+      country('GUY', 'Americas', 'Georgetown'),
+      country('CYM', 'Americas', 'George Town'),
+    ];
+    for (let seed = 0; seed < 10; seed++) {
+      expect(pickOptions(candidates[0], { ...settings, candidates }, seededRng(seed))).toEqual([
+        'GUY',
+      ]);
+    }
   });
 
   it('never puts two conflicting countries in the same question', () => {

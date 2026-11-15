@@ -1,7 +1,7 @@
 # Geo Quiz
 
 A browser-based geography quiz game. Players are tested on countries: where they are on
-the map, and later their capitals and flags.
+the map, their capitals and their flags.
 
 The game starts as a fully static frontend: country data is generated ahead of time and
 shipped as JSON alongside the app. A backend is added later (Phase 4). See
@@ -9,9 +9,20 @@ shipped as JSON alongside the app. A backend is added later (Phase 4). See
 
 ## How to play
 
-Pick **Find the country** in the menu. Each round has 10 questions: a country is named,
-and you click it on the world map. A correct click turns the country green; a wrong one
-turns red and shows the right country in green. The results list every question.
+Pick a game mode in the menu, and optionally one or more regions (Europe, Africa, ...).
+Each round has 10 questions, and the results list every question with your answers.
+
+| Mode                 | Question           | You answer by                         |
+| -------------------- | ------------------ | ------------------------------------- |
+| **Find the country** | A country is named | Clicking it on the world map          |
+| **Name the capital** | A country is named | Picking its capital from four options |
+| **Whose capital?**   | A capital is named | Picking its country from four options |
+| **Name the flag**    | A flag is shown    | Picking its country from four options |
+| **Pick the flag**    | A country is named | Picking its flag from four options    |
+
+The map can be zoomed and dragged, and tiny countries get markers. Every mode can be
+played with the keyboard: on the map, the arrow keys move from country to country
+and Enter answers; in the other modes, press 1 to 4.
 
 ## Roadmap
 
@@ -19,7 +30,7 @@ turns red and shows the right country in green. The results list every question.
 | ----- | --------------------------------------------------------------------- | ------- |
 | 1     | Country dataset and world map geometry (`data/`)                      | Done    |
 | 2     | First playable map quiz, main menu, modular game structure            | Done    |
-| 3     | Capital and flag modes; map polish (zoom, markers for tiny countries) | Planned |
+| 3     | Capital and flag modes; map polish (zoom, markers for tiny countries) | Done    |
 | 4     | Spring Boot backend: accounts, saved scores, leaderboards             | Planned |
 
 ## Repository layout

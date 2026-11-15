@@ -30,3 +30,13 @@ The remaining items keep their numbers, since code comments refer to them.
   rotated to the Pacific (e.g. `geoEqualEarth().rotate([-170, 0])`) for that region
   would fix it; the remembered view is in viewBox units, so it must not carry over
   between maps with different projections.
+
+## 7. Menu: one card per pair of reverse modes
+
+- **Needed for:** the style and layout pass of the menu.
+- **Today:** every mode is its own card, so the two directions of a question are
+  separate cards: "Name the capital" and "Whose capital?", "Name the flag" and "Pick
+  the flag" ([ADR 0009](decisions/0009-reverse-capital-mode.md)).
+- **Approach:** an optional grouping in the registry (e.g. `GameModeInfo.group` and a
+  label for each direction), so the menu shows one card with a direction switch. The
+  modes and their ids stay as they are, so URLs and saved results don't change.

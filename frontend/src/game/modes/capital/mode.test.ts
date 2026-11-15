@@ -1,6 +1,7 @@
 import countriesRaw from '../../../../public/data/countries.json?raw';
 import { createGameData } from '../../../data/load';
 import { parseCountries } from '../../../data/validate';
+import { labelKey } from '../../choice/choices';
 import { seededRng } from '../../engine/random';
 import { defaultRoundConfig } from '../../engine/types';
 import { createRoundQuestions } from '../../setup';
@@ -60,8 +61,9 @@ describe('capital mode', () => {
         for (const { targetId, options = [] } of questions) {
           expect(options).toHaveLength(4);
           expect(options).toContain(targetId);
+          // Different also when written differently: never George Town and Georgetown.
           const labels = options.map((id) => capitalOf(data, id));
-          expect(new Set(labels).size, labels.join()).toBe(4);
+          expect(new Set(labels.map(labelKey)).size, labels.join()).toBe(4);
         }
       }
     });

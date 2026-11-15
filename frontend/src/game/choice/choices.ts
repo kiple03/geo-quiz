@@ -23,6 +23,18 @@ export interface ChoiceSettings {
 }
 
 /**
+ * What two labels must differ in to count as different: not case, accents, spaces or
+ * punctuation. So "George Town" (Cayman Islands) and "Georgetown" (Guyana) are the same
+ * label, and never two options in one question.
+ */
+export const labelKey = (label: string): string =>
+  label
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .toLocaleLowerCase()
+    .replace(/[^\p{L}\p{N}]/gu, '');
+
+/**
  * `GameMode.isCorrect` for options that are country ids: right if it is the asked
  * country, never by the text shown (Kingston is Jamaica's and Norfolk Island's).
  */
@@ -31,7 +43,7 @@ export const isTargetAnswer = (question: Question, answer: string) => answer ===
 /**
  * Multiple-choice questions for `GameMode.buildQuestions`: `config.questionCount`
  * countries from the (already filtered) pool, each with options that are country ids,
- * in random order. Shared by the capital and flag modes (ADR 0007).
+ * in random order. Shared by both capital modes and both flag modes (ADR 0007).
  */
 export function buildChoiceQuestions(
   pool: readonly Country[],
@@ -62,7 +74,7 @@ export function pickOptions(
   }: ChoiceSettings,
   rng: Rng,
 ): string[] {
-  const key = (country: Country) => labelOf(country).trim().toLocaleLowerCase();
+  const key = (country: Country) => labelKey(labelOf(country));
   const chosen = [target];
   const labels = new Set([key(target)]);
   const sameRegion = candidates.filter((c) => c.region === target.region);
