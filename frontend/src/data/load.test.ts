@@ -1,5 +1,5 @@
-import { fixtureCountries, fixtureWorldJson } from '../test/fixtures';
-import { loadGameData } from './load';
+import { fixtureCountries, fixtureGameData, fixtureWorldJson } from '../test/fixtures';
+import { createGameData, datasetLoaders, requireDataset } from './load';
 
 const files: Record<string, unknown> = {
   '/data/countries.json': fixtureCountries,
@@ -20,27 +20,51 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe('loadGameData', () => {
-  it('fetches both files from /data/ and indexes countries by id', async () => {
+describe('datasetLoaders', () => {
+  it('loads each dataset from its own file in /data/', async () => {
     const fetchMock = stubFetch();
-    const data = await loadGameData();
 
-    expect(fetchMock.mock.calls.map(([url]) => url).sort()).toEqual([
+    expect(await datasetLoaders.countries()).toHaveLength(2);
+    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual(['/data/countries.json']);
+
+    const world = await datasetLoaders.world();
+    expect(world.objects.world.geometries).toHaveLength(3);
+    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
       '/data/countries.json',
       '/data/world.topo.json',
     ]);
-    expect(data.countries).toHaveLength(2);
-    expect(data.countriesById.get('BBB')?.name).toBe('Betaland');
-    expect(data.world.objects.world.geometries).toHaveLength(3);
   });
 
   it('rejects with the file name and status on an HTTP error', async () => {
     stubFetch({ '/data/world.topo.json': new Response('', { status: 503 }) });
-    await expect(loadGameData()).rejects.toThrow('Could not load world.topo.json (HTTP 503)');
+    await expect(datasetLoaders.world()).rejects.toThrow(
+      'Could not load world.topo.json (HTTP 503)',
+    );
   });
 
   it('rejects when a file fails validation', async () => {
     stubFetch({ '/data/countries.json': new Response(JSON.stringify([{ id: 'NOR' }])) });
-    await expect(loadGameData()).rejects.toThrow(/countries.json is invalid/);
+    await expect(datasetLoaders.countries()).rejects.toThrow(/countries.json is invalid/);
+  });
+});
+
+describe('createGameData', () => {
+  it('indexes the countries by id', () => {
+    const data = createGameData(fixtureCountries);
+    expect(data.countriesById.get('BBB')?.name).toBe('Betaland');
+    expect([...data.countryIds]).toEqual(['AAA', 'BBB']);
+    expect(data.datasets).toEqual({});
+  });
+});
+
+describe('requireDataset', () => {
+  it('returns a loaded dataset', () => {
+    expect(requireDataset(fixtureGameData, 'world')).toBe(fixtureGameData.datasets.world);
+  });
+
+  it("throws a clear error when the mode didn't declare the dataset", () => {
+    expect(() => requireDataset(createGameData(fixtureCountries), 'world')).toThrow(
+      /"world" dataset is not loaded/,
+    );
   });
 });

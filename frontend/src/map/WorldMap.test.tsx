@@ -2,12 +2,12 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import worldRaw from '../../public/data/world.topo.json?raw';
 import { parseWorld } from '../data/validate';
-import { fixtureGameData } from '../test/fixtures';
+import { fixtureWorld } from '../test/fixtures';
 import { getMapGeometry } from './geometry';
 import { MAX_ZOOM, maxZoomFor } from './useMapZoom';
 import WorldMap from './WorldMap';
 
-const world = fixtureGameData.world;
+const world = fixtureWorld;
 const countryIds = new Set(['AAA', 'BBB']);
 
 function shape(container: HTMLElement, id: string) {

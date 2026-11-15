@@ -1,47 +1,59 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { GameDataContext, type GameDataState } from './gameDataContext';
-import { loadGameData, type GameData } from './load';
-
-type Outcome = { attempt: number } & ({ ok: true; data: GameData } | { ok: false; error: Error });
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import {
+  GameDataContext,
+  type DatasetEntries,
+  type DatasetEntry,
+  type GameDataContextValue,
+} from './gameDataContext';
+import { datasetLoaders, type DatasetId, type DatasetLoaders, type Datasets } from './load';
 
 interface GameDataProviderProps {
   children: ReactNode;
-  /** Replaces the real loader, e.g. in tests. Must be a stable function. */
-  load?: (signal: AbortSignal) => Promise<GameData>;
+  /** Replaces the real loaders, e.g. in tests. Read once, when the provider mounts. */
+  loaders?: DatasetLoaders;
 }
 
 /**
- * Loads the game data once and shares it with every screen. Loading starts as soon as
- * the app mounts, so the data is usually ready by the time a game is picked.
+ * Loads each dataset once, when a screen first asks for it (`useGameData`), and keeps it
+ * for the rest of the session (ADR 0007). The countries start loading as soon as the app
+ * mounts, since every game needs them. A failed load is forgotten, so asking again
+ * retries it.
  */
-export function GameDataProvider({ children, load = loadGameData }: GameDataProviderProps) {
-  const [attempt, setAttempt] = useState(0);
-  const [outcome, setOutcome] = useState<Outcome | null>(null);
+export function GameDataProvider({ children, loaders = datasetLoaders }: GameDataProviderProps) {
+  const [entries, setEntries] = useState<DatasetEntries>({});
+  const [initialLoaders] = useState(loaders);
+  // Datasets loading or loaded. A ref, not state, so two requests in one render (or
+  // StrictMode's double effects) never start the same load twice.
+  const started = useRef(new Set<DatasetId>());
 
-  useEffect(() => {
-    const controller = new AbortController();
-    load(controller.signal).then(
-      (data) => {
-        if (!controller.signal.aborted) setOutcome({ attempt, ok: true, data });
-      },
-      (error: unknown) => {
-        if (controller.signal.aborted) return;
-        const err = error instanceof Error ? error : new Error(String(error));
-        setOutcome({ attempt, ok: false, error: err });
-      },
-    );
-    return () => controller.abort();
-  }, [load, attempt]);
+  const request = useCallback(
+    (ids: readonly DatasetId[]) => {
+      const update = <K extends DatasetId>(id: K, entry: DatasetEntry<Datasets[K]>) =>
+        setEntries((current) => ({ ...current, [id]: entry }));
 
-  const retry = useCallback(() => setAttempt((n) => n + 1), []);
+      const load = <K extends DatasetId>(id: K) => {
+        if (started.current.has(id)) return;
+        started.current.add(id);
+        update(id, { status: 'loading' });
+        // Not aborted on unmount: a load is shared and cached, so it is never wasted.
+        (initialLoaders[id] as () => Promise<Datasets[K]>)().then(
+          (value) => update(id, { status: 'ready', value }),
+          (error: unknown) => {
+            started.current.delete(id);
+            update(id, {
+              status: 'error',
+              error: error instanceof Error ? error : new Error(String(error)),
+            });
+          },
+        );
+      };
+      ids.forEach(load);
+    },
+    [initialLoaders],
+  );
 
-  // An outcome from an earlier attempt means a retry is still loading.
-  const state = useMemo<GameDataState>(() => {
-    if (!outcome || outcome.attempt !== attempt) return { status: 'loading' };
-    return outcome.ok
-      ? { status: 'ready', data: outcome.data }
-      : { status: 'error', error: outcome.error, retry };
-  }, [outcome, attempt, retry]);
+  useEffect(() => request(['countries']), [request]);
 
-  return <GameDataContext value={state}>{children}</GameDataContext>;
+  const value = useMemo<GameDataContextValue>(() => ({ entries, request }), [entries, request]);
+  return <GameDataContext value={value}>{children}</GameDataContext>;
 }

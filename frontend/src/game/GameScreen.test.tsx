@@ -1,8 +1,8 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useNavigate } from 'react-router';
 import { GameDataProvider } from '../data/GameDataProvider';
-import { fixtureCountries, fixtureGameData } from '../test/fixtures';
+import { fixtureCountries, fixtureLoaders } from '../test/fixtures';
 import { DEFAULT_AUTO_ADVANCE_MS } from './engine/types';
 import GameScreen from './GameScreen';
 
@@ -42,7 +42,10 @@ afterEach(() => {
 async function startGame(path = '/play/map-click') {
   const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
   renderApp(path);
-  await screen.findByRole('application', { name: 'World map' });
+  const map = await screen.findByRole('application', { name: 'World map' });
+  // The data resolves outside act(), so React can show the map before RoundView's
+  // effect has moved focus to it. Wait for that too, or keys typed next go to <body>.
+  await waitFor(() => expect(map).toHaveFocus());
   return user;
 }
 
@@ -267,7 +270,7 @@ describe('Map-click game in a region', () => {
     }
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     render(
-      <GameDataProvider load={() => Promise.resolve(fixtureGameData)}>
+      <GameDataProvider loaders={fixtureLoaders}>
         <MemoryRouter initialEntries={['/play/map-click?region=africa']}>
           <Routes>
             <Route path="/play/:modeId" element={<GameScreen />} />

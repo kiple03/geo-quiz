@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { countryName } from '../../../data/load';
+import { countryName, requireDataset } from '../../../data/load';
 import WorldMap, { type MapHighlight } from '../../../map/WorldMap';
 import { regionsFrame } from '../../regions';
 import { countryIdsInRound } from '../../setup';
@@ -40,7 +40,7 @@ function MapClickPlay({ data, config, question, history, feedback, onAnswer }: P
         {message}
       </p>
       <WorldMap
-        world={data.world}
+        world={requireDataset(data, 'world')}
         clickableIds={clickableIds}
         highlights={highlights}
         onCountryClick={feedback ? undefined : onAnswer}

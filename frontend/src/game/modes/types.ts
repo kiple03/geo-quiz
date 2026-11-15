@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import type { GameData } from '../../data/load';
+import type { ExtraDatasetId, GameData } from '../../data/load';
 import type { Country } from '../../data/types';
 import type { Rng } from '../engine/random';
 import type { AnswerRecord, Question, RoundConfig } from '../engine/types';
@@ -35,6 +35,12 @@ export interface PlayProps {
  * engine (game/engine), score, progress and "Next" in RoundView, results in ResultsView.
  */
 export interface GameMode extends GameModeInfo {
+  /**
+   * Datasets the mode needs besides the countries, e.g. `['world']` for a map. The game
+   * screen loads them before the round starts; the mode reads them with
+   * `requireDataset(data, id)`. Omit if the countries are enough (ADR 0007).
+   */
+  datasets?: readonly ExtraDatasetId[];
   /**
    * The countries this mode can ask about. Shared filters such as `RoundConfig.regions`
    * are applied afterwards for every mode (game/setup.ts), so don't filter for them here.

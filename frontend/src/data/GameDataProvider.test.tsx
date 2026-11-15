@@ -1,11 +1,40 @@
 import { render, screen } from '@testing-library/react';
-import { fixtureGameData } from '../test/fixtures';
+import userEvent from '@testing-library/user-event';
+import { StrictMode } from 'react';
+import { fixtureCountries, fixtureLoaders, fixtureWorld } from '../test/fixtures';
 import { useGameData } from './gameDataContext';
 import { GameDataProvider } from './GameDataProvider';
+import type { ExtraDatasetId } from './load';
 
-function Status() {
-  const state = useGameData();
-  return <p>{state.status}</p>;
+/** Shows the state of `useGameData(extra)`, with the datasets it got when ready. */
+function Status({ name, extra }: { name: string; extra?: readonly ExtraDatasetId[] }) {
+  const state = useGameData(extra);
+  let text: string = state.status;
+  if (state.status === 'ready') {
+    text += `: ${state.data.countries.length} countries, ${Object.keys(state.data.datasets).join(',') || 'nothing else'}`;
+  }
+  if (state.status === 'error') {
+    return (
+      <p>
+        {name} error: {state.error.message}
+        <button type="button" onClick={state.retry}>
+          Retry {name}
+        </button>
+      </p>
+    );
+  }
+  return (
+    <p>
+      {name} {text}
+    </p>
+  );
+}
+
+function spyLoaders() {
+  return {
+    countries: vi.fn(fixtureLoaders.countries),
+    world: vi.fn(fixtureLoaders.world),
+  };
 }
 
 afterEach(() => {
@@ -13,39 +42,95 @@ afterEach(() => {
 });
 
 describe('GameDataProvider', () => {
-  it('loads once and passes the abort signal to the loader', async () => {
-    const load = vi.fn((signal: AbortSignal) => {
-      expect(signal).toBeInstanceOf(AbortSignal);
-      return Promise.resolve(fixtureGameData);
-    });
-    render(
-      <GameDataProvider load={load}>
-        <Status />
-      </GameDataProvider>,
-    );
-
-    expect(screen.getByText('loading')).toBeInTheDocument();
-    expect(await screen.findByText('ready')).toBeInTheDocument();
-    expect(load).toHaveBeenCalledTimes(1);
+  it('starts loading the countries when it mounts, but nothing else', () => {
+    const loaders = spyLoaders();
+    render(<GameDataProvider loaders={loaders}>no screens</GameDataProvider>);
+    expect(loaders.countries).toHaveBeenCalledTimes(1);
+    expect(loaders.world).not.toHaveBeenCalled();
   });
 
-  it('aborts the load when unmounted and ignores its result', async () => {
-    let signal: AbortSignal | undefined;
-    const load = (s: AbortSignal) => {
-      signal = s;
-      return new Promise<never>(() => {});
-    };
-    const { unmount } = render(
-      <GameDataProvider load={load}>
-        <Status />
+  it('gives the countries alone to a screen that needs nothing else', async () => {
+    const loaders = spyLoaders();
+    render(
+      <GameDataProvider loaders={loaders}>
+        <Status name="A" />
       </GameDataProvider>,
     );
-    unmount();
-    expect(signal?.aborted).toBe(true);
+    expect(screen.getByText('A loading')).toBeInTheDocument();
+    expect(await screen.findByText('A ready: 2 countries, nothing else')).toBeInTheDocument();
+    expect(loaders.world).not.toHaveBeenCalled();
+  });
+
+  it('loads an extra dataset when first asked for, once for all screens', async () => {
+    const loaders = spyLoaders();
+    render(
+      <StrictMode>
+        <GameDataProvider loaders={loaders}>
+          <Status name="A" extra={['world']} />
+          <Status name="B" extra={['world']} />
+        </GameDataProvider>
+      </StrictMode>,
+    );
+    expect(await screen.findByText('A ready: 2 countries, world')).toBeInTheDocument();
+    expect(screen.getByText('B ready: 2 countries, world')).toBeInTheDocument();
+    expect(loaders.countries).toHaveBeenCalledTimes(1);
+    expect(loaders.world).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps a loaded dataset for later screens', async () => {
+    const loaders = spyLoaders();
+    const { rerender } = render(
+      <GameDataProvider loaders={loaders}>
+        <Status name="A" extra={['world']} />
+      </GameDataProvider>,
+    );
+    await screen.findByText('A ready: 2 countries, world');
+    rerender(
+      <GameDataProvider loaders={loaders}>
+        <Status name="B" extra={['world']} />
+      </GameDataProvider>,
+    );
+    // Ready at once, without loading again.
+    expect(screen.getByText('B ready: 2 countries, world')).toBeInTheDocument();
+    expect(loaders.world).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows an error and loads only the failed dataset again on retry', async () => {
+    const user = userEvent.setup();
+    const loaders = {
+      countries: vi.fn(() => Promise.resolve(fixtureCountries)),
+      world: vi
+        .fn()
+        .mockRejectedValueOnce(new Error('Could not load world.topo.json (HTTP 503)'))
+        .mockResolvedValue(fixtureWorld),
+    };
+    render(
+      <GameDataProvider loaders={loaders}>
+        <Status name="A" extra={['world']} />
+      </GameDataProvider>,
+    );
+    expect(
+      await screen.findByText('A error: Could not load world.topo.json (HTTP 503)'),
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Retry A' }));
+    expect(await screen.findByText('A ready: 2 countries, world')).toBeInTheDocument();
+    expect(loaders.world).toHaveBeenCalledTimes(2);
+    expect(loaders.countries).toHaveBeenCalledTimes(1);
+  });
+
+  it('turns a non-Error rejection into an Error', async () => {
+    const loaders = { ...fixtureLoaders, countries: () => Promise.reject('offline') };
+    render(
+      <GameDataProvider loaders={loaders}>
+        <Status name="A" />
+      </GameDataProvider>,
+    );
+    expect(await screen.findByText('A error: offline')).toBeInTheDocument();
   });
 
   it('throws a clear error when used outside the provider', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(() => render(<Status />)).toThrow(/inside <GameDataProvider>/);
+    expect(() => render(<Status name="A" />)).toThrow(/inside <GameDataProvider>/);
   });
 });

@@ -14,7 +14,8 @@ import './game.css';
 function GameScreen() {
   const { modeId } = useParams();
   const mode = findGameMode(modeId);
-  const dataState = useGameData();
+  // Only what this mode needs; a dataset loaded once stays cached (ADR 0007).
+  const dataState = useGameData(mode?.datasets);
   const [roundNumber, setRoundNumber] = useState(0);
   const [searchParams] = useSearchParams();
   const search = searchParams.toString();
@@ -42,7 +43,7 @@ function GameScreen() {
         {mode.title}
         {regionLabel && <span className="game-region"> · {regionLabel}</span>}
       </h1>
-      {dataState.status === 'loading' && <p role="status">Loading the map…</p>}
+      {dataState.status === 'loading' && <p role="status">Loading the game…</p>}
       {dataState.status === 'error' && (
         <div role="alert">
           <p>Could not load the game data.</p>
