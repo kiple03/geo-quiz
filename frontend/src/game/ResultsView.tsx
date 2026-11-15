@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import type { GameData } from '../data/load';
+import CountryFlag from '../flags/CountryFlag';
 import type { RoundResult } from './engine/types';
 import type { GameMode } from './modes/types';
 import { roundSearchFor } from './settings';
@@ -23,11 +24,14 @@ function ResultsView({ result, mode, data, onPlayAgain }: ResultsViewProps) {
         {result.answers.map(({ question, answer, correct }, i) => (
           <li key={i} className={correct ? 'results-item--correct' : 'results-item--wrong'}>
             <span className="results-mark">{correct ? '✓' : '✗'}</span>{' '}
+            {/* The round is over, so flags give nothing away (ADR 0008). */}
+            <CountryFlag data={data} id={question.targetId} />
             {mode.describeQuestion(question, data)}
             {!correct && (
               <span className="results-answer">
                 {' '}
-                (you answered {mode.describeAnswer(answer, data)})
+                (you answered <CountryFlag data={data} id={answer} />
+                {mode.describeAnswer(answer, data)})
               </span>
             )}
           </li>

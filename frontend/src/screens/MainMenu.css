@@ -47,6 +47,17 @@
   color: var(--color-ink-muted);
 }
 
+.mode-card-flags {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  font-size: var(--text-xl);
+}
+
+.mode-card-flags .flag {
+  margin: 0;
+}
+
 /* Region choice: radio buttons drawn as a row of chips. */
 
 .region-picker {

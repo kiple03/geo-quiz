@@ -1,4 +1,5 @@
 import { Link, useSearchParams } from 'react-router';
+import { FlagImage } from '../flags/CountryFlag';
 import { gameModes } from '../game/modes/registry';
 import { findRegionByName, REGIONS } from '../game/regions';
 import { roundConfigFromSearch, roundSearchFor } from '../game/settings';
@@ -52,6 +53,14 @@ function MainMenu() {
             <Link className="mode-card" to={{ pathname: `/play/${mode.id}`, search }}>
               <span className="mode-card-title">{mode.title}</span>
               <span className="mode-card-description">{mode.description}</span>
+              {mode.previewFlags && (
+                // Decoration only: the card's text says what the mode is.
+                <span className="mode-card-flags" aria-hidden="true">
+                  {mode.previewFlags.map((id) => (
+                    <FlagImage key={id} id={id} />
+                  ))}
+                </span>
+              )}
             </Link>
           </li>
         ))}

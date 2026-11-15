@@ -1,5 +1,6 @@
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { countryName, requireDataset } from '../../../data/load';
+import CountryFlag from '../../../flags/CountryFlag';
 import WorldMap, { type MapHighlight } from '../../../map/WorldMap';
 import { regionsFrame } from '../../regions';
 import { countryIdsInRound } from '../../setup';
@@ -19,7 +20,7 @@ function MapClickPlay({ data, config, question, history, feedback, onAnswer }: P
     highlights[q.targetId] = correct ? 'past-correct' : 'past-wrong';
   }
 
-  let message = '';
+  let message: ReactNode = '';
   if (feedback?.correct) {
     highlights[question.targetId] = 'correct';
     message = `Correct! That is ${targetName}.`;
@@ -27,13 +28,22 @@ function MapClickPlay({ data, config, question, history, feedback, onAnswer }: P
     const clicked = countryName(data, feedback.answer);
     highlights[feedback.answer] = 'wrong';
     highlights[question.targetId] = 'reveal';
-    message = `Not quite: you clicked ${clicked}. ${targetName} is highlighted on the map.`;
+    message = (
+      <>
+        Not quite: you clicked <CountryFlag data={data} id={feedback.answer} />
+        {clicked}. {targetName} is highlighted on the map.
+      </>
+    );
   }
 
   return (
     <div className="map-click">
       <p className="game-prompt">
-        Click on <strong>{targetName}</strong>
+        Click on{' '}
+        <strong>
+          <CountryFlag data={data} id={question.targetId} />
+          {targetName}
+        </strong>
       </p>
       {/* Always rendered, so screen readers announce the feedback when it appears. */}
       <p className="game-feedback" role="status" data-correct={feedback?.correct}>
