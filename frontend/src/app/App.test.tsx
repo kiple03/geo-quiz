@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { fixtureGameData } from '../test/fixtures';
+import { fixtureCountries } from '../test/fixtures';
 import { renderApp } from '../test/renderApp';
 
 describe('App routing', () => {
@@ -84,17 +84,17 @@ describe('Game screen data loading', () => {
 
   it('shows the error and recovers when "Try again" succeeds', async () => {
     const user = userEvent.setup();
-    const load = vi
+    const countries = vi
       .fn()
       .mockRejectedValueOnce(new Error('Could not load countries.json (HTTP 500)'))
-      .mockResolvedValue(fixtureGameData);
-    renderApp('/play/map-click', { load });
+      .mockResolvedValue(fixtureCountries);
+    renderApp('/play/map-click', { loaders: { countries } });
 
     const alert = await screen.findByRole('alert');
     expect(alert).toHaveTextContent('Could not load countries.json (HTTP 500)');
 
     await user.click(screen.getByRole('button', { name: 'Try again' }));
     expect(await screen.findByRole('application', { name: 'World map' })).toBeInTheDocument();
-    expect(load).toHaveBeenCalledTimes(2);
+    expect(countries).toHaveBeenCalledTimes(2);
   });
 });

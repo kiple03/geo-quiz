@@ -1,13 +1,34 @@
 import type { Country, WorldTopology } from './types';
 import { parseCountries, parseWorld } from './validate';
 
-/** Everything the games need, loaded once when the app starts. */
+/**
+ * Every dataset the app can load, by id. Each is fetched and cached on its own, when a
+ * screen first needs it (ADR 0007). New datasets (e.g. US states) are added here, with
+ * a loader in `datasetLoaders`.
+ */
+export interface Datasets {
+  /** Every mode needs it, so it starts loading when the app starts. */
+  countries: readonly Country[];
+  /** The world map (ADR 0002), only loaded for modes that show it. */
+  world: WorldTopology;
+}
+
+export type DatasetId = keyof Datasets;
+
+/** The datasets a mode can ask for on top of `countries`, e.g. `world` for a map mode. */
+export type ExtraDatasetId = Exclude<DatasetId, 'countries'>;
+
+/** Loads one dataset; rejects with a readable message on failure. */
+export type DatasetLoaders = { [K in DatasetId]: () => Promise<Datasets[K]> };
+
+/** What a mode gets: the countries, plus the extra datasets it declared. */
 export interface GameData {
   countries: readonly Country[];
   countriesById: ReadonlyMap<string, Country>;
   /** Ids of all countries; map shapes not in here are neutral land (ADR 0002). */
   countryIds: ReadonlySet<string>;
-  world: WorldTopology;
+  /** Only the datasets the mode declared in `GameMode.datasets`; read with `requireDataset`. */
+  datasets: Partial<Pick<Datasets, ExtraDatasetId>>;
 }
 
 /**
@@ -16,31 +37,43 @@ export interface GameData {
  */
 const DATA_URL = `${import.meta.env.BASE_URL}data/`;
 
-async function fetchJson(file: string, signal?: AbortSignal): Promise<unknown> {
-  const response = await fetch(DATA_URL + file, { signal });
+async function fetchJson(file: string): Promise<unknown> {
+  const response = await fetch(DATA_URL + file);
   if (!response.ok) throw new Error(`Could not load ${file} (HTTP ${response.status})`);
   return response.json();
 }
+
+/** The real loaders: fetch and validate the static files. */
+export const datasetLoaders: DatasetLoaders = {
+  countries: async () => parseCountries(await fetchJson('countries.json')),
+  world: async () => parseWorld(await fetchJson('world.topo.json')),
+};
 
 /** The display name for a country id; falls back to the id itself if it is unknown. */
 export function countryName(data: GameData, id: string): string {
   return data.countriesById.get(id)?.name ?? id;
 }
 
-export function createGameData(countries: readonly Country[], world: WorldTopology): GameData {
+export function createGameData(
+  countries: readonly Country[],
+  datasets: GameData['datasets'] = {},
+): GameData {
   return {
     countries,
     countriesById: new Map(countries.map((country) => [country.id, country])),
     countryIds: new Set(countries.map((country) => country.id)),
-    world,
+    datasets,
   };
 }
 
-/** Fetches and validates all game data. Rejects with a readable message on failure. */
-export async function loadGameData(signal?: AbortSignal): Promise<GameData> {
-  const [countriesJson, worldJson] = await Promise.all([
-    fetchJson('countries.json', signal),
-    fetchJson('world.topo.json', signal),
-  ]);
-  return createGameData(parseCountries(countriesJson), parseWorld(worldJson));
+/**
+ * A dataset the mode declared. Throws if it is missing, which means the mode forgot to
+ * list it in `GameMode.datasets`: the game screen only starts a round once they load.
+ */
+export function requireDataset<K extends ExtraDatasetId>(data: GameData, id: K): Datasets[K] {
+  const dataset = data.datasets[id];
+  if (dataset === undefined) {
+    throw new Error(`The "${id}" dataset is not loaded. Add it to the mode's \`datasets\`.`);
+  }
+  return dataset;
 }

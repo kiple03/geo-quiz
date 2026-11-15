@@ -52,9 +52,16 @@ Keep it modular; new features should be additive. In `frontend/src/`:
 - `game/settings.ts`: round settings in the URL (`/play/map-click?region=europe`),
   parsed on top of `defaultRoundConfig()`; `game/regions.ts`: the regions the menu
   offers, with their map frames (ADR 0006). Modes get the config via `PlayProps.config`.
-- `data/`: the only place that knows where data is loaded from.
+- `game/choice/`: shared multiple-choice parts (ADR 0007): `buildChoiceQuestions`
+  (options are country ids, wrong ones from the same region, no repeated labels) and
+  the `MultipleChoice` component. Capital mode uses them; the flag mode will too.
+- `data/`: the only place that knows where data is loaded from. Datasets (`Datasets`
+  in `load.ts`: `countries`, `world`) load separately, on first use, and stay cached
+  (ADR 0007). A mode lists what it needs besides the countries in `GameMode.datasets`
+  and reads it with `requireDataset(data, id)`. Tests pass `fixtureLoaders` or
+  `renderApp(path, { loaders })`.
 
-Known follow-ups for subdivision features and per-mode datasets are in `docs/backlog.md`;
+Known follow-ups for subdivision features and other map layers are in `docs/backlog.md`;
 check it before starting those features.
 
 ## Commands

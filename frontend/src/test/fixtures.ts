@@ -1,4 +1,4 @@
-import { createGameData } from '../data/load';
+import { createGameData, type DatasetLoaders } from '../data/load';
 import type { Country } from '../data/types';
 import { parseWorld } from '../data/validate';
 
@@ -61,4 +61,13 @@ export const fixtureWorldJson = {
   },
 };
 
-export const fixtureGameData = createGameData(fixtureCountries, parseWorld(fixtureWorldJson));
+export const fixtureWorld = parseWorld(fixtureWorldJson);
+
+/** The fixture data with every dataset loaded. */
+export const fixtureGameData = createGameData(fixtureCountries, { world: fixtureWorld });
+
+/** Loaders that resolve with the fixture data, for `<GameDataProvider loaders>`. */
+export const fixtureLoaders: DatasetLoaders = {
+  countries: () => Promise.resolve(fixtureCountries),
+  world: () => Promise.resolve(fixtureWorld),
+};

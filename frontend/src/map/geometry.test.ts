@@ -1,11 +1,11 @@
 import worldRaw from '../../public/data/world.topo.json?raw';
 import { parseWorld } from '../data/validate';
-import { fixtureGameData } from '../test/fixtures';
+import { fixtureWorld } from '../test/fixtures';
 import { getMapGeometry, MAP_WIDTH, projectBox } from './geometry';
 
 describe('getMapGeometry', () => {
   it('projects one shape per geometry, in a viewBox about twice as wide as high', () => {
-    const geometry = getMapGeometry(fixtureGameData.world);
+    const geometry = getMapGeometry(fixtureWorld);
     expect(geometry.shapes.map((s) => s.id)).toEqual(['AAA', 'BBB', 'NEU']);
     expect(geometry.width).toBe(MAP_WIDTH);
     expect(geometry.height).toBeGreaterThan(450);
@@ -14,12 +14,12 @@ describe('getMapGeometry', () => {
   });
 
   it('is cached per topology', () => {
-    expect(getMapGeometry(fixtureGameData.world)).toBe(getMapGeometry(fixtureGameData.world));
+    expect(getMapGeometry(fixtureWorld)).toBe(getMapGeometry(fixtureWorld));
   });
 
   // A shape with the wrong winding order is drawn as "the whole globe except the shape".
   it('gives the fixture squares small, equal areas (correct winding)', () => {
-    const { shapes, width, height } = getMapGeometry(fixtureGameData.world);
+    const { shapes, width, height } = getMapGeometry(fixtureWorld);
     for (const shape of shapes) {
       expect(shape.area).toBeGreaterThan(0);
       expect(shape.area).toBeLessThan((width * height) / 100);
@@ -28,7 +28,7 @@ describe('getMapGeometry', () => {
   });
 
   it('gives each shape its bounds and a centroid inside them', () => {
-    const [a] = getMapGeometry(fixtureGameData.world).shapes;
+    const [a] = getMapGeometry(fixtureWorld).shapes;
     const [[x0, y0], [x1, y1]] = a.bounds;
     expect(x1).toBeGreaterThan(x0);
     expect(y1).toBeGreaterThan(y0);
@@ -42,8 +42,8 @@ describe('getMapGeometry', () => {
   describe('projectBox', () => {
     it('gives the bounds of a lon/lat box, the same as a shape that fills it', () => {
       // AAA is the square 0–10°E, 0–10°N.
-      const [aaa] = getMapGeometry(fixtureGameData.world).shapes;
-      const [[x0, y0], [x1, y1]] = projectBox(fixtureGameData.world, [
+      const [aaa] = getMapGeometry(fixtureWorld).shapes;
+      const [[x0, y0], [x1, y1]] = projectBox(fixtureWorld, [
         [0, 0],
         [10, 10],
       ]);
@@ -55,11 +55,11 @@ describe('getMapGeometry', () => {
 
     it('includes the bulge of curved meridians, not just the corners', () => {
       // At 60°N the west edge of a box from 60°S is further in than at the equator.
-      const box = projectBox(fixtureGameData.world, [
+      const box = projectBox(fixtureWorld, [
         [-90, -60],
         [-60, 60],
       ]);
-      const corners = projectBox(fixtureGameData.world, [
+      const corners = projectBox(fixtureWorld, [
         [-90, 60],
         [-60, 60],
       ]);

@@ -7,10 +7,9 @@ import { mapClickMode } from './mode';
 
 describe('map-click mode', () => {
   describe('questionPool with the real data', () => {
-    const data = createGameData(
-      parseCountries(JSON.parse(countriesRaw)),
-      parseWorld(JSON.parse(worldRaw)),
-    );
+    const data = createGameData(parseCountries(JSON.parse(countriesRaw)), {
+      world: parseWorld(JSON.parse(worldRaw)),
+    });
     const poolIds = new Set(mapClickMode.questionPool(data).map((c) => c.id));
 
     it('asks about every country, including the tiniest (zoom and markers)', () => {
