@@ -28,7 +28,7 @@ function MainMenu() {
   return (
     <section className="main-menu">
       <h1>Geo Quiz</h1>
-      <p className="main-menu-intro">How well do you know the world map? Pick a game.</p>
+      <p className="main-menu-intro">How well do you know the world? Pick a game.</p>
       <fieldset className="region-picker">
         <legend className="region-picker-legend">Region</legend>
         <div className="region-picker-options">
