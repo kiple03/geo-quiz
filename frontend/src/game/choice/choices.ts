@@ -23,6 +23,12 @@ export interface ChoiceSettings {
 }
 
 /**
+ * `GameMode.isCorrect` for options that are country ids: right if it is the asked
+ * country, never by the text shown (Kingston is Jamaica's and Norfolk Island's).
+ */
+export const isTargetAnswer = (question: Question, answer: string) => answer === question.targetId;
+
+/**
  * Multiple-choice questions for `GameMode.buildQuestions`: `config.questionCount`
  * countries from the (already filtered) pool, each with options that are country ids,
  * in random order. Shared by the capital and flag modes (ADR 0007).

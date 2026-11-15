@@ -13,7 +13,8 @@ export interface ChoiceOption {
   content?: ReactNode;
   /**
    * Optional: the accessible name while asking, when the label would give the answer
-   * away, e.g. "Flag 2" for a flag whose label is its country.
+   * away, e.g. "Flag 2" for a flag whose label is its country. An option with `content`
+   * and no `askingLabel` is "Option 2" while asking.
    */
   askingLabel?: string;
 }
@@ -81,8 +82,17 @@ function MultipleChoice({ label, options, correctId, chosenId, onChoose }: Multi
   const media = options.some((option) => option.content !== undefined);
 
   /** Spelled out, since adjacent spans can run together ("OsloRight answer"). */
-  const accessibleName = (option: ChoiceOption, mark: string | null): string | undefined => {
-    if (!answered) return option.askingLabel;
+  const accessibleName = (
+    option: ChoiceOption,
+    index: number,
+    mark: string | null,
+  ): string | undefined => {
+    if (!answered) {
+      // A picture's alt is empty, so a picture option always needs a name of its own.
+      return (
+        option.askingLabel ?? (option.content !== undefined ? `Option ${index + 1}` : undefined)
+      );
+    }
     if (mark) return `${option.label}, ${mark.toLowerCase()}`;
     return option.content !== undefined ? option.label : undefined;
   };
@@ -113,7 +123,7 @@ function MultipleChoice({ label, options, correctId, chosenId, onChoose }: Multi
             // Not `disabled`: that would drop the buttons from the reading order, and
             // the marks below must stay readable.
             aria-disabled={answered || undefined}
-            aria-label={accessibleName(option, mark)}
+            aria-label={accessibleName(option, i, mark)}
             // Mouse, touch and screen readers' own clicks (keys are handled above).
             onClick={() => choose(option.id)}
           >

@@ -50,3 +50,7 @@ codes for the same country) or to `NEUTRAL_LAND` (a shape that should not be ask
 The flag step stops if a country has no flag in flag-icons, or if two flags are identical.
 Fix it in `frontend/src/data/flags.ts`: `NO_FLAG` for a country without a flag,
 `SHARED_FLAGS` for one that flies another country's flag.
+
+Only byte-identical flags are caught. After bumping flag-icons, look over the flags of
+new or changed territories: one drawn differently but looking the same as another
+country's (like France and its territories) must be added to `SHARED_FLAGS` by hand.

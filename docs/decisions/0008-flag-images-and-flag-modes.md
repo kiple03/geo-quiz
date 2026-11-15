@@ -34,11 +34,12 @@ cases:
   even. The price is that real proportions are lost: square flags (Switzerland, Vatican
   City) are drawn 4:3, and Indonesia and Monaco become the same picture.
 - **Static files, not a dataset.** `data/build.ts` copies one flag per country to
-  `frontend/public/data/flags/<Country.id>.svg` with flag-icons' licence, removing the
-  `id` attribute that names the country. All 236 are 1.6 MB, but the median flag is
-  about 0.4 KB gzipped and the largest (Serbia) 49 KB. The browser fetches each flag
-  when it is first shown and caches it. A flag round shows at most 40, and fetches them
-  all when it starts (`GameMode.preload`), so later questions don't wait. `flagUrl(id)`
+  `frontend/public/data/flags/<Country.id>.svg` with flag-icons' licence, removing each
+  file's root `id` (`flag-icons-no`) so that identical flags compare equal. All 236 are
+  1.6 MB, but the median flag is about 0.4 KB gzipped and the largest (Serbia) 49 KB.
+  The browser fetches each flag when it is first shown and caches it. A round fetches
+  its flags when it starts (`GameMode.preload`), so later questions don't wait: the
+  asked flags, plus every option's in "Pick the flag" (at most 40). `flagUrl(id)`
   in `data/load.ts` is the only place that knows where flags live. `Country` is
   unchanged.
 - **Shown as `<img>`, never inlined.** Several flag files use internal ids (Nepal's
@@ -50,7 +51,8 @@ cases:
   (Antarctica) gets no file and no flag anywhere. `SHARED_FLAGS` lists the territories
   above: their flag is shown next to their name, since it is the flag they fly, but
   flag rounds never ask about or offer them. The build fails if two flag files are
-  identical and not covered there. The French ones differ in their markup only, so they
+  identical and not covered there, or if the rules contradict each other (e.g. a shared
+  flag pointing at a country without a flag of its own). The French ones differ in their markup only, so they
   were found by eye. `LOOK_ALIKE_FLAGS` (Chad and Romania, Indonesia and Monaco) are
   never options in the same question, through a new `conflicts` setting in
   `buildChoiceQuestions`. Similar but learnable pairs (Australia and New Zealand,
@@ -80,7 +82,7 @@ cases:
 - **Negative:** The flag modes need sight. A screen reader gets a fair game (no names
   leak while asking) and every name afterwards, but cannot tell flags apart. Flags lose
   their real proportions. Someone who opens the developer tools can read the answer
-  from an image's file name.
+  from an image's file name (and from some internal ids, e.g. `ar-a`).
 - **Follow-up:** Subdivision flags (US states, Norwegian counties;
   [backlog](../backlog.md) item 2) would be their own files under their own ids.
   `CountryFlag` already renders nothing for an id that is not a country. If more

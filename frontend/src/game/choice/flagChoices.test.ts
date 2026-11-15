@@ -7,7 +7,8 @@ import { defaultRoundConfig } from '../engine/types';
 import { flagNameMode } from '../modes/flag-name/mode';
 import { flagPickMode } from '../modes/flag-pick/mode';
 import { createRoundQuestions } from '../setup';
-import { flagPool, preloadFlags } from './flagChoices';
+import type { GameMode } from '../modes/types';
+import { flagPool } from './flagChoices';
 
 // The real data, since its shared and look-alike flags are what these modes must handle.
 const data = createGameData(parseCountries(JSON.parse(countriesRaw)));
@@ -76,27 +77,35 @@ describe('flag questions', () => {
     });
   }
 
-  it('preloads every flag a round shows, once each', () => {
-    const created: string[] = [];
-    const RealImage = globalThis.Image;
-    globalThis.Image = class {
-      set src(url: string) {
-        created.push(url);
+  describe('preloading', () => {
+    const questions = [
+      { targetId: 'NOR', options: ['NOR', 'SWE', 'ATA'] },
+      { targetId: 'SWE', options: ['SWE', 'DNK'] },
+    ];
+    /** The flag files a mode's preload fetches, in order. */
+    function preloaded(preload: GameMode['preload']): string[] {
+      const created: string[] = [];
+      const RealImage = globalThis.Image;
+      globalThis.Image = class {
+        set src(url: string) {
+          created.push(url.replace(/^.*\//, ''));
+        }
+      } as unknown as typeof Image;
+      try {
+        preload!(questions, data);
+      } finally {
+        globalThis.Image = RealImage;
       }
-    } as unknown as typeof Image;
-    try {
-      preloadFlags([
-        { targetId: 'NOR', options: ['NOR', 'SWE', 'ATA'] },
-        { targetId: 'SWE', options: ['SWE', 'DNK'] },
-      ]);
-    } finally {
-      globalThis.Image = RealImage;
+      return created;
     }
-    // Antarctica has no flag image.
-    expect(created.map((url) => url.replace(/^.*\//, ''))).toEqual([
-      'NOR.svg',
-      'SWE.svg',
-      'DNK.svg',
-    ]);
+
+    it('fetches every flag once when the options are flags', () => {
+      // Antarctica has no flag image.
+      expect(preloaded(flagPickMode.preload)).toEqual(['NOR.svg', 'SWE.svg', 'DNK.svg']);
+    });
+
+    it('fetches only the asked flags when the options are names', () => {
+      expect(preloaded(flagNameMode.preload)).toEqual(['NOR.svg', 'SWE.svg']);
+    });
   });
 });

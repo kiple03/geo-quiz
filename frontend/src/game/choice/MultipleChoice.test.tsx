@@ -136,6 +136,19 @@ describe('MultipleChoice', () => {
       expect(screen.getByRole('group')).toHaveClass('choices--media');
     });
 
+    it('names a picture option "Option N" if it has no asking label', () => {
+      render(
+        <MultipleChoice
+          label="Capital of Norway"
+          options={pictures.map((o) => ({ ...o, askingLabel: undefined }))}
+          correctId="NOR"
+          chosenId={undefined}
+          onChoose={vi.fn()}
+        />,
+      );
+      expect(option('Option 2')).toHaveAttribute('data-option-id', 'NOR');
+    });
+
     it('shows and reads every label once answered', () => {
       renderPictures('SWE');
       expect(option('Stockholm, your answer')).toHaveClass('choice--wrong');

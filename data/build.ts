@@ -218,14 +218,8 @@ function sizeReport(name: string, content: string): string {
   return `${name}: ${kb(Buffer.byteLength(content))} (${kb(gzipSync(content).length)} gzipped)`;
 }
 
-/**
- * One flag per country, by `Country.id`, except NO_FLAG (ADR 0008). Drops flag-icons'
- * `id` attribute, which names the country. Fails if a country has no flag, if the flag
- * rules name an unknown country, or if two flags are identical and not in SHARED_FLAGS
- * (a flag round could not tell them apart). Returns the files to write.
- */
-async function buildFlags(countries: Country[]): Promise<Map<string, string>> {
-  const ids = new Set(countries.map((c) => c.id));
+/** Problems with the rules in flags.ts: unknown ids, or rules that contradict each other. */
+function flagRuleProblems(ids: ReadonlySet<string>): string[] {
   const errors: string[] = [];
   const ruleIds = [
     ...NO_FLAG,
@@ -233,9 +227,33 @@ async function buildFlags(countries: Country[]): Promise<Map<string, string>> {
     ...Object.values(SHARED_FLAGS),
     ...LOOK_ALIKE_FLAGS.flat(),
   ];
-  for (const id of ruleIds) {
+  for (const id of new Set(ruleIds)) {
     if (!ids.has(id)) errors.push(`The flag rules in flags.ts name ${id}, which is not a country.`);
   }
+  for (const [id, source] of Object.entries(SHARED_FLAGS)) {
+    if (NO_FLAG.has(id)) errors.push(`${id} is in both NO_FLAG and SHARED_FLAGS.`);
+    // The flag is someone's own: the source must be asked in flag rounds itself.
+    if (NO_FLAG.has(source) || source in SHARED_FLAGS) {
+      errors.push(`SHARED_FLAGS: ${id} points at ${source}, which has no flag of its own.`);
+    }
+  }
+  for (const id of LOOK_ALIKE_FLAGS.flat()) {
+    if (NO_FLAG.has(id) || id in SHARED_FLAGS) {
+      errors.push(`LOOK_ALIKE_FLAGS names ${id}, which is never in a flag round.`);
+    }
+  }
+  return errors;
+}
+
+/**
+ * One flag per country, by `Country.id`, except NO_FLAG (ADR 0008). Fails if a country
+ * has no flag, if the flag rules are inconsistent, or if two flags are identical and
+ * not in SHARED_FLAGS (a flag round could not tell them apart). Only byte-identical
+ * files are caught: flags drawn with different markup (France and its territories)
+ * must be listed by hand. Returns the files to write.
+ */
+async function buildFlags(countries: Country[]): Promise<Map<string, string>> {
+  const errors = flagRuleProblems(new Set(countries.map((c) => c.id)));
 
   const files = new Map<string, string>();
   const byContent = new Map<string, string[]>();
@@ -246,7 +264,15 @@ async function buildFlags(countries: Country[]): Promise<Map<string, string>> {
       errors.push(`${country.id} (${country.name}) has no flag. Add it to NO_FLAG in flags.ts.`);
       continue;
     }
-    const svg = (await readFile(source, 'utf8')).replace(/ id="flag-icons-[a-z-]+"/, '');
+    // Each file's root has its own id (`flag-icons-no`); without it, flags that are the
+    // same picture compare equal. Not to hide the country: the file name and some
+    // internal ids (`ar-a`) still name it.
+    const raw = await readFile(source, 'utf8');
+    const svg = raw.replace(/ id="flag-icons-[a-z-]+"/, '');
+    if (svg === raw) {
+      errors.push(`${source} has no flag-icons root id. Did its format change?`);
+      continue;
+    }
     files.set(`${country.id}.svg`, svg);
     byContent.set(svg, [...(byContent.get(svg) ?? []), country.id]);
   }
