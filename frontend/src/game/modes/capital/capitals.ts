@@ -13,6 +13,17 @@ export const hasCapital = (country: Country) => country.capitals.length > 0;
  */
 export const mainCapital = (country: Country) => country.capitals[0] ?? '';
 
+/**
+ * Whether two countries have a capital in common (Jamaica and Norfolk Island: Kingston).
+ * Two such countries are never options together when a capital is asked, so the asked
+ * capital always has exactly one right answer among the options.
+ */
+export function sharesCapital(a: Country, b: Country): boolean {
+  const key = (capital: string) => capital.trim().toLocaleLowerCase();
+  const capitals = new Set(a.capitals.map(key));
+  return b.capitals.some((capital) => capitals.has(key(capital)));
+}
+
 /** All of a country's capitals, e.g. "Pretoria (also Bloemfontein and Cape Town)". */
 export function capitalsText(country: Country): string {
   const [first, ...others] = country.capitals;
