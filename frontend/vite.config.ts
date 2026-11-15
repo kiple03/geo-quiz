@@ -8,8 +8,9 @@ export default defineConfig({
   server: {
     // The backend (backend/, port 8080) serves everything under /api. Proxying it
     // keeps the browser on one origin in dev: no CORS, and cookies just work (ADR 0010).
+    // A key starting with ^ is a regex: /api and /api/..., but not e.g. /apiary.
     proxy: {
-      '/api': 'http://localhost:8080',
+      '^/api(/|$)': 'http://localhost:8080',
     },
   },
   test: {

@@ -1,6 +1,7 @@
 # 0001. Static country data first, backend later
 
-- **Status:** Accepted
+- **Status:** Accepted. The follow-up about serving country data from the API is
+  superseded by [ADR 0010](0010-backend-stack.md).
 - **Date:** 2026-11-13
 
 ## Context

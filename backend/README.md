@@ -6,7 +6,9 @@ leaderboards (Phase 4). The stack and its reasons are in
 the frontend loads it as static files
 ([ADR 0001](../docs/decisions/0001-static-data-first.md)).
 
-Today it has one endpoint, `GET /api/health`.
+Today it has one endpoint, `GET /api/health`. Every endpoint is under `/api`:
+`web/ApiPathConfig` adds the prefix to each `@RestController`, so a controller maps
+`/scores` and is served at `/api/scores`.
 
 ## Requirements
 

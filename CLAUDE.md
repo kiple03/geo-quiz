@@ -21,8 +21,9 @@ Read [docs/decisions/0001-static-data-first.md](docs/decisions/0001-static-data-
 
 - Country data is generated ahead of time by a script in `data/` and committed as static
   JSON that the frontend loads directly. The backend (Phase 4) is for user data only.
-- Keep the JSON schema stable and typed in the frontend, so the Phase 4 backend can serve
-  the same shape and the frontend can switch to an API with minimal changes.
+- Keep the JSON schema stable and typed in the frontend. The backend does not serve it
+  (ADR 0010 supersedes that part of ADR 0001), but may read the same generated data,
+  e.g. to check saved answers.
 - The client downloads the whole dataset, so watch its size (especially map geometry).
 - Never hand-edit `frontend/public/data/`. Change `data/build.ts` and regenerate.
 - The core game mode is clicking the named country on a world map: Natural Earth 1:50m
@@ -115,8 +116,9 @@ Backend, from `backend/` (Java 25; `.\mvnw.cmd` in PowerShell, `./mvnw` in Git B
 ## Backend (ADR 0010)
 
 - Every endpoint lives under `/api`, the one prefix the Vite dev proxy forwards.
-  Actuator is moved there too, with only `health` exposed. Keep the browser on one
-  origin (no CORS).
+  `web/ApiPathConfig` adds it to every `@RestController`, so controllers map paths
+  without it (`@GetMapping("/scores")` → `/api/scores`). Actuator is moved there too,
+  with only `health` exposed. Keep the browser on one origin (no CORS).
 - Country data is not served by the API; it stays static (ADR 0001).
 - PostgreSQL + Flyway + Testcontainers arrive with the first table; no H2.
 - The frontend reaches the API only through `frontend/src/data/`.
@@ -155,9 +157,10 @@ pending.
 - When a test guards a fix, temporarily undo the fix and check that the test fails.
 - `backend/mvnw` must be committed as executable, or CI fails with "Permission denied".
   Git on Windows doesn't record it: `git add --chmod=+x backend/mvnw`.
-- Maven skips rebuilding a jar it thinks is up to date. If `repackage` says "Unable to
-  find main class" while the classes exist, the jar is stale or empty: run
-  `./mvnw clean verify`.
+- The repo is in OneDrive, which syncs `backend/target/` and can turn its folders into
+  read-only cloud placeholders. Symptoms: an empty jar and "Unable to find main class"
+  from `repackage`, or `clean` failing with "Failed to delete". Fix:
+  `cmd /c "rmdir /s /q target"` in `backend/`, then build again.
 
 ## Workflow
 

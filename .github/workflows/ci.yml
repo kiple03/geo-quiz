@@ -68,6 +68,12 @@ jobs:
           cache: maven
           cache-dependency-path: backend/pom.xml
 
+      # setup-java caches ~/.m2/repository only; the wrapper's Maven lives here.
+      - uses: actions/cache@v5
+        with:
+          path: ~/.m2/wrapper
+          key: maven-wrapper-${{ hashFiles('backend/.mvn/wrapper/maven-wrapper.properties') }}
+
       # Compile, test, package, and check formatting (Spotless runs in verify).
       - name: Verify
         run: ./mvnw -B verify

@@ -27,9 +27,10 @@ PRs build on, including parts that arrive with them.
 - **Formatting is checked in the build.** Spotless with google-java-format (2-space
   indents, as in `.editorconfig`) runs `check` in `./mvnw verify`; `spotless:apply`
   fixes. This is the backend's `format:check`.
-- **Every endpoint is under `/api`.** Actuator moves there too, and only `health` is
-  exposed: `GET /api/health`. Tests check that other Actuator endpoints are not
-  reachable.
+- **Every endpoint is under `/api`.** `ApiPathConfig` adds the prefix to every
+  `@RestController`, so a controller maps `/scores` and is served at `/api/scores`.
+  Actuator moves under `/api` too, with only `health` exposed (`GET /api/health`) and
+  its discovery page at `GET /api` turned off. Tests check both.
 - **One origin.** In dev, Vite proxies `/api` to the backend on port 8080, so the
   browser only talks to `localhost:5173`: no CORS configuration, and session cookies
   work as on any single site. Production should keep one origin as well (the hosting PR
@@ -38,10 +39,12 @@ PRs build on, including parts that arrive with them.
   define the schema; dev runs Postgres with Docker Compose, and tests use Testcontainers
   against the same Postgres version. No H2: its SQL dialect differs, so tests on it can
   pass where Postgres fails.
-- **Country data stays static** (ADR 0001 stands). The frontend keeps loading the
-  generated JSON files directly; serving them through the API would add load and
-  latency for nothing. When scores are saved, the backend may read the same generated
-  data to check answers, so there is still one schema.
+- **Country data stays static, and the API does not serve it.** This supersedes the
+  follow-up in ADR 0001 (the backend serving the same shape, the frontend switching to
+  an API); the rest of ADR 0001 stands. The frontend keeps loading the generated JSON
+  files directly; serving them through the API would add load and latency for nothing.
+  When scores are saved, the backend may read the same generated data to check answers,
+  so there is still one schema.
 - **CI: a second job, `backend (build, test)`,** that runs `./mvnw -B verify`. The
   frontend job and its name are unchanged, because the `main` ruleset requires it. No
   path filters: a required check that a filter skips stays pending forever.
