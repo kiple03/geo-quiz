@@ -1,5 +1,5 @@
 import { countryName } from '../../../data/load';
-import { buildChoiceQuestions } from '../../choice/choices';
+import { buildChoiceQuestions, isTargetAnswer } from '../../choice/choices';
 import type { GameMode } from '../types';
 import CapitalPlay from './CapitalPlay';
 import { capitalOf, capitalsText, hasCapital, mainCapital } from './capitals';
@@ -22,7 +22,7 @@ export const capitalMode: GameMode = {
     }),
 
   // By country, not by name: Kingston is the capital of Jamaica and Norfolk Island.
-  isCorrect: (question, answer) => answer === question.targetId,
+  isCorrect: isTargetAnswer,
 
   describeQuestion: (question, data) => {
     const country = data.countriesById.get(question.targetId);

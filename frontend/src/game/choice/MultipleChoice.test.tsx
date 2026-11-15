@@ -104,4 +104,56 @@ describe('MultipleChoice', () => {
     expect(option('Oslo, right answer')).toHaveClass('choice--correct');
     expect(option('Copenhagen')).toHaveClass('choice--other');
   });
+
+  describe('with pictures as options', () => {
+    const pictures = options.map((o, i) => ({
+      ...o,
+      askingLabel: `Picture ${i + 1}`,
+      content: <img src={`${o.id}.svg`} alt="" />,
+    }));
+    const renderPictures = (chosenId?: string) =>
+      render(
+        <MultipleChoice
+          label="Capital of Norway"
+          options={pictures}
+          correctId="NOR"
+          chosenId={chosenId}
+          onChoose={vi.fn()}
+        />,
+      );
+
+    it('names the options neutrally and hides the labels while asking', () => {
+      renderPictures();
+      const buttons = screen.getAllByRole('button');
+      expect(buttons.map((b) => b.getAttribute('aria-label'))).toEqual([
+        'Picture 1',
+        'Picture 2',
+        'Picture 3',
+        'Picture 4',
+      ]);
+      expect(screen.queryByText('Oslo')).not.toBeInTheDocument();
+      expect(buttons[1].querySelector('img')).toHaveAttribute('src', 'NOR.svg');
+      expect(screen.getByRole('group')).toHaveClass('choices--media');
+    });
+
+    it('names a picture option "Option N" if it has no asking label', () => {
+      render(
+        <MultipleChoice
+          label="Capital of Norway"
+          options={pictures.map((o) => ({ ...o, askingLabel: undefined }))}
+          correctId="NOR"
+          chosenId={undefined}
+          onChoose={vi.fn()}
+        />,
+      );
+      expect(option('Option 2')).toHaveAttribute('data-option-id', 'NOR');
+    });
+
+    it('shows and reads every label once answered', () => {
+      renderPictures('SWE');
+      expect(option('Stockholm, your answer')).toHaveClass('choice--wrong');
+      expect(option('Oslo, right answer')).toHaveClass('choice--correct');
+      expect(option('Copenhagen')).toHaveTextContent('Copenhagen');
+    });
+  });
 });

@@ -12,3 +12,4 @@ Short records of significant decisions and why they were made. Number them seque
 | [0005](0005-map-keyboard-and-screen-reader-play.md)   | Keyboard and screen-reader play for the map game          | Accepted |
 | [0006](0006-region-quizzes.md)                        | Region quizzes: settings in the URL, region as the field  | Accepted |
 | [0007](0007-multiple-choice-and-datasets-per-mode.md) | Multiple-choice modes and datasets loaded per mode        | Accepted |
+| [0008](0008-flag-images-and-flag-modes.md)            | Flag images and flag modes                                | Accepted |

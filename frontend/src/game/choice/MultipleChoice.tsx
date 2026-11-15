@@ -1,10 +1,22 @@
-import { useRef, type KeyboardEvent } from 'react';
+import { useRef, type KeyboardEvent, type ReactNode } from 'react';
 import './MultipleChoice.css';
 
 export interface ChoiceOption {
   /** What is answered when it is picked, e.g. a country id. */
   id: string;
+  /** The option's text, and its accessible name once the question is answered. */
   label: string;
+  /**
+   * Optional: shown instead of the label, e.g. a flag (ADR 0008). The label is then
+   * shown below it once the question is answered.
+   */
+  content?: ReactNode;
+  /**
+   * Optional: the accessible name while asking, when the label would give the answer
+   * away, e.g. "Flag 2" for a flag whose label is its country. An option with `content`
+   * and no `askingLabel` is "Option 2" while asking.
+   */
+  askingLabel?: string;
 }
 
 interface MultipleChoiceProps {
@@ -67,9 +79,27 @@ function MultipleChoice({ label, options, correctId, chosenId, onChoose }: Multi
     return id === chosenId ? 'wrong' : 'other';
   };
 
+  const media = options.some((option) => option.content !== undefined);
+
+  /** Spelled out, since adjacent spans can run together ("OsloRight answer"). */
+  const accessibleName = (
+    option: ChoiceOption,
+    index: number,
+    mark: string | null,
+  ): string | undefined => {
+    if (!answered) {
+      // A picture's alt is empty, so a picture option always needs a name of its own.
+      return (
+        option.askingLabel ?? (option.content !== undefined ? `Option ${index + 1}` : undefined)
+      );
+    }
+    if (mark) return `${option.label}, ${mark.toLowerCase()}`;
+    return option.content !== undefined ? option.label : undefined;
+  };
+
   return (
     <div
-      className="choices"
+      className={media ? 'choices choices--media' : 'choices'}
       role="group"
       aria-label={label}
       onKeyDown={handleKeyDown}
@@ -93,15 +123,21 @@ function MultipleChoice({ label, options, correctId, chosenId, onChoose }: Multi
             // Not `disabled`: that would drop the buttons from the reading order, and
             // the marks below must stay readable.
             aria-disabled={answered || undefined}
-            // Spelled out, since adjacent spans can run together ("OsloRight answer").
-            aria-label={mark ? `${option.label}, ${mark.toLowerCase()}` : undefined}
+            aria-label={accessibleName(option, i, mark)}
             // Mouse, touch and screen readers' own clicks (keys are handled above).
             onClick={() => choose(option.id)}
           >
             <span className="choice-key" aria-hidden="true">
               {i + 1}
             </span>
-            <span className="choice-label">{option.label}</span>
+            {option.content !== undefined ? (
+              <span className="choice-content">
+                {option.content}
+                {answered && <span className="choice-label">{option.label}</span>}
+              </span>
+            ) : (
+              <span className="choice-label">{option.label}</span>
+            )}
             {mark && (
               <span className="choice-mark">
                 {state === 'correct' ? '✓' : '✗'} {mark}
