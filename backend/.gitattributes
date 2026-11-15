@@ -1,0 +1,2 @@
+# The root .gitattributes forces LF; Windows batch files need CRLF to run.
+*.cmd text eol=crlf

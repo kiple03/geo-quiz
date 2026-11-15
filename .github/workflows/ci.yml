@@ -49,3 +49,25 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  backend:
+    # Status check name; add it to the branch ruleset once it has run.
+    name: backend (build, test)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25' # keep in step with <java.version> in backend/pom.xml
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+
+      # Compile, test, package, and check formatting (Spotless runs in verify).
+      - name: Verify
+        run: ./mvnw -B verify
