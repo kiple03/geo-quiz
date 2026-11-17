@@ -5,6 +5,14 @@ import { defineConfig } from 'vite';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    // The backend (backend/, port 8080) serves everything under /api. Proxying it
+    // keeps the browser on one origin in dev: no CORS, and cookies just work (ADR 0010).
+    // A key starting with ^ is a regex: /api and /api/..., but not e.g. /apiary.
+    proxy: {
+      '^/api(/|$)': 'http://localhost:8080',
+    },
+  },
   test: {
     environment: 'jsdom',
     globals: true,

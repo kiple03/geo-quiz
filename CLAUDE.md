@@ -7,22 +7,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Geo Quiz: a browser geography quiz (country names, capitals, flags, locations). It is a
 personal learning project. Repo: `github.com/kiple03/geo-quiz`, default branch `main`.
 
-| Path              | Contents                                                                         |
-| ----------------- | -------------------------------------------------------------------------------- |
-| `frontend/`       | Vite 8 + React 19 + TypeScript 6.0, ESLint, Prettier, Vitest + RTL               |
-| `data/`           | `build.ts` generates `frontend/public/data/` (countries, world map, flags/)      |
-| `backend/`        | Placeholder. Spring Boot API arrives in Phase 4 (scores, accounts, leaderboards) |
-| `docs/decisions/` | ADRs (`NNNN-short-title.md`). Never rewrite an accepted ADR; supersede it        |
-| `docs/backlog.md` | Deferred design items for planned features (zoom, regions, subdivisions)         |
+| Path              | Contents                                                                      |
+| ----------------- | ----------------------------------------------------------------------------- |
+| `frontend/`       | Vite 8 + React 19 + TypeScript 6.0, ESLint, Prettier, Vitest + RTL            |
+| `data/`           | `build.ts` generates `frontend/public/data/` (countries, world map, flags/)   |
+| `backend/`        | Spring Boot 4.1, Java 25, Maven wrapper (ADR 0010). Phase 4: accounts, scores |
+| `docs/decisions/` | ADRs (`NNNN-short-title.md`). Never rewrite an accepted ADR; supersede it     |
+| `docs/backlog.md` | Deferred design items for planned features (zoom, regions, subdivisions)      |
 
 ## Architecture: static data first (ADR 0001)
 
 Read [docs/decisions/0001-static-data-first.md](docs/decisions/0001-static-data-first.md).
 
 - Country data is generated ahead of time by a script in `data/` and committed as static
-  JSON that the frontend loads directly. There is no backend and no runtime API for now.
-- Keep the JSON schema stable and typed in the frontend, so the Phase 4 backend can serve
-  the same shape and the frontend can switch to an API with minimal changes.
+  JSON that the frontend loads directly. The backend (Phase 4) is for user data only.
+- Keep the JSON schema stable and typed in the frontend. The backend does not serve it
+  (ADR 0010 supersedes that part of ADR 0001), but may read the same generated data,
+  e.g. to check saved answers.
 - The client downloads the whole dataset, so watch its size (especially map geometry).
 - Never hand-edit `frontend/public/data/`. Change `data/build.ts` and regenerate.
 - The core game mode is clicking the named country on a world map: Natural Earth 1:50m
@@ -103,11 +104,33 @@ npm run typecheck      # tsc --noEmit
 
 Regenerating should leave `git status` clean unless the script or sources changed.
 
+Backend, from `backend/` (Java 25; `.\mvnw.cmd` in PowerShell, `./mvnw` in Git Bash):
+
+```sh
+./mvnw spring-boot:run   # http://localhost:8080/api/health; Vite proxies /api to it
+./mvnw verify            # compile, test, package, Spotless check (what CI runs)
+./mvnw spotless:apply    # format Java (google-java-format)
+./mvnw test -Dtest=HealthEndpointTests   # one test class
+```
+
+## Backend (ADR 0010)
+
+- Every endpoint lives under `/api`, the one prefix the Vite dev proxy forwards.
+  `web/ApiPathConfig` adds it to every `@RestController`, so controllers map paths
+  without it (`@GetMapping("/scores")` → `/api/scores`). Actuator is moved there too,
+  with only `health` exposed. Keep the browser on one origin (no CORS).
+- Country data is not served by the API; it stays static (ADR 0001).
+- PostgreSQL + Flyway + Testcontainers arrive with the first table; no H2.
+- The frontend reaches the API only through `frontend/src/data/`.
+
 ## CI
 
-`.github/workflows/ci.yml` has one job, `frontend (lint, typecheck, test)`:
-`npm ci` → lint → format check → typecheck → `vitest run` → build. `main` is protected by
-a ruleset that requires this check. Renaming the job breaks the required check.
+`.github/workflows/ci.yml` has two jobs. `frontend (lint, typecheck, test)`:
+`npm ci` → lint → format check → typecheck → `vitest run` → build.
+`backend (build, test)`: `./mvnw -B verify`. `main` is protected by a ruleset that
+requires the frontend check (and the backend check once it is added). Renaming a job
+breaks its required check. Don't add path filters: a skipped required check stays
+pending.
 
 ## Gotchas
 
@@ -132,6 +155,8 @@ a ruleset that requires this check. Renaming the job breaks the required check.
   24's built-in WebSocket: clicks, wheel, keys, screenshots,
   `Accessibility.getFullAXTree`. Keep such scripts in the scratchpad, not the repo.
 - When a test guards a fix, temporarily undo the fix and check that the test fails.
+- `backend/mvnw` must be committed as executable, or CI fails with "Permission denied".
+  Git on Windows doesn't record it: `git add --chmod=+x backend/mvnw`.
 
 ## Workflow
 
