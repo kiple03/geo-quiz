@@ -157,10 +157,6 @@ pending.
 - When a test guards a fix, temporarily undo the fix and check that the test fails.
 - `backend/mvnw` must be committed as executable, or CI fails with "Permission denied".
   Git on Windows doesn't record it: `git add --chmod=+x backend/mvnw`.
-- The repo is in OneDrive, which syncs `backend/target/` and can turn its folders into
-  read-only cloud placeholders. Symptoms: an empty jar and "Unable to find main class"
-  from `repackage`, or `clean` failing with "Failed to delete". Fix:
-  `cmd /c "rmdir /s /q target"` in `backend/`, then build again.
 
 ## Workflow
 
